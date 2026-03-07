@@ -47,7 +47,7 @@ import { Separator } from "@/components/ui/separator";
 
 const defaultContent = {
   site: {
-    title: "Rick Gamarra | Enterprise Technology Portal TEST",
+    title: "Rick Gamarra | Enterprise Technology Portal",
     tagline: "Infrastructure, systems, automation, and practical technology leadership.",
     theme: "dark",
     contactEmail: "rick@example.com",
