@@ -1,0 +1,31 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.192.99.7.220 }}
+          username: ${{ secrets.root }}
+          key: ${{ secrets.ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE6clCeJvXAOLso0Y9ziYUR5J9bUwO+zz+7nE+8Kz32z github-actions-deploy }}
+          port: ${{ secrets.2222 }}
+          script: |
+            set -e
+            cd /var/www/personal-techportal
+            git fetch origin
+            git reset --hard origin/main
+            npm install
+            npm run build
+            pm2 restart personal-techportal
+            pm2 save
