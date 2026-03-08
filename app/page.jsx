@@ -148,7 +148,7 @@ What defines my approach is a practical engineering mindset: identify the issue 
       description: "A curated study page with official links, free resources, videos, and exam prep material.",
       icon: "Shield",
       thumbnail: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1200&q=80",
-      href: "/pages/pages/CompTIASecurity.html",
+      href: "/pages/CompTIASecurity.html",
       newTab: true,
       featured: true,
       category: "Certifications",
