@@ -340,9 +340,9 @@ export default function PersonalTechnologyPortal() {
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+      <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
         <div className="flex min-h-screen">
-          <aside className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:block ${sidebarOpen ? "block" : "hidden lg:block"}`}>
+          <aside className={`fixed inset-y-0 left-0 z-40 w-72 max-w-[85vw] border-r border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 transition-transform duration-300 lg:static lg:block ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                 <div>
@@ -414,6 +414,14 @@ export default function PersonalTechnologyPortal() {
             </div>
           </aside>
 
+          {sidebarOpen ? (
+            <button
+              aria-label="Close menu overlay"
+              className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          ) : null}
+
           <main className="min-w-0 flex-1">
             <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/70">
               <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -422,7 +430,7 @@ export default function PersonalTechnologyPortal() {
                     <Menu className="h-5 w-5" />
                   </Button>
                   <div>
-                    <div className="text-lg font-semibold tracking-tight">{content.site.title}</div>
+                    <div className="max-w-[55vw] truncate text-base font-semibold tracking-tight sm:max-w-none sm:text-lg">{content.site.title}</div>
                     <div className="text-sm text-muted-foreground">{content.site.tagline}</div>
                   </div>
                 </div>
@@ -432,7 +440,7 @@ export default function PersonalTechnologyPortal() {
                   </Button>
                   <Dialog open={adminOpen} onOpenChange={setAdminOpen}>
                     <DialogTrigger asChild>
-                      <Button className="rounded-2xl">Admin Access</Button>
+                      <Button className="rounded-2xl text-xs sm:text-sm">Admin Access</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
@@ -465,13 +473,13 @@ export default function PersonalTechnologyPortal() {
               {active === "home" && (
                 <div className="space-y-10">
                   <section>
-                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 items-center lg:grid-cols-[1.4fr_0.9fr]">
                       <Card className="overflow-hidden rounded-[28px] border-0 bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white shadow-2xl">
-                        <CardContent className="grid gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
+                        <CardContent className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
                           <div className="space-y-6">
                             <Badge className="w-fit rounded-full bg-white/15 text-white hover:bg-white/15">Personal Homepage + Resource Portal</Badge>
                             <div className="space-y-3">
-                              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{content.hero.headline}</h1>
+                              <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-5xl">{content.hero.headline}</h1>
                               <p className="max-w-2xl text-base text-slate-200 sm:text-lg">{content.hero.summary}</p>
                             </div>
                             <div className="flex flex-wrap gap-3">
@@ -492,7 +500,7 @@ export default function PersonalTechnologyPortal() {
                             </div>
                           </div>
                           <div className="relative">
-                            <img src={content.hero.image} alt="Professional technology workspace" className="h-full min-h-[280px] w-full rounded-[24px] object-cover shadow-xl" />
+                            <img src={content.hero.image} alt="Professional technology workspace" className="h-56 sm:h-72 lg:h-full lg:min-h-[280px] w-full rounded-[24px] object-cover shadow-xl" />
                             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-slate-950/55 p-4 backdrop-blur">
                               <div className="text-sm font-medium">Professional Focus</div>
                               <div className="mt-1 text-sm text-slate-300">Enterprise systems, support operations, infrastructure, automation, and continuous growth.</div>
@@ -521,7 +529,7 @@ export default function PersonalTechnologyPortal() {
 
                   <section className="space-y-5">
                     <SectionTitle eyebrow="Highlights" title="Explore Key Areas" description="Quick entry points into the main sections of the portal." />
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                       {[
                         ["My IT Journey", "Background, experience, and professional perspective.", User, "journey"],
                         ["Resources", "Curated links, references, and study material.", BookOpen, "resources"],
@@ -550,7 +558,7 @@ export default function PersonalTechnologyPortal() {
 
                   <section className="space-y-5">
                     <SectionTitle eyebrow="Featured Resources" title="Curated Categories" description="Priority categories surfaced on the homepage for faster access." />
-                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
                       {featuredResources.map((resource) => (
                         <Card key={resource.id} className="rounded-[24px]">
                           <CardContent className="space-y-4 p-6">
@@ -573,7 +581,7 @@ export default function PersonalTechnologyPortal() {
 
                   <section className="space-y-5">
                     <SectionTitle eyebrow="Related Pages" title="Existing HTML Pages from This Project" description="These linked pages are presented as professional modules and always open in separate browser tabs." />
-                    <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                       {content.projectPages.map((page) => (
                         <Card key={page.id} className="overflow-hidden rounded-[24px] transition hover:-translate-y-1 hover:shadow-xl">
                           <img src={page.thumbnail} alt={page.title} className="h-44 w-full object-cover" />
@@ -607,7 +615,7 @@ export default function PersonalTechnologyPortal() {
                   <SectionTitle eyebrow="Professional Profile" title={content.journey.title} description={content.journey.subtitle} />
                   <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
                     <Card className="rounded-[28px]">
-                      <CardContent className="space-y-6 p-8">
+                      <CardContent className="space-y-6 p-6 sm:p-8">
                         <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground sm:text-base">{content.journey.body}</p>
                       </CardContent>
                     </Card>
@@ -674,7 +682,7 @@ export default function PersonalTechnologyPortal() {
               {active === "projects" && (
                 <div className="space-y-6">
                   <SectionTitle eyebrow="Linked HTML Library" title="Project Pages" description="Previously created HTML pages are surfaced as managed cards and configured to open in new tabs." />
-                  <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                     {filteredProjects.map((page) => (
                       <Card key={page.id} className="overflow-hidden rounded-[24px]">
                         <img src={page.thumbnail} alt={page.title} className="h-48 w-full object-cover" />
@@ -706,7 +714,7 @@ export default function PersonalTechnologyPortal() {
               {active === "certs" && (
                 <div className="space-y-6">
                   <SectionTitle eyebrow="Development" title="Learning & Certifications" description="An expandable section for certifications, training priorities, and learning milestones." />
-                  <div className="grid gap-5 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {content.certifications.map((item) => (
                       <Card key={item.title} className="rounded-[24px]">
                         <CardContent className="space-y-4 p-6">
@@ -730,7 +738,7 @@ export default function PersonalTechnologyPortal() {
                   <SectionTitle eyebrow="Connect" title="Contact" description="A professional contact section suitable for portfolio and portal use." />
                   <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
                     <Card className="rounded-[28px]">
-                      <CardContent className="space-y-4 p-8">
+                      <CardContent className="space-y-4 p-6 sm:p-8">
                         <div>
                           <div className="text-lg font-semibold">Professional Contact</div>
                           <p className="mt-2 text-sm text-muted-foreground">Use this area for email, LinkedIn, downloadable resume links, or a contact form integration later.</p>
@@ -768,7 +776,7 @@ export default function PersonalTechnologyPortal() {
 
                   {!isAuthed ? (
                     <Card className="rounded-[28px]">
-                      <CardContent className="space-y-4 p-8">
+                      <CardContent className="space-y-4 p-6 sm:p-8">
                         <div className="text-lg font-semibold">Admin authentication required</div>
                         <p className="text-sm text-muted-foreground">Use the Admin Access button in the header. Demo credentials: admin / demo123</p>
                       </CardContent>
