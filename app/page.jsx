@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { contentIndex } from "@/data/contentIndex";
 import {
   LayoutDashboard,
   User,
@@ -175,6 +176,17 @@ What defines my approach is a practical engineering mindset: identify the issue 
       featured: true,
       category: "Lab Pages",
     },
+    {
+  id: 99,
+  title: "AI World",
+  description: "Local LLMs, Dockerized workflows, agentic platforms, and operational automation.",
+  icon: "Cpu",
+  thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
+  href: "/pages/ai/airesources/AIWorld.html",
+  newTab: true,
+  featured: true,
+  category: "AI",
+}
   ],
 };
 
