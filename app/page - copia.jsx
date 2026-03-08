@@ -623,22 +623,25 @@ export default function PersonalTechnologyPortal() {
               )}
 
               {active === "journey" && (
-                <div className="flex flex-col items-center w-full space-y-6">
-                  <div className="w-full max-w-5xl flex items-center justify-between">
-                    <SectionTitle eyebrow="About Me" title="My IT Journey" description="A personal account of 30+ years in enterprise technology." />
-                    <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="rounded-2xl shrink-0">
-                        Open Full Page <ExternalLink className="ml-2 h-4 w-4" />
-                      </Button>
-                    </a>
-                  </div>
-                  <div className="w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-lg" style={{ height: "80vh" }}>
-                    <iframe
-                      src="/pages/about-story.html"
-                      title="My IT Journey"
-                      className="h-full w-full border-0"
-                      loading="lazy"
-                    />
+                <div className="space-y-6">
+                  <SectionTitle eyebrow="Professional Profile" title={content.journey.title} description={content.journey.subtitle} />
+                  <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+                    <Card className="rounded-[28px]">
+                      <CardContent className="space-y-6 p-8">
+                        <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground sm:text-base">{content.journey.body}</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="rounded-[28px]">
+                      <CardHeader>
+                        <CardTitle>Core Themes</CardTitle>
+                        <CardDescription>Editable from the admin dashboard.</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {content.journey.highlights.map((item) => (
+                          <div key={item} className="rounded-2xl border p-4 text-sm">{item}</div>
+                        ))}
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               )}
