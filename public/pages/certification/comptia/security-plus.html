@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security+ Certification Resources</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-soft: #111a2b;
+      --card: #162238;
+      --card-2: #1b2a44;
+      --text: #e5edf9;
+      --muted: #9fb0cc;
+      --accent: #60a5fa;
+      --accent-2: #93c5fd;
+      --border: #2a3a57;
+      --warning-bg: #3a2610;
+      --warning-text: #ffd08a;
+      --ok-bg: #102b1d;
+      --ok-text: #8de3b1;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    body.light {
+      --bg: #f4f7fb;
+      --bg-soft: #ffffff;
+      --card: #ffffff;
+      --card-2: #f8fbff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-2: #1d4ed8;
+      --border: #d9e2ef;
+      --warning-bg: #fff7ed;
+      --warning-text: #c2410c;
+      --ok-bg: #ecfdf5;
+      --ok-text: #166534;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .brand-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .search-wrap {
+      margin-bottom: 16px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .search-wrap input::placeholder {
+      color: var(--muted);
+    }
+
+    .theme-btn, .top-btn, .export-btn {
+      width: 100%;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .theme-btn:hover, .top-btn:hover, .export-btn:hover {
+      background: var(--card-2);
+      text-decoration: none;
+    }
+
+    .nav-title {
+      margin: 22px 0 10px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text);
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover {
+      background: var(--card);
+      border-color: var(--border);
+      text-decoration: none;
+    }
+
+    .sidebar-note {
+      margin-top: 22px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(37,99,235,0.18), rgba(96,165,250,0.08));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero h2 {
+      margin: 0 0 8px;
+      font-size: 2.1rem;
+    }
+
+    .hero .subtitle {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 980px;
+      line-height: 1.7;
+    }
+
+    .counter {
+      min-width: 180px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .counter .number {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .counter .label {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    section h3 {
+      margin: 0 0 14px;
+      font-size: 1.4rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background: rgba(96, 165, 250, 0.12);
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      padding: 5px 9px;
+      border-radius: 999px;
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.35;
+    }
+
+    .card p, .card ul {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .card ul {
+      padding-left: 18px;
+    }
+
+    .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-2);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      border-color: var(--accent);
+    }
+
+    .warning, .ok {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .ok {
+      background: var(--ok-bg);
+      color: var(--ok-text);
+    }
+
+    pre {
+      margin: 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dce9ff;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    body.light pre {
+      background: #eef4fb;
+      color: #1f2937;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+      padding-bottom: 20px;
+    }
+
+    @media (max-width: 1000px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div id="top"></div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🔐</div>
+        <div>
+          <h1>Security+ Certification Resources</h1>
+          <p>By Richard Gamarra</p>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Search resources, videos, practice tests, flashcards..." />
+      </div>
+
+      <button class="theme-btn" id="themeToggle">Toggle light / dark mode</button>
+      <a class="top-btn" href="#top">Back to top</a>
+      <button class="export-btn" id="exportBtn">Export HTML</button>
+
+      <div class="nav-title">Sections</div>
+      <nav class="nav">
+        <a href="#official">🏛️ Official CompTIA Resources</a>
+        <a href="#free">🆓 Free Study Resources</a>
+        <a href="#practice">📝 Practice Tests & Simulators</a>
+        <a href="#cram">⚡ Cram & Last-Minute Review</a>
+        <a href="#videos">🎥 Video Learning</a>
+        <a href="#strategy">🧭 Recommended Study Strategy</a>
+        <a href="#extra">🧰 Extra Tools</a>
+      </nav>
+
+      <div class="sidebar-note">
+        Built as a practical, exam-focused study dashboard for CompTIA Security+ SY0-701.
+        Start with the official objectives and exam page, then move to free video training,
+        practice exams, last-minute review, and flashcards.
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <h2>Security+ Certification Resources</h2>
+            <p class="subtitle">By Richard Gamarra</p>
+            <p>
+              A professional study hub for passing the CompTIA Security+ exam. This page organizes
+              official exam information, free resources, practice tests, cram sheets, videos,
+              flashcards, and a recommended study path for beginners and last-minute reviewers.
+            </p>
+          </div>
+
+          <div class="counter">
+            <div class="number" id="toolCount">0</div>
+            <div class="label">Visible resources</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <span class="pill">SY0-701 focus</span>
+          <span class="pill">Official links first</span>
+          <span class="pill">Free + paid mix</span>
+          <span class="pill">Practice-heavy</span>
+          <span class="pill">Beginner friendly</span>
+        </div>
+      </div>
+
+      <section id="official">
+        <h3>🏛️ Official CompTIA Resources</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🌐</div>
+              <span class="tag">Official</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/" target="_blank" rel="noopener noreferrer">CompTIA Homepage</a></h4>
+            <p>Start here for certifications, training paths, exam resources, and official announcements.</p>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/" target="_blank" rel="noopener noreferrer">Open site</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🎯</div>
+              <span class="tag">Exam Details</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/certifications/security/" target="_blank" rel="noopener noreferrer">CompTIA Security+ Official Exam Page</a></h4>
+            <p>The current official page for Security+ exam details, exam code, duration, languages, objectives, and training options.</p>
+            <pre>Current exam: SY0-701
+Time: 90 minutes
+Questions: up to 90
+Passing score: 750 / 900</pre>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/certifications/security/" target="_blank" rel="noopener noreferrer">Open exam page</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🗓️</div>
+              <span class="tag">Registration</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/resources/schedule-exam/" target="_blank" rel="noopener noreferrer">Schedule / Register for the Exam</a></h4>
+            <p>Official CompTIA scheduling guidance. Use this page to go into CompTIA Central and schedule through Pearson VUE.</p>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/resources/schedule-exam/" target="_blank" rel="noopener noreferrer">Scheduling steps</a>
+              <a class="btn" href="https://www.pearsonvue.com/us/en/comptia.html" target="_blank" rel="noopener noreferrer">Pearson VUE</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📚</div>
+              <span class="tag">Official Training</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/resources/certmaster-training/" target="_blank" rel="noopener noreferrer">CompTIA CertMaster Training</a></h4>
+            <p>Official CompTIA study ecosystem including CertMaster Learn, CertMaster Practice, and labs aligned to the exam objectives.</p>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/resources/certmaster-training/" target="_blank" rel="noopener noreferrer">Open training</a>
+              <a class="btn" href="https://www.comptia.org/training/certmaster-practice/trial-sign-up" target="_blank" rel="noopener noreferrer">CertMaster Practice</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="free">
+        <h3>🆓 Free Study Resources</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">⭐</div>
+              <span class="tag">Best Free Pick</span>
+            </div>
+            <h4><a href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank" rel="noopener noreferrer">Professor Messer SY0-701 Course</a></h4>
+            <p>One of the most widely recommended free Security+ video courses. Great starting point for beginners.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank" rel="noopener noreferrer">Open course</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📝</div>
+              <span class="tag">Objectives</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/certifications/security/" target="_blank" rel="noopener noreferrer">Official Exam Objectives</a></h4>
+            <p>Your best anchor resource. Build your notes, flashcards, and review plan directly from the official objectives.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/certifications/security/" target="_blank" rel="noopener noreferrer">Open objectives page</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📖</div>
+              <span class="tag">Blog / Guidance</span>
+            </div>
+            <h4><a href="https://www.comptia.org/en-us/blog/cybersecurity-training-for-beginners-how-to-train-for-comptia-security/" target="_blank" rel="noopener noreferrer">CompTIA Beginner Training Guide</a></h4>
+            <p>Helpful overview of how CompTIA recommends preparing, especially for newcomers to cybersecurity.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/en-us/blog/cybersecurity-training-for-beginners-how-to-train-for-comptia-security/" target="_blank" rel="noopener noreferrer">Open guide</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">💬</div>
+              <span class="tag">Community</span>
+            </div>
+            <h4><a href="https://www.reddit.com/r/CompTIA_Security/" target="_blank" rel="noopener noreferrer">r/CompTIA_Security</a></h4>
+            <p>Good for recent pass/fail experiences, recommended resource stacks, study timelines, and practical exam advice.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.reddit.com/r/CompTIA_Security/" target="_blank" rel="noopener noreferrer">Open subreddit</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="practice">
+        <h3>📝 Practice Tests & Exam Simulators</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🧠</div>
+              <span class="tag">Official Practice</span>
+            </div>
+            <h4><a href="https://www.comptia.org/training/certmaster-practice/trial-sign-up" target="_blank" rel="noopener noreferrer">CompTIA CertMaster Practice</a></h4>
+            <p>Official timed practice, performance-based questions, and targeted review of weak areas.</p>
+            <span class="warning">Paid / official</span>
+            <div class="actions">
+              <a class="btn" href="https://www.comptia.org/training/certmaster-practice/trial-sign-up" target="_blank" rel="noopener noreferrer">Open practice</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🎓</div>
+              <span class="tag">Popular Paid Pick</span>
+            </div>
+            <h4><a href="https://www.diontraining.com/products/comptia-security-sy0-701" target="_blank" rel="noopener noreferrer">Dion Training Security+ Course</a></h4>
+            <p>Widely used for structured lessons, labs, practice exams, and PBQ-style exposure.</p>
+            <span class="warning">Paid</span>
+            <div class="actions">
+              <a class="btn" href="https://www.diontraining.com/products/comptia-security-sy0-701" target="_blank" rel="noopener noreferrer">Open course</a>
+              <a class="btn" href="https://www.diontraining.com/collections/practice-exams" target="_blank" rel="noopener noreferrer">Practice exams</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">⏱️</div>
+              <span class="tag">Timed Exams</span>
+            </div>
+            <h4><a href="https://www.udemy.com/course/comptia-security-sy0-701-practice-exams/" target="_blank" rel="noopener noreferrer">Udemy Security+ Practice Exams</a></h4>
+            <p>Useful for exam pacing and repeated timed runs. Best used after you already know the objectives.</p>
+            <span class="warning">Paid</span>
+            <div class="actions">
+              <a class="btn" href="https://www.udemy.com/course/comptia-security-sy0-701-practice-exams/" target="_blank" rel="noopener noreferrer">Open practice exams</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🧪</div>
+              <span class="tag">Practice Strategy</span>
+            </div>
+            <h4>How to use practice exams correctly</h4>
+            <ul>
+              <li>Do not memorize answers.</li>
+              <li>Track weak domains after every test.</li>
+              <li>Review every missed question in your own words.</li>
+              <li>Repeat only after re-studying the domain.</li>
+              <li>Save one fresh timed exam for the final week.</li>
+            </ul>
+            <span class="ok">Use practice exams as a diagnosis tool, not just a score tool.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="cram">
+        <h3>⚡ Cram & Last-Minute Review</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📄</div>
+              <span class="tag">Cram Notes</span>
+            </div>
+            <h4><a href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank" rel="noopener noreferrer">Professor Messer Course Index + Notes Options</a></h4>
+            <p>Use the free course index to do objective-by-objective review. His note products are popular for fast final revision.</p>
+            <div class="actions">
+              <a class="btn" href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank" rel="noopener noreferrer">Open course index</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🧾</div>
+              <span class="tag">Last Week</span>
+            </div>
+            <h4>7-day cram checklist</h4>
+            <pre>Day 7-6: Re-read exam objectives
+Day 5: Timed full practice exam
+Day 4: Review weak domains only
+Day 3: PBQ-style review and acronyms
+Day 2: Flashcards and key terms
+Day 1: Light review only
+Exam day: Sleep, ID, timing, confidence</pre>
+            <p>Keep the last week focused on weaknesses and speed, not brand-new material.</p>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🔤</div>
+              <span class="tag">Acronyms</span>
+            </div>
+            <h4><a href="https://quizlet.com/917461370/full-comptia-security-sy0-701-acronym-list-flash-cards/" target="_blank" rel="noopener noreferrer">Security+ Acronym Flashcards</a></h4>
+            <p>Acronyms are a major part of fast exam recall. Use them for daily short review sessions.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://quizlet.com/917461370/full-comptia-security-sy0-701-acronym-list-flash-cards/" target="_blank" rel="noopener noreferrer">Open flashcards</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="videos">
+        <h3>🎥 Video Learning Resources</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">▶️</div>
+              <span class="tag">Top Free Video</span>
+            </div>
+            <h4><a href="https://www.professormesser.com/" target="_blank" rel="noopener noreferrer">Professor Messer</a></h4>
+            <p>The safest first recommendation for free Security+ study videos and monthly study-group style review.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank" rel="noopener noreferrer">Course</a>
+              <a class="btn" href="https://www.youtube.com/watch?v=glfN72QmXtY" target="_blank" rel="noopener noreferrer">Study group</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📺</div>
+              <span class="tag">YouTube</span>
+            </div>
+            <h4><a href="https://www.youtube.com/watch?v=7JdkjvMhQZc" target="_blank" rel="noopener noreferrer">Full Security+ Free Course</a></h4>
+            <p>Long-form YouTube training can work well as a second perspective after your main course.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.youtube.com/watch?v=7JdkjvMhQZc" target="_blank" rel="noopener noreferrer">Open video</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">☁️</div>
+              <span class="tag">Alternative Channel</span>
+            </div>
+            <h4><a href="https://www.youtube.com/watch?v=SmzTNZwJnIw" target="_blank" rel="noopener noreferrer">Inside Cloud and Security</a></h4>
+            <p>Helpful alternate explanations and domain-by-domain review for SY0-701 topics.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.youtube.com/watch?v=SmzTNZwJnIw" target="_blank" rel="noopener noreferrer">Open domain video</a>
+              <a class="btn" href="https://www.youtube.com/watch?v=OTWJuA6cudo" target="_blank" rel="noopener noreferrer">More domain review</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="strategy">
+        <h3>🧭 Recommended Study Strategy</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🚀</div>
+              <span class="tag">Beginner Path</span>
+            </div>
+            <h4>Best study order for beginners</h4>
+            <ol style="margin:0; padding-left:18px; color:var(--muted); line-height:1.6; font-size:0.95rem;">
+              <li>Read the official exam page and objectives.</li>
+              <li>Watch a full free course from Professor Messer.</li>
+              <li>Take notes by domain, not by video order.</li>
+              <li>Use flashcards daily for acronyms and core terms.</li>
+              <li>Start practice exams only after first full content pass.</li>
+              <li>Re-study weak domains, then re-test.</li>
+            </ol>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🎯</div>
+              <span class="tag">Pass Strategy</span>
+            </div>
+            <h4>How to maximize passing odds</h4>
+            <ul>
+              <li>Know the objectives better than the resource names.</li>
+              <li>Focus on concepts, not memorized answer patterns.</li>
+              <li>Treat PBQs as applied troubleshooting questions.</li>
+              <li>Practice reading answers carefully and eliminating distractors.</li>
+              <li>Schedule the exam only after consistent practice scores and objective coverage.</li>
+            </ul>
+            <span class="ok">Consistency beats resource hoarding.</span>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">📅</div>
+              <span class="tag">Sample Plan</span>
+            </div>
+            <h4>4-week sample study plan</h4>
+            <pre>Week 1: Objectives + video course start
+Week 2: Finish course + build notes
+Week 3: Practice exams + weak domains
+Week 4: Cram review + flashcards + one final timed exam</pre>
+            <p>Stretch it longer if you are new to networking, cryptography, or security operations.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="extra">
+        <h3>🧰 Extra Tools</h3>
+        <div class="grid">
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🃏</div>
+              <span class="tag">Flashcards</span>
+            </div>
+            <h4><a href="https://quizlet.com/851095469/comptia-security-sy0-701-flash-cards/" target="_blank" rel="noopener noreferrer">Quizlet Security+ Flashcards</a></h4>
+            <p>Good for rapid recall, especially for acronyms, ports, security controls, and protocol distinctions.</p>
+            <span class="ok">Free option available</span>
+            <div class="actions">
+              <a class="btn" href="https://quizlet.com/851095469/comptia-security-sy0-701-flash-cards/" target="_blank" rel="noopener noreferrer">Open set</a>
+              <a class="btn" href="https://quizlet.com/859138726/comptia-security-701-study-guide-flash-cards/" target="_blank" rel="noopener noreferrer">Study guide set</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">🗣️</div>
+              <span class="tag">Community</span>
+            </div>
+            <h4><a href="https://www.reddit.com/r/CompTIA/" target="_blank" rel="noopener noreferrer">r/CompTIA</a></h4>
+            <p>Useful for recent success stories, timeline examples, and realistic feedback on what helped people pass.</p>
+            <span class="ok">Free</span>
+            <div class="actions">
+              <a class="btn" href="https://www.reddit.com/r/CompTIA/" target="_blank" rel="noopener noreferrer">Open subreddit</a>
+              <a class="btn" href="https://www.reddit.com/r/CompTIA_Security/" target="_blank" rel="noopener noreferrer">Security+ subreddit</a>
+            </div>
+          </article>
+
+          <article class="card searchable tool-card">
+            <div class="card-top">
+              <div class="icon">✅</div>
+              <span class="tag">Final Checklist</span>
+            </div>
+            <h4>Before you schedule the exam</h4>
+            <ul>
+              <li>You have reviewed all official objectives.</li>
+              <li>You can explain, not just recognize, key concepts.</li>
+              <li>You have done at least one full timed practice exam.</li>
+              <li>You know your weakest domain and have reviewed it twice.</li>
+              <li>You understand the testing process and ID requirements.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer">
+        Security+ Certification Resources • By Richard Gamarra
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const input = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".searchable");
+    const themeToggle = document.getElementById("themeToggle");
+    const exportBtn = document.getElementById("exportBtn");
+    const body = document.body;
+    const toolCount = document.getElementById("toolCount");
+
+    function updateToolCount() {
+      const visibleCards = Array.from(document.querySelectorAll(".tool-card"))
+        .filter(card => !card.classList.contains("hidden"));
+      toolCount.textContent = visibleCards.length;
+    }
+
+    input.addEventListener("input", function () {
+      const term = this.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.classList.toggle("hidden", !text.includes(term));
+      });
+
+      updateToolCount();
+    });
+
+    themeToggle.addEventListener("click", function () {
+      body.classList.toggle("light");
+    });
+
+    exportBtn.addEventListener("click", function () {
+      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "security-plus-certification-resources-richard-gamarra.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+    });
+
+    updateToolCount();
+  </script>
+</body>
+</html>
