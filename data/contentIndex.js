@@ -76,5 +76,16 @@ export const contentIndex = [
     icon: "Briefcase",
     featured: false,
     showInProjects: true,
+  },
+  {
+  id: 100,
+  title: "About This Portal",
+  description: "Full story behind why this technology portal was created and how it evolved.",
+  icon: "User",
+  thumbnail: "https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1200&q=80",
+  href: "/pages/about-story.html",
+  newTab: true,
+  featured: true,
+  category: "About",
   }
 ];

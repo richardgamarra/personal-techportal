@@ -143,6 +143,7 @@ What defines my approach is a practical engineering mindset: identify the issue 
     },
   ],
   projectPages: [
+    
     {
       id: 1,
       title: "CompTIA Security+ Resource Portal",
@@ -187,6 +188,7 @@ What defines my approach is a practical engineering mindset: identify the issue 
   featured: true,
   category: "AI",
 }
+  
   ],
 };
 
@@ -526,6 +528,12 @@ export default function PersonalTechnologyPortal() {
                             <Badge variant="secondary">Curated Resources</Badge>
                             <Badge variant="secondary">Expandable Architecture</Badge>
                           </div>
+                          <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
+                          <Button className="mt-2 rounded-2xl">
+                           Read Full Story
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </Button>
+                        </a>
                         </CardContent>
                       </Card>
                     </motion.div>
