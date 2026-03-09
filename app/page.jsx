@@ -1,12 +1,11 @@
 "use client";
+
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { contentIndex } from "@/data/contentIndex";
 import {
-  LayoutDashboard,
   User,
   BookOpen,
-  Briefcase,
   Award,
   Mail,
   Search,
@@ -14,7 +13,6 @@ import {
   Settings,
   Image as ImageIcon,
   Link as LinkIcon,
-  Pencil,
   Plus,
   Trash2,
   Shield,
@@ -79,9 +77,21 @@ What defines my approach is a practical engineering mindset: identify the issue 
     ],
   },
   certifications: [
-    { title: "Cloud & Microsoft Learning", status: "Active", note: "Continuing development in modern infrastructure and platform tools." },
-    { title: "AI & Automation Exploration", status: "Ongoing", note: "Hands-on work with local models, Docker, automation workflows, and agentic tools." },
-    { title: "Enterprise Systems Practice", status: "Established", note: "Broad operational experience in systems, support, troubleshooting, and modernization." },
+    {
+      title: "Cloud & Microsoft Learning",
+      status: "Active",
+      note: "Continuing development in modern infrastructure and platform tools.",
+    },
+    {
+      title: "AI & Automation Exploration",
+      status: "Ongoing",
+      note: "Hands-on work with local models, Docker, automation workflows, and agentic tools.",
+    },
+    {
+      title: "Enterprise Systems Practice",
+      status: "Established",
+      note: "Broad operational experience in systems, support, troubleshooting, and modernization.",
+    },
   ],
   resources: [
     {
@@ -91,8 +101,18 @@ What defines my approach is a practical engineering mindset: identify the issue 
       description: "VPN, routing, remote access, firewalling, and connectivity resources.",
       featured: true,
       items: [
-        { title: "Remote Access Design Notes", type: "internal", href: "#", description: "Approaches for secure access to home and remote environments." },
-        { title: "WireGuard Documentation", type: "external", href: "https://www.wireguard.com/", description: "Official documentation and implementation guidance." },
+        {
+          title: "Remote Access Design Notes",
+          type: "internal",
+          href: "#",
+          description: "Approaches for secure access to home and remote environments.",
+        },
+        {
+          title: "WireGuard Documentation",
+          type: "external",
+          href: "https://www.wireguard.com/",
+          description: "Official documentation and implementation guidance.",
+        },
       ],
     },
     {
@@ -102,7 +122,12 @@ What defines my approach is a practical engineering mindset: identify the issue 
       description: "Identity, endpoint hygiene, risk reduction, and security operations references.",
       featured: true,
       items: [
-        { title: "Security+ Learning Hub", type: "external", href: "/pages/CompTIASecurity.html", description: "Certification and learning reference point." },
+        {
+          title: "Security+ Learning Hub",
+          type: "external",
+          href: "/pages/CompTIASecurity.html",
+          description: "Certification and learning reference point.",
+        },
       ],
     },
     {
@@ -112,7 +137,12 @@ What defines my approach is a practical engineering mindset: identify the issue 
       description: "Windows, services, troubleshooting, deployment, and operational support content.",
       featured: false,
       items: [
-        { title: "Windows Troubleshooting Notes", type: "internal", href: "#", description: "Collected operational patterns and recovery steps." },
+        {
+          title: "Windows Troubleshooting Notes",
+          type: "internal",
+          href: "#",
+          description: "Collected operational patterns and recovery steps.",
+        },
       ],
     },
     {
@@ -122,7 +152,12 @@ What defines my approach is a practical engineering mindset: identify the issue 
       description: "Local LLMs, Dockerized workflows, agentic platforms, and operational automation.",
       featured: true,
       items: [
-        { title: "Ollama", type: "external", href: "https://ollama.com/", description: "Run local LLM workloads and experiments." },
+        {
+          title: "Ollama",
+          type: "external",
+          href: "https://ollama.com/",
+          description: "Run local LLM workloads and experiments.",
+        },
       ],
     },
     {
@@ -142,61 +177,12 @@ What defines my approach is a practical engineering mindset: identify the issue 
       items: [],
     },
   ],
-  projectPages: [
-    
-    {
-      id: 1,
-      title: "CompTIA Security+ Resource Portal",
-      description: "A curated study page with official links, free resources, videos, and exam prep material.",
-      icon: "Shield",
-      thumbnail: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1200&q=80",
-      href: "/pages/CompTIASecurity.html",
-      newTab: true,
-      featured: true,
-      category: "Certifications",
-    },
-    {
-      id: 2,
-      title: "AI Tools Reference Page",
-      description: "A structured page for AI utilities, local models, and workflow tools used in lab and learning environments.",
-      icon: "Cpu",
-      thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
-      href: "ai-tools.html",
-      newTab: true,
-      featured: false,
-      category: "Tools",
-    },
-    {
-      id: 3,
-      title: "Networking Lab Library",
-      description: "A collection of practical networking, VPN, and remote access pages linked from the portal.",
-      icon: "Network",
-      thumbnail: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
-      href: "networking-lab.html",
-      newTab: true,
-      featured: true,
-      category: "Lab Pages",
-    },
-    {
-  id: 99,
-  title: "AI World",
-  description: "Local LLMs, Dockerized workflows, agentic platforms, and operational automation.",
-  icon: "Cpu",
-  thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
-  href: "/pages/ai/airesources/AIWorld.html",
-  newTab: true,
-  featured: true,
-  category: "AI",
-}
-  
-  ],
 };
 
 const iconMap = {
   Home,
   User,
   BookOpen,
-  Briefcase,
   Award,
   Mail,
   Shield,
@@ -213,8 +199,9 @@ const navItems = [
   { id: "home", label: "Home", icon: Home },
   { id: "journey", label: "My IT Journey", icon: User },
   { id: "resources", label: "Resources", icon: BookOpen },
-  { id: "projects", label: "Project Pages", icon: FolderKanban },
   { id: "certs", label: "Learning & Certifications", icon: Award },
+  { id: "enterprise", label: "Enterprise", icon: Server },
+  { id: "projects", label: "Project Pages", icon: FolderKanban },
   { id: "contact", label: "Contact", icon: Mail },
   { id: "admin", label: "Admin", icon: Settings },
 ];
@@ -222,9 +209,13 @@ const navItems = [
 function SectionTitle({ eyebrow, title, description }) {
   return (
     <div className="space-y-2">
-      <div className="text-xs font-semibold uppercase tracking-[0.25em] text-sky-500">{eyebrow}</div>
+      <div className="text-xs font-semibold uppercase tracking-[0.25em] text-sky-500">
+        {eyebrow}
+      </div>
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      {description ? <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">{description}</p> : null}
+      {description ? (
+        <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">{description}</p>
+      ) : null}
     </div>
   );
 }
@@ -233,9 +224,83 @@ function ResourceIcon({ name, className = "h-5 w-5" }) {
   const Comp = iconMap[name] || LinkIcon;
   return <Comp className={className} />;
 }
+
+function getSectionCards(cards, sectionName) {
+  return cards.filter(
+    (card) => (card.section || "").toLowerCase() === sectionName.toLowerCase()
+  );
+}
+
+function filterCards(cards, search) {
+  const q = search.trim().toLowerCase();
+  if (!q) return cards;
+
+  return cards.filter((card) =>
+    [card.title, card.description, card.category, card.subcategory, card.section]
+      .filter(Boolean)
+      .some((value) => value.toLowerCase().includes(q))
+  );
+}
+
+function CardGrid({ cards }) {
+  if (!cards.length) {
+    return (
+      <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
+        No pages in this section yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+      {cards.map((page) => (
+        <Card
+          key={page.id}
+          className="overflow-hidden rounded-[24px] transition hover:-translate-y-1 hover:shadow-xl"
+        >
+          <img
+            src={page.thumbnail}
+            alt={page.title}
+            className="h-48 w-full object-cover"
+          />
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
+                  <ResourceIcon name={page.icon} />
+                </div>
+                <div>
+                  <div className="font-semibold">{page.title}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {[page.category, page.subcategory].filter(Boolean).join(" • ")}
+                  </div>
+                </div>
+              </div>
+              {page.featured ? <Badge>Featured</Badge> : null}
+            </div>
+
+            <p className="text-sm text-muted-foreground">{page.description}</p>
+
+            <a
+              href={page.href}
+              target={page.newTab === false ? "_self" : "_blank"}
+              rel={page.newTab === false ? undefined : "noopener noreferrer"}
+              className="block"
+            >
+              <Button className="w-full rounded-2xl">
+                Open Page <ExternalLink className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
 const initialContent = {
   ...defaultContent,
-  projectPages: contentIndex,
+  allCards: contentIndex,
 };
 
 export default function PersonalTechnologyPortal() {
@@ -250,33 +315,34 @@ export default function PersonalTechnologyPortal() {
   const [theme, setTheme] = useState(defaultContent.site.theme);
   const [toast, setToast] = useState("");
 
-  const filteredResources = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return content.resources;
-    return content.resources
-      .map((r) => ({
-        ...r,
-        items: r.items.filter(
-          (i) =>
-            i.title.toLowerCase().includes(q) ||
-            i.description.toLowerCase().includes(q) ||
-            r.name.toLowerCase().includes(q) ||
-            r.description.toLowerCase().includes(q)
-        ),
-      }))
-      .filter((r) => r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q) || r.items.length > 0);
-  }, [search, content.resources]);
+  const resourceCards = useMemo(
+    () => filterCards(getSectionCards(content.allCards || [], "Resources"), search),
+    [content.allCards, search]
+  );
 
-  const filteredProjects = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return content.projectPages;
-    return content.projectPages.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q)
-    );
-  }, [search, content.projectPages]);
+  const certCards = useMemo(
+    () =>
+      filterCards(
+        getSectionCards(content.allCards || [], "Learning & Certifications"),
+        search
+      ),
+    [content.allCards, search]
+  );
+
+  const enterpriseCards = useMemo(
+    () => filterCards(getSectionCards(content.allCards || [], "Enterprise"), search),
+    [content.allCards, search]
+  );
+
+  const projectCards = useMemo(
+    () => filterCards(getSectionCards(content.allCards || [], "Project Pages"), search),
+    [content.allCards, search]
+  );
+
+  const featuredCards = useMemo(
+    () => (content.allCards || []).filter((card) => card.featured),
+    [content.allCards]
+  );
 
   const showToast = (message) => {
     setToast(message);
@@ -308,7 +374,7 @@ export default function PersonalTechnologyPortal() {
   };
 
   const addResourceCategory = () => {
-    const nextId = Math.max(...content.resources.map((r) => r.id)) + 1;
+    const nextId = Math.max(...content.resources.map((r) => r.id), 0) + 1;
     setContent((prev) => ({
       ...prev,
       resources: [
@@ -327,47 +393,63 @@ export default function PersonalTechnologyPortal() {
   };
 
   const addProjectPage = () => {
-    const nextId = Math.max(...content.projectPages.map((p) => p.id)) + 1;
+    const currentCards = content.allCards || [];
+    const nextId = Math.max(...currentCards.map((p) => p.id), 0) + 1;
+
+    const newCard = {
+      id: nextId,
+      title: `New Project Page ${nextId}`,
+      description: "Describe this linked HTML page.",
+      icon: "FolderKanban",
+      thumbnail:
+        "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
+      href: `/pages/page-${nextId}.html`,
+      newTab: true,
+      featured: false,
+      section: "Project Pages",
+      category: "Project Pages",
+      subcategory: "New",
+    };
+
     setContent((prev) => ({
       ...prev,
-      projectPages: [
-        ...prev.projectPages,
-        {
-          id: nextId,
-          title: `New Project Page ${nextId}`,
-          description: "Describe this linked HTML page.",
-          icon: "FolderKanban",
-          thumbnail: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
-          href: `page-${nextId}.html`,
-          newTab: true,
-          featured: false,
-          category: "Project Pages",
-        },
-      ],
+      allCards: [...(prev.allCards || []), newCard],
     }));
+
     showToast("Linked project page added.");
   };
 
   const removeProjectPage = (id) => {
-    setContent((prev) => ({ ...prev, projectPages: prev.projectPages.filter((p) => p.id !== id) }));
+    setContent((prev) => ({
+      ...prev,
+      allCards: (prev.allCards || []).filter((p) => p.id !== id),
+    }));
     showToast("Linked page removed.");
   };
-
-  const featuredResources = content.resources.filter((r) => r.featured);
-  const featuredProjects = content.projectPages.filter((p) => p.featured);
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
       <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
         <div className="flex min-h-screen">
-          <aside className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:block ${sidebarOpen ? "block" : "hidden lg:block"}`}>
+          <aside
+            className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:block ${
+              sidebarOpen ? "block" : "hidden lg:block"
+            }`}
+          >
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                 <div>
                   <div className="text-lg font-semibold tracking-tight">Rick Gamarra</div>
-                  <div className="text-sm text-muted-foreground">Enterprise Technology Portal</div>
+                  <div className="text-sm text-muted-foreground">
+                    Enterprise Technology Portal
+                  </div>
                 </div>
-                <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  onClick={() => setSidebarOpen(false)}
+                >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
@@ -375,7 +457,12 @@ export default function PersonalTechnologyPortal() {
               <div className="px-4 py-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search resources, pages, topics..." className="pl-9" />
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search resources, pages, topics..."
+                    className="pl-9"
+                  />
                 </div>
               </div>
 
@@ -406,13 +493,15 @@ export default function PersonalTechnologyPortal() {
                 <Separator className="my-4" />
 
                 <div className="space-y-3 px-1 pb-6">
-                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Featured Linked Pages</div>
-                  {featuredProjects.map((page) => (
+                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Featured Linked Pages
+                  </div>
+                  {featuredCards.slice(0, 6).map((page) => (
                     <a
                       key={page.id}
                       href={page.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={page.newTab === false ? "_self" : "_blank"}
+                      rel={page.newTab === false ? undefined : "noopener noreferrer"}
                       className="flex items-center justify-between rounded-2xl border border-slate-200 p-3 transition hover:border-sky-400 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
                     >
                       <div className="flex items-center gap-3">
@@ -421,7 +510,7 @@ export default function PersonalTechnologyPortal() {
                         </div>
                         <div>
                           <div className="text-sm font-medium">{page.title}</div>
-                          <div className="text-xs text-muted-foreground">{page.category}</div>
+                          <div className="text-xs text-muted-foreground">{page.section}</div>
                         </div>
                       </div>
                       <ExternalLink className="h-4 w-4 text-muted-foreground" />
@@ -436,18 +525,37 @@ export default function PersonalTechnologyPortal() {
             <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/70">
               <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(true)}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="lg:hidden"
+                    onClick={() => setSidebarOpen(true)}
+                  >
                     <Menu className="h-5 w-5" />
                   </Button>
                   <div>
-                    <div className="text-lg font-semibold tracking-tight">{content.site.title}</div>
-                    <div className="text-sm text-muted-foreground">{content.site.tagline}</div>
+                    <div className="text-lg font-semibold tracking-tight">
+                      {content.site.title}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {content.site.tagline}
+                    </div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                    {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  >
+                    {theme === "dark" ? (
+                      <Sun className="h-4 w-4" />
+                    ) : (
+                      <Moon className="h-4 w-4" />
+                    )}
                   </Button>
+
                   <Dialog open={adminOpen} onOpenChange={setAdminOpen}>
                     <DialogTrigger asChild>
                       <Button className="rounded-2xl">Admin Access</Button>
@@ -455,21 +563,37 @@ export default function PersonalTechnologyPortal() {
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
                         <DialogTitle>Admin Login</DialogTitle>
-                        <DialogDescription>Demo authentication for content management preview.</DialogDescription>
+                        <DialogDescription>
+                          Demo authentication for content management preview.
+                        </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-2">
                         <div className="space-y-2">
                           <Label>Username</Label>
-                          <Input value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
+                          <Input
+                            value={adminUser}
+                            onChange={(e) => setAdminUser(e.target.value)}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label>Password</Label>
-                          <Input type="password" value={adminPass} onChange={(e) => setAdminPass(e.target.value)} />
+                          <Input
+                            type="password"
+                            value={adminPass}
+                            onChange={(e) => setAdminPass(e.target.value)}
+                          />
                         </div>
                         <div className="rounded-2xl border border-dashed p-3 text-sm text-muted-foreground">
-                          Demo credentials: <span className="font-medium">admin / demo123</span>
+                          Demo credentials:{" "}
+                          <span className="font-medium">admin / demo123</span>
                         </div>
-                        <Button className="w-full" onClick={() => { handleLogin(); setAdminOpen(false); }}>
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            handleLogin();
+                            setAdminOpen(false);
+                          }}
+                        >
                           Sign In
                         </Button>
                       </div>
@@ -483,37 +607,73 @@ export default function PersonalTechnologyPortal() {
               {active === "home" && (
                 <div className="space-y-10">
                   <section>
-                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]"
+                    >
                       <Card className="overflow-hidden rounded-[28px] border-0 bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white shadow-2xl">
                         <CardContent className="grid gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
                           <div className="space-y-6">
-                            <Badge className="w-fit rounded-full bg-white/15 text-white hover:bg-white/15">Personal Homepage + Resource Portal</Badge>
+                            <Badge className="w-fit rounded-full bg-white/15 text-white hover:bg-white/15">
+                              Personal Homepage + Resource Portal
+                            </Badge>
+
                             <div className="space-y-3">
-                              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{content.hero.headline}</h1>
-                              <p className="max-w-2xl text-base text-slate-200 sm:text-lg">{content.hero.summary}</p>
+                              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                                {content.hero.headline}
+                              </h1>
+                              <p className="max-w-2xl text-base text-slate-200 sm:text-lg">
+                                {content.hero.summary}
+                              </p>
                             </div>
+
                             <div className="flex flex-wrap gap-3">
-                              <Button className="rounded-2xl bg-white text-slate-900 hover:bg-slate-100" onClick={() => setActive("resources")}>{content.hero.ctaPrimary}</Button>
-                              <Button variant="outline" className="rounded-2xl border-white/30 bg-transparent text-white hover:bg-white/10" onClick={() => setActive("journey")}>{content.hero.ctaSecondary}</Button>
+                              <Button
+                                className="rounded-2xl bg-white text-slate-900 hover:bg-slate-100"
+                                onClick={() => setActive("resources")}
+                              >
+                                {content.hero.ctaPrimary}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                className="rounded-2xl border-white/30 bg-transparent text-white hover:bg-white/10"
+                                onClick={() => setActive("journey")}
+                              >
+                                {content.hero.ctaSecondary}
+                              </Button>
                             </div>
-                            <div className="grid gap-3 sm:grid-cols-3">
+
+                            <div className="grid gap-3 sm:grid-cols-4">
                               {[
-                                ["Resource Categories", String(content.resources.length)],
-                                ["Linked Project Pages", String(content.projectPages.length)],
-                                ["Editable Sections", "Site-wide"],
+                                ["Resources", String(resourceCards.length)],
+                                ["Learning & Certs", String(certCards.length)],
+                                ["Enterprise", String(enterpriseCards.length)],
+                                ["Projects", String(projectCards.length)],
                               ].map(([label, value]) => (
-                                <div key={label} className="rounded-2xl bg-white/10 p-4 backdrop-blur">
+                                <div
+                                  key={label}
+                                  className="rounded-2xl bg-white/10 p-4 backdrop-blur"
+                                >
                                   <div className="text-2xl font-semibold">{value}</div>
                                   <div className="text-sm text-slate-300">{label}</div>
                                 </div>
                               ))}
                             </div>
                           </div>
+
                           <div className="relative">
-                            <img src={content.hero.image} alt="Professional technology workspace" className="h-full min-h-[280px] w-full rounded-[24px] object-cover shadow-xl" />
+                            <img
+                              src={content.hero.image}
+                              alt="Professional technology workspace"
+                              className="h-full min-h-[280px] w-full rounded-[24px] object-cover shadow-xl"
+                            />
                             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-slate-950/55 p-4 backdrop-blur">
                               <div className="text-sm font-medium">Professional Focus</div>
-                              <div className="mt-1 text-sm text-slate-300">Enterprise systems, support operations, infrastructure, automation, and continuous growth.</div>
+                              <div className="mt-1 text-sm text-slate-300">
+                                Enterprise systems, support operations, infrastructure,
+                                automation, and continuous growth.
+                              </div>
                             </div>
                           </div>
                         </CardContent>
@@ -522,48 +682,99 @@ export default function PersonalTechnologyPortal() {
                       <Card className="rounded-[28px] shadow-lg">
                         <CardHeader>
                           <CardTitle>Why I Built This Portal</CardTitle>
-                          <CardDescription>A short first-person motivation story.</CardDescription>
+                          <CardDescription>
+                            A short first-person motivation story.
+                          </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <p className="text-sm leading-7 text-muted-foreground">{content.story}</p>
+                          <p className="text-sm leading-7 text-muted-foreground">
+                            {content.story}
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             <Badge variant="secondary">Knowledge Hub</Badge>
                             <Badge variant="secondary">Professional Profile</Badge>
                             <Badge variant="secondary">Curated Resources</Badge>
                             <Badge variant="secondary">Expandable Architecture</Badge>
                           </div>
-                          <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
-                          <Button className="mt-2 rounded-2xl">
-                           Read Full Story
-                          <ExternalLink className="ml-2 h-4 w-4" />
-                        </Button>
-                        </a>
+                          <a
+                            href="/pages/about-story.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button className="mt-2 rounded-2xl">
+                              Read Full Story
+                              <ExternalLink className="ml-2 h-4 w-4" />
+                            </Button>
+                          </a>
                         </CardContent>
                       </Card>
                     </motion.div>
                   </section>
 
                   <section className="space-y-5">
-                    <SectionTitle eyebrow="Highlights" title="Explore Key Areas" description="Quick entry points into the main sections of the portal." />
+                    <SectionTitle
+                      eyebrow="Highlights"
+                      title="Explore Key Areas"
+                      description="Quick entry points into the main sections of the portal."
+                    />
                     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                       {[
-                        ["My IT Journey", "Background, experience, and professional perspective.", User, "journey"],
-                        ["Resources", "Curated links, references, and study material.", BookOpen, "resources"],
-                        ["Project Pages", "Previously built HTML pages that open in new tabs.", FolderKanban, "projects"],
-                        ["Learning & Certifications", "Current areas of study and development.", Award, "certs"],
-                        ["Contact", "Professional contact information and next steps.", Mail, "contact"],
-                        ["Admin", "Editable content controls and management experience.", Settings, "admin"],
+                        [
+                          "My IT Journey",
+                          "Background, experience, and professional perspective.",
+                          User,
+                          "journey",
+                        ],
+                        [
+                          "Resources",
+                          "Curated reference pages and practical tools.",
+                          BookOpen,
+                          "resources",
+                        ],
+                        [
+                          "Learning & Certifications",
+                          "Study pages, certification material, and learning content.",
+                          Award,
+                          "certs",
+                        ],
+                        [
+                          "Enterprise",
+                          "Enterprise support, Windows, systems, and troubleshooting pages.",
+                          Server,
+                          "enterprise",
+                        ],
+                        [
+                          "Project Pages",
+                          "Temporary holding area for pages not yet classified.",
+                          FolderKanban,
+                          "projects",
+                        ],
+                        [
+                          "Contact",
+                          "Professional contact information and next steps.",
+                          Mail,
+                          "contact",
+                        ],
                       ].map(([title, description, Icon, target]) => (
-                        <Card key={title} className="rounded-[24px] transition hover:-translate-y-1 hover:shadow-xl">
+                        <Card
+                          key={title}
+                          className="rounded-[24px] transition hover:-translate-y-1 hover:shadow-xl"
+                        >
                           <CardContent className="space-y-4 p-6">
                             <div className="w-fit rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
                               <Icon className="h-5 w-5" />
                             </div>
                             <div>
                               <div className="text-lg font-semibold">{title}</div>
-                              <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                {description}
+                              </p>
                             </div>
-                            <Button variant="ghost" className="px-0" onClick={() => setActive(target)}>
+                            <Button
+                              variant="ghost"
+                              className="px-0"
+                              onClick={() => setActive(target)}
+                            >
                               Open Section <ChevronRight className="ml-1 h-4 w-4" />
                             </Button>
                           </CardContent>
@@ -573,51 +784,34 @@ export default function PersonalTechnologyPortal() {
                   </section>
 
                   <section className="space-y-5">
-                    <SectionTitle eyebrow="Featured Resources" title="Curated Categories" description="Priority categories surfaced on the homepage for faster access." />
-                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-                      {featuredResources.map((resource) => (
-                        <Card key={resource.id} className="rounded-[24px]">
-                          <CardContent className="space-y-4 p-6">
-                            <div className="flex items-center justify-between">
-                              <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
-                                <ResourceIcon name={resource.icon} />
-                              </div>
-                              <Star className="h-4 w-4 text-amber-500" />
-                            </div>
-                            <div>
-                              <div className="font-semibold">{resource.name}</div>
-                              <p className="mt-1 text-sm text-muted-foreground">{resource.description}</p>
-                            </div>
-                            <Button variant="outline" className="w-full rounded-2xl" onClick={() => setActive("resources")}>View Category</Button>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                    <SectionTitle
+                      eyebrow="Featured Pages"
+                      title="Highlighted Portal Content"
+                      description="Featured HTML pages from across resources, learning, enterprise, and project sections."
+                    />
+                    <CardGrid cards={featuredCards} />
                   </section>
 
                   <section className="space-y-5">
-                    <SectionTitle eyebrow="Related Pages" title="Existing HTML Pages from This Project" description="These linked pages are presented as professional modules and always open in separate browser tabs." />
-                    <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
-                      {content.projectPages.map((page) => (
-                        <Card key={page.id} className="overflow-hidden rounded-[24px] transition hover:-translate-y-1 hover:shadow-xl">
-                          <img src={page.thumbnail} alt={page.title} className="h-44 w-full object-cover" />
-                          <CardContent className="space-y-4 p-6">
-                            <div className="flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-3">
-                                <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
-                                  <ResourceIcon name={page.icon} />
-                                </div>
-                                <div>
-                                  <div className="font-semibold">{page.title}</div>
-                                  <div className="text-xs text-muted-foreground">{page.category}</div>
-                                </div>
-                              </div>
-                              {page.featured ? <Badge>Featured</Badge> : null}
+                    <SectionTitle
+                      eyebrow="All Portal Pages"
+                      title="Card-Based Content Sections"
+                      description="Pages are organized into Resources, Learning & Certifications, Enterprise, and Project Pages."
+                    />
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                      {[
+                        ["Resources", resourceCards.length],
+                        ["Learning & Certifications", certCards.length],
+                        ["Enterprise", enterpriseCards.length],
+                        ["Project Pages", projectCards.length],
+                      ].map(([label, count]) => (
+                        <Card key={label} className="rounded-[24px]">
+                          <CardContent className="space-y-2 p-6">
+                            <div className="text-lg font-semibold">{label}</div>
+                            <div className="text-3xl font-bold">{count}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Linked pages in this section
                             </div>
-                            <p className="text-sm text-muted-foreground">{page.description}</p>
-                            <a href={page.href} target="_blank" rel="noopener noreferrer" className="block">
-                              <Button className="w-full rounded-2xl">Open Page <ExternalLink className="ml-2 h-4 w-4" /></Button>
-                            </a>
                           </CardContent>
                         </Card>
                       ))}
@@ -627,16 +821,27 @@ export default function PersonalTechnologyPortal() {
               )}
 
               {active === "journey" && (
-                <div className="flex flex-col items-center w-full space-y-6">
-                  <div className="w-full max-w-5xl flex items-center justify-between">
-                    <SectionTitle eyebrow="About Me" title="My IT Journey" description="A personal account of 30+ years in enterprise technology." />
-                    <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="rounded-2xl shrink-0">
+                <div className="flex w-full flex-col items-center space-y-6">
+                  <div className="flex w-full max-w-5xl items-center justify-between">
+                    <SectionTitle
+                      eyebrow="About Me"
+                      title="My IT Journey"
+                      description="A personal account of 30+ years in enterprise technology."
+                    />
+                    <a
+                      href="/pages/about-story.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button variant="outline" className="shrink-0 rounded-2xl">
                         Open Full Page <ExternalLink className="ml-2 h-4 w-4" />
                       </Button>
                     </a>
                   </div>
-                  <div className="w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-lg" style={{ height: "80vh" }}>
+                  <div
+                    className="w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 shadow-lg dark:border-slate-800"
+                    style={{ height: "80vh" }}
+                  >
                     <iframe
                       src="/pages/about-story.html"
                       title="My IT Journey"
@@ -649,134 +854,109 @@ export default function PersonalTechnologyPortal() {
 
               {active === "resources" && (
                 <div className="space-y-6">
-                  <SectionTitle eyebrow="Curated Resources" title="Resource Categories" description="Categories support internal pages, external links, descriptions, icons, and featured placement." />
-                  <div className="grid gap-6 xl:grid-cols-2">
-                    {filteredResources.map((resource) => (
-                      <Card key={resource.id} className="rounded-[28px]">
-                        <CardHeader>
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex items-center gap-3">
-                              <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
-                                <ResourceIcon name={resource.icon} />
-                              </div>
-                              <div>
-                                <CardTitle>{resource.name}</CardTitle>
-                                <CardDescription>{resource.description}</CardDescription>
-                              </div>
-                            </div>
-                            {resource.featured ? <Badge>Featured</Badge> : null}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          {resource.items.length ? (
-                            resource.items.map((item) => (
-                              <div key={item.title} className="flex items-start justify-between gap-4 rounded-2xl border p-4">
-                                <div>
-                                  <div className="font-medium">{item.title}</div>
-                                  <div className="mt-1 text-sm text-muted-foreground">{item.description}</div>
-                                </div>
-                                {item.type === "external" ? (
-                                  <a href={item.href} target="_blank" rel="noopener noreferrer"><Button variant="outline" size="sm">Open</Button></a>
-                                ) : (
-                                  <Button variant="outline" size="sm">View</Button>
-                                )}
-                              </div>
-                            ))
-                          ) : (
-                            <div className="rounded-2xl border border-dashed p-5 text-sm text-muted-foreground">No items yet. Add links and content from the admin area.</div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {active === "projects" && (
-                <div className="space-y-6">
-                  <SectionTitle eyebrow="Linked HTML Library" title="Project Pages" description="Previously created HTML pages are surfaced as managed cards and configured to open in new tabs." />
-                  <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
-                    {filteredProjects.map((page) => (
-                      <Card key={page.id} className="overflow-hidden rounded-[24px]">
-                        <img src={page.thumbnail} alt={page.title} className="h-48 w-full object-cover" />
-                        <CardContent className="space-y-4 p-6">
-                          <div className="flex items-center gap-3">
-                            <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-900">
-                              <ResourceIcon name={page.icon} />
-                            </div>
-                            <div>
-                              <div className="font-semibold">{page.title}</div>
-                              <div className="text-xs text-muted-foreground">{page.category}</div>
-                            </div>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{page.description}</p>
-                          <div className="flex items-center justify-between rounded-2xl border p-3 text-sm">
-                            <span>Open behavior</span>
-                            <Badge variant="secondary">{page.newTab ? "New Tab" : "Same Tab"}</Badge>
-                          </div>
-                          <a href={page.href} target={page.newTab ? "_blank" : "_self"} rel={page.newTab ? "noopener noreferrer" : undefined}>
-                            <Button className="w-full rounded-2xl">Open Page <ExternalLink className="ml-2 h-4 w-4" /></Button>
-                          </a>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                  <SectionTitle
+                    eyebrow="Curated Resources"
+                    title="Resources"
+                    description="Reference pages, tools, guides, and curated technical material."
+                  />
+                  <CardGrid cards={resourceCards} />
                 </div>
               )}
 
               {active === "certs" && (
                 <div className="space-y-6">
-                  <SectionTitle eyebrow="Development" title="Learning & Certifications" description="An expandable section for certifications, training priorities, and learning milestones." />
-                  <div className="grid gap-5 lg:grid-cols-3">
-                    {content.certifications.map((item) => (
-                      <Card key={item.title} className="rounded-[24px]">
-                        <CardContent className="space-y-4 p-6">
-                          <div className="flex items-center justify-between">
-                            <Award className="h-5 w-5" />
-                            <Badge>{item.status}</Badge>
-                          </div>
-                          <div>
-                            <div className="font-semibold">{item.title}</div>
-                            <p className="mt-1 text-sm text-muted-foreground">{item.note}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                  <SectionTitle
+                    eyebrow="Development"
+                    title="Learning & Certifications"
+                    description="Certification pages, study portals, and professional development content."
+                  />
+                  <CardGrid cards={certCards} />
+                </div>
+              )}
+
+              {active === "enterprise" && (
+                <div className="space-y-6">
+                  <SectionTitle
+                    eyebrow="Operations"
+                    title="Enterprise"
+                    description="Enterprise support, Windows administration, troubleshooting, and operational content."
+                  />
+                  <CardGrid cards={enterpriseCards} />
+                </div>
+              )}
+
+              {active === "projects" && (
+                <div className="space-y-6">
+                  <SectionTitle
+                    eyebrow="Unclassified Pages"
+                    title="Project Pages"
+                    description="Temporary card section for pages not yet moved into Resources, Learning & Certifications, or Enterprise."
+                  />
+                  <CardGrid cards={projectCards} />
                 </div>
               )}
 
               {active === "contact" && (
                 <div className="space-y-6">
-                  <SectionTitle eyebrow="Connect" title="Contact" description="A professional contact section suitable for portfolio and portal use." />
+                  <SectionTitle
+                    eyebrow="Connect"
+                    title="Contact"
+                    description="A professional contact section suitable for portfolio and portal use."
+                  />
                   <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
                     <Card className="rounded-[28px]">
                       <CardContent className="space-y-4 p-8">
                         <div>
                           <div className="text-lg font-semibold">Professional Contact</div>
-                          <p className="mt-2 text-sm text-muted-foreground">Use this area for email, LinkedIn, downloadable resume links, or a contact form integration later.</p>
+                          <p className="mt-2 text-sm text-muted-foreground">
+                            Use this area for email, LinkedIn, downloadable resume links,
+                            or a contact form integration later.
+                          </p>
                         </div>
                         <div className="rounded-2xl border p-4 text-sm">
                           <div className="font-medium">Email</div>
-                          <div className="text-muted-foreground">{content.site.contactEmail}</div>
+                          <a
+                            href={`mailto:${content.site.contactEmail}`}
+                            className="text-sky-600 underline underline-offset-4"
+                          >
+                            {content.site.contactEmail}
+                          </a>
                         </div>
                         <div className="rounded-2xl border p-4 text-sm">
                           <div className="font-medium">LinkedIn</div>
-                          <a href={content.site.linkedIn} target="_blank" rel="noopener noreferrer" className="text-sky-600 underline underline-offset-4">Professional profile link</a>
+                          <a
+                            href={content.site.linkedIn}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sky-600 underline underline-offset-4"
+                          >
+                            Professional profile link
+                          </a>
                         </div>
                         <Button className="rounded-2xl">Download Resume</Button>
                       </CardContent>
                     </Card>
+
                     <Card className="rounded-[28px]">
                       <CardHeader>
                         <CardTitle>Recommended Extensions</CardTitle>
-                        <CardDescription>Easy next additions for a production deployment.</CardDescription>
+                        <CardDescription>
+                          Easy next additions for a production deployment.
+                        </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-3 text-sm text-muted-foreground">
-                        <div className="rounded-2xl border p-4">Contact form backed by serverless function or Supabase.</div>
-                        <div className="rounded-2xl border p-4">Analytics via Plausible or Vercel Analytics.</div>
-                        <div className="rounded-2xl border p-4">Protected admin authentication with NextAuth or Supabase Auth.</div>
-                        <div className="rounded-2xl border p-4">Upload media to object storage and persist content to database.</div>
+                        <div className="rounded-2xl border p-4">
+                          Contact form backed by serverless function or Supabase.
+                        </div>
+                        <div className="rounded-2xl border p-4">
+                          Analytics via Plausible or Vercel Analytics.
+                        </div>
+                        <div className="rounded-2xl border p-4">
+                          Protected admin authentication with NextAuth or Supabase Auth.
+                        </div>
+                        <div className="rounded-2xl border p-4">
+                          Upload media to object storage and persist content to database.
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
@@ -785,49 +965,96 @@ export default function PersonalTechnologyPortal() {
 
               {active === "admin" && (
                 <div className="space-y-6">
-                  <SectionTitle eyebrow="Admin Panel" title="Content Management Dashboard" description="This preview demonstrates editable sections, linked project page control, and portal configuration." />
+                  <SectionTitle
+                    eyebrow="Admin Panel"
+                    title="Content Management Dashboard"
+                    description="This preview demonstrates editable sections, linked project page control, and portal configuration."
+                  />
 
                   {!isAuthed ? (
                     <Card className="rounded-[28px]">
                       <CardContent className="space-y-4 p-8">
-                        <div className="text-lg font-semibold">Admin authentication required</div>
-                        <p className="text-sm text-muted-foreground">Use the Admin Access button in the header. Demo credentials: admin / demo123</p>
+                        <div className="text-lg font-semibold">
+                          Admin authentication required
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Use the Admin Access button in the header. Demo credentials:
+                          admin / demo123
+                        </p>
                       </CardContent>
                     </Card>
                   ) : (
                     <Tabs defaultValue="hero" className="space-y-6">
                       <TabsList className="flex h-auto flex-wrap gap-2 rounded-2xl bg-transparent p-0">
-                        <TabsTrigger value="hero" className="rounded-2xl border px-4 py-2">Homepage</TabsTrigger>
-                        <TabsTrigger value="journey" className="rounded-2xl border px-4 py-2">Journey Page</TabsTrigger>
-                        <TabsTrigger value="resources" className="rounded-2xl border px-4 py-2">Resources</TabsTrigger>
-                        <TabsTrigger value="linked" className="rounded-2xl border px-4 py-2">Linked Pages</TabsTrigger>
-                        <TabsTrigger value="settings" className="rounded-2xl border px-4 py-2">Settings</TabsTrigger>
+                        <TabsTrigger value="hero" className="rounded-2xl border px-4 py-2">
+                          Homepage
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="journey"
+                          className="rounded-2xl border px-4 py-2"
+                        >
+                          Journey Page
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="resources"
+                          className="rounded-2xl border px-4 py-2"
+                        >
+                          Resources
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="linked"
+                          className="rounded-2xl border px-4 py-2"
+                        >
+                          Linked Pages
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="settings"
+                          className="rounded-2xl border px-4 py-2"
+                        >
+                          Settings
+                        </TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="hero">
                         <Card className="rounded-[28px]">
                           <CardHeader>
                             <CardTitle>Edit Homepage</CardTitle>
-                            <CardDescription>Update hero content and motivation story.</CardDescription>
+                            <CardDescription>
+                              Update hero content and motivation story.
+                            </CardDescription>
                           </CardHeader>
                           <CardContent className="grid gap-6 lg:grid-cols-2">
                             <div className="space-y-4">
                               <div className="space-y-2">
                                 <Label>Headline</Label>
-                                <Input value={content.hero.headline} onChange={(e) => updateHero("headline", e.target.value)} />
+                                <Input
+                                  value={content.hero.headline}
+                                  onChange={(e) => updateHero("headline", e.target.value)}
+                                />
                               </div>
                               <div className="space-y-2">
                                 <Label>Summary</Label>
-                                <Textarea value={content.hero.summary} onChange={(e) => updateHero("summary", e.target.value)} rows={5} />
+                                <Textarea
+                                  value={content.hero.summary}
+                                  onChange={(e) => updateHero("summary", e.target.value)}
+                                  rows={5}
+                                />
                               </div>
                               <div className="space-y-2">
                                 <Label>Hero Image URL</Label>
-                                <Input value={content.hero.image} onChange={(e) => updateHero("image", e.target.value)} />
+                                <Input
+                                  value={content.hero.image}
+                                  onChange={(e) => updateHero("image", e.target.value)}
+                                />
                               </div>
                             </div>
                             <div className="space-y-2">
                               <Label>Motivation Story</Label>
-                              <Textarea value={content.story} onChange={(e) => updateStory(e.target.value)} rows={12} />
+                              <Textarea
+                                value={content.story}
+                                onChange={(e) => updateStory(e.target.value)}
+                                rows={12}
+                              />
                             </div>
                           </CardContent>
                         </Card>
@@ -837,20 +1064,32 @@ export default function PersonalTechnologyPortal() {
                         <Card className="rounded-[28px]">
                           <CardHeader>
                             <CardTitle>Edit My IT Journey</CardTitle>
-                            <CardDescription>Manage the biography page content.</CardDescription>
+                            <CardDescription>
+                              Manage the biography page content.
+                            </CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             <div className="space-y-2">
                               <Label>Page Title</Label>
-                              <Input value={content.journey.title} onChange={(e) => updateJourney("title", e.target.value)} />
+                              <Input
+                                value={content.journey.title}
+                                onChange={(e) => updateJourney("title", e.target.value)}
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Subtitle</Label>
-                              <Input value={content.journey.subtitle} onChange={(e) => updateJourney("subtitle", e.target.value)} />
+                              <Input
+                                value={content.journey.subtitle}
+                                onChange={(e) => updateJourney("subtitle", e.target.value)}
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Body</Label>
-                              <Textarea value={content.journey.body} onChange={(e) => updateJourney("body", e.target.value)} rows={10} />
+                              <Textarea
+                                value={content.journey.body}
+                                onChange={(e) => updateJourney("body", e.target.value)}
+                                rows={10}
+                              />
                             </div>
                           </CardContent>
                         </Card>
@@ -862,23 +1101,70 @@ export default function PersonalTechnologyPortal() {
                             <div className="flex items-center justify-between gap-3">
                               <div>
                                 <CardTitle>Manage Resource Categories</CardTitle>
-                                <CardDescription>Add, organize, and extend categories.</CardDescription>
+                                <CardDescription>
+                                  Add, organize, and extend categories.
+                                </CardDescription>
                               </div>
-                              <Button onClick={addResourceCategory}><Plus className="mr-2 h-4 w-4" />Add Category</Button>
+                              <Button onClick={addResourceCategory}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Category
+                              </Button>
                             </div>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {content.resources.map((resource) => (
-                              <div key={resource.id} className="grid gap-4 rounded-2xl border p-4 md:grid-cols-[1fr_1fr_auto]">
-                                <Input value={resource.name} onChange={(e) => setContent((prev) => ({ ...prev, resources: prev.resources.map((r) => r.id === resource.id ? { ...r, name: e.target.value } : r) }))} />
-                                <Input value={resource.description} onChange={(e) => setContent((prev) => ({ ...prev, resources: prev.resources.map((r) => r.id === resource.id ? { ...r, description: e.target.value } : r) }))} />
+                              <div
+                                key={resource.id}
+                                className="grid gap-4 rounded-2xl border p-4 md:grid-cols-[1fr_1fr_auto]"
+                              >
+                                <Input
+                                  value={resource.name}
+                                  onChange={(e) =>
+                                    setContent((prev) => ({
+                                      ...prev,
+                                      resources: prev.resources.map((r) =>
+                                        r.id === resource.id
+                                          ? { ...r, name: e.target.value }
+                                          : r
+                                      ),
+                                    }))
+                                  }
+                                />
+                                <Input
+                                  value={resource.description}
+                                  onChange={(e) =>
+                                    setContent((prev) => ({
+                                      ...prev,
+                                      resources: prev.resources.map((r) =>
+                                        r.id === resource.id
+                                          ? { ...r, description: e.target.value }
+                                          : r
+                                      ),
+                                    }))
+                                  }
+                                />
                                 <div className="flex items-center gap-3">
                                   <Label className="text-sm">Featured</Label>
-                                  <Switch checked={resource.featured} onCheckedChange={(checked) => setContent((prev) => ({ ...prev, resources: prev.resources.map((r) => r.id === resource.id ? { ...r, featured: checked } : r) }))} />
+                                  <Switch
+                                    checked={resource.featured}
+                                    onCheckedChange={(checked) =>
+                                      setContent((prev) => ({
+                                        ...prev,
+                                        resources: prev.resources.map((r) =>
+                                          r.id === resource.id
+                                            ? { ...r, featured: checked }
+                                            : r
+                                        ),
+                                      }))
+                                    }
+                                  />
                                 </div>
                               </div>
                             ))}
-                            <Button variant="outline"><Save className="mr-2 h-4 w-4" />Save Changes</Button>
+                            <Button variant="outline">
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Changes
+                            </Button>
                           </CardContent>
                         </Card>
                       </TabsContent>
@@ -889,47 +1175,181 @@ export default function PersonalTechnologyPortal() {
                             <div className="flex items-center justify-between gap-3">
                               <div>
                                 <CardTitle>Manage Linked HTML Pages</CardTitle>
-                                <CardDescription>These links are configured to open project pages in new tabs.</CardDescription>
+                                <CardDescription>
+                                  These links are configured to open project pages in new tabs.
+                                </CardDescription>
                               </div>
-                              <Button onClick={addProjectPage}><Plus className="mr-2 h-4 w-4" />Add Linked Page</Button>
+                              <Button onClick={addProjectPage}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Linked Page
+                              </Button>
                             </div>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                            {content.projectPages.map((page) => (
-                              <div key={page.id} className="space-y-4 rounded-2xl border p-4">
+                            {(content.allCards || []).map((page) => (
+                              <div
+                                key={page.id}
+                                className="space-y-4 rounded-2xl border p-4"
+                              >
                                 <div className="grid gap-4 lg:grid-cols-2">
                                   <div className="space-y-2">
                                     <Label>Title</Label>
-                                    <Input value={page.title} onChange={(e) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, title: e.target.value } : p) }))} />
+                                    <Input
+                                      value={page.title}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, title: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>Section</Label>
+                                    <Input
+                                      value={page.section || ""}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, section: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
                                   <div className="space-y-2">
                                     <Label>Category</Label>
-                                    <Input value={page.category} onChange={(e) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, category: e.target.value } : p) }))} />
+                                    <Input
+                                      value={page.category || ""}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, category: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>Subcategory</Label>
+                                    <Input
+                                      value={page.subcategory || ""}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, subcategory: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
                                   <div className="space-y-2 lg:col-span-2">
                                     <Label>Description</Label>
-                                    <Textarea value={page.description} onChange={(e) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, description: e.target.value } : p) }))} rows={3} />
+                                    <Textarea
+                                      value={page.description}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, description: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                      rows={3}
+                                    />
                                   </div>
                                   <div className="space-y-2">
                                     <Label>Destination URL / Path</Label>
-                                    <Input value={page.href} onChange={(e) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, href: e.target.value } : p) }))} />
+                                    <Input
+                                      value={page.href}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, href: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
                                   <div className="space-y-2">
                                     <Label>Thumbnail URL</Label>
-                                    <Input value={page.thumbnail} onChange={(e) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, thumbnail: e.target.value } : p) }))} />
+                                    <Input
+                                      value={page.thumbnail}
+                                      onChange={(e) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, thumbnail: e.target.value }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-6">
                                   <div className="flex items-center gap-3">
                                     <Label>Open in new tab</Label>
-                                    <Switch checked={page.newTab} onCheckedChange={(checked) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, newTab: checked } : p) }))} />
+                                    <Switch
+                                      checked={page.newTab !== false}
+                                      onCheckedChange={(checked) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, newTab: checked }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
                                   <div className="flex items-center gap-3">
                                     <Label>Featured</Label>
-                                    <Switch checked={page.featured} onCheckedChange={(checked) => setContent((prev) => ({ ...prev, projectPages: prev.projectPages.map((p) => p.id === page.id ? { ...p, featured: checked } : p) }))} />
+                                    <Switch
+                                      checked={!!page.featured}
+                                      onCheckedChange={(checked) =>
+                                        setContent((prev) => ({
+                                          ...prev,
+                                          allCards: prev.allCards.map((p) =>
+                                            p.id === page.id
+                                              ? { ...p, featured: checked }
+                                              : p
+                                          ),
+                                        }))
+                                      }
+                                    />
                                   </div>
-                                  <Button variant="outline"><Eye className="mr-2 h-4 w-4" />Preview Link</Button>
-                                  <Button variant="destructive" onClick={() => removeProjectPage(page.id)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
+                                  <Button variant="outline">
+                                    <Eye className="mr-2 h-4 w-4" />
+                                    Preview Link
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => removeProjectPage(page.id)}
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete
+                                  </Button>
                                 </div>
                               </div>
                             ))}
@@ -941,32 +1361,73 @@ export default function PersonalTechnologyPortal() {
                         <Card className="rounded-[28px]">
                           <CardHeader>
                             <CardTitle>Portal Settings</CardTitle>
-                            <CardDescription>Branding, contact info, and visual preferences.</CardDescription>
+                            <CardDescription>
+                              Branding, contact info, and visual preferences.
+                            </CardDescription>
                           </CardHeader>
                           <CardContent className="grid gap-4 lg:grid-cols-2">
                             <div className="space-y-2">
                               <Label>Site Title</Label>
-                              <Input value={content.site.title} onChange={(e) => setContent((prev) => ({ ...prev, site: { ...prev.site, title: e.target.value } }))} />
+                              <Input
+                                value={content.site.title}
+                                onChange={(e) =>
+                                  setContent((prev) => ({
+                                    ...prev,
+                                    site: { ...prev.site, title: e.target.value },
+                                  }))
+                                }
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Tagline</Label>
-                              <Input value={content.site.tagline} onChange={(e) => setContent((prev) => ({ ...prev, site: { ...prev.site, tagline: e.target.value } }))} />
+                              <Input
+                                value={content.site.tagline}
+                                onChange={(e) =>
+                                  setContent((prev) => ({
+                                    ...prev,
+                                    site: { ...prev.site, tagline: e.target.value },
+                                  }))
+                                }
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Contact Email</Label>
-                              <Input value={content.site.contactEmail} onChange={(e) => setContent((prev) => ({ ...prev, site: { ...prev.site, contactEmail: e.target.value } }))} />
+                              <Input
+                                value={content.site.contactEmail}
+                                onChange={(e) =>
+                                  setContent((prev) => ({
+                                    ...prev,
+                                    site: { ...prev.site, contactEmail: e.target.value },
+                                  }))
+                                }
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>LinkedIn URL</Label>
-                              <Input value={content.site.linkedIn} onChange={(e) => setContent((prev) => ({ ...prev, site: { ...prev.site, linkedIn: e.target.value } }))} />
+                              <Input
+                                value={content.site.linkedIn}
+                                onChange={(e) =>
+                                  setContent((prev) => ({
+                                    ...prev,
+                                    site: { ...prev.site, linkedIn: e.target.value },
+                                  }))
+                                }
+                              />
                             </div>
                             <div className="flex items-center gap-3 rounded-2xl border p-4">
                               <Label>Dark mode default</Label>
-                              <Switch checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+                              <Switch
+                                checked={theme === "dark"}
+                                onCheckedChange={(checked) =>
+                                  setTheme(checked ? "dark" : "light")
+                                }
+                              />
                             </div>
                             <div className="flex items-center gap-3 rounded-2xl border p-4">
                               <ImageIcon className="h-4 w-4" />
-                              <div className="text-sm text-muted-foreground">Media upload would connect to storage in production.</div>
+                              <div className="text-sm text-muted-foreground">
+                                Media upload would connect to storage in production.
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
