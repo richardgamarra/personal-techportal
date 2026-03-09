@@ -10,46 +10,34 @@ import {
   Mail,
   Search,
   ExternalLink,
-  Settings,
-  Image as ImageIcon,
-  Link as LinkIcon,
-  Plus,
-  Trash2,
-  Shield,
   Server,
-  Network,
-  Cpu,
-  Cloud,
-  GraduationCap,
   Moon,
   Sun,
   Menu,
   Home,
   FolderKanban,
-  Save,
-  Eye,
-  Star,
   X,
   ChevronRight,
+  Link as LinkIcon,
+  Shield,
+  Network,
+  Cpu,
+  Cloud,
+  GraduationCap,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-const defaultContent = {
+const siteContent = {
   site: {
-    title: "Rick Gamarra | Enterprise Technology Portal",
+    title: "Richard Gamarra | Enterprise Technology Portal",
     tagline: "Infrastructure, systems, automation, and practical technology leadership.",
     theme: "dark",
-    contactEmail: "rick@example.com",
+    contactEmail: "contact@richardgamarra.com",
     linkedIn: "https://www.linkedin.com/",
   },
   hero: {
@@ -61,122 +49,8 @@ const defaultContent = {
     image:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
   },
-  story: `I created this portal to organize the things that matter most in my professional journey: knowledge, experience, useful references, and the constant evolution of technology. Over the years I have worked across enterprise systems, infrastructure, support operations, troubleshooting, and modernization efforts. I wanted one professional space where I could connect that experience with what I am learning now in automation, AI tools, and modern platforms. This site is designed to be both a personal home page and a practical technology hub that I can continue expanding over time.`,
-  journey: {
-    title: "My IT Journey",
-    subtitle: "A practical career shaped by enterprise operations, support, and continuous improvement.",
-    body: `I am an experienced IT professional with a background in enterprise systems, infrastructure support, systems administration, troubleshooting, and modernization initiatives. My work has focused on keeping business-critical technology reliable while helping users and teams navigate complex operational environments. Over time, that foundation expanded into broader interests in automation, AI-enabled workflows, and modern technology platforms.
-
-What defines my approach is a practical engineering mindset: identify the issue clearly, understand the environment, stabilize the problem, and build a repeatable solution. I value service, responsiveness, strong documentation, and continuous learning. This portal reflects that same mindset by bringing together resources, projects, and reference pages in one organized place.`,
-    highlights: [
-      "Enterprise systems and infrastructure support",
-      "Windows administration and troubleshooting",
-      "Networking, virtualization, and endpoint operations",
-      "AI, automation, and modern tooling exploration",
-      "Professional growth, mentorship, and continuous learning",
-    ],
-  },
-  certifications: [
-    {
-      title: "Cloud & Microsoft Learning",
-      status: "Active",
-      note: "Continuing development in modern infrastructure and platform tools.",
-    },
-    {
-      title: "AI & Automation Exploration",
-      status: "Ongoing",
-      note: "Hands-on work with local models, Docker, automation workflows, and agentic tools.",
-    },
-    {
-      title: "Enterprise Systems Practice",
-      status: "Established",
-      note: "Broad operational experience in systems, support, troubleshooting, and modernization.",
-    },
-  ],
-  resources: [
-    {
-      id: 1,
-      name: "Networking",
-      icon: "Network",
-      description: "VPN, routing, remote access, firewalling, and connectivity resources.",
-      featured: true,
-      items: [
-        {
-          title: "Remote Access Design Notes",
-          type: "internal",
-          href: "#",
-          description: "Approaches for secure access to home and remote environments.",
-        },
-        {
-          title: "WireGuard Documentation",
-          type: "external",
-          href: "https://www.wireguard.com/",
-          description: "Official documentation and implementation guidance.",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Cybersecurity",
-      icon: "Shield",
-      description: "Identity, endpoint hygiene, risk reduction, and security operations references.",
-      featured: true,
-      items: [
-        {
-          title: "Security+ Learning Hub",
-          type: "external",
-          href: "/pages/CompTIASecurity.html",
-          description: "Certification and learning reference point.",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Systems Administration",
-      icon: "Server",
-      description: "Windows, services, troubleshooting, deployment, and operational support content.",
-      featured: false,
-      items: [
-        {
-          title: "Windows Troubleshooting Notes",
-          type: "internal",
-          href: "#",
-          description: "Collected operational patterns and recovery steps.",
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "AI / Automation",
-      icon: "Cpu",
-      description: "Local LLMs, Dockerized workflows, agentic platforms, and operational automation.",
-      featured: true,
-      items: [
-        {
-          title: "Ollama",
-          type: "external",
-          href: "https://ollama.com/",
-          description: "Run local LLM workloads and experiments.",
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: "Cloud",
-      icon: "Cloud",
-      description: "Cloud architecture, identity, hosting, and hybrid environment references.",
-      featured: false,
-      items: [],
-    },
-    {
-      id: 6,
-      name: "Learning Resources",
-      icon: "GraduationCap",
-      description: "Study guides, labs, notes, and curated professional development material.",
-      featured: true,
-      items: [],
-    },
-  ],
+  story:
+    "I created this portal to organize the things that matter most in my professional journey: knowledge, experience, useful references, and the constant evolution of technology. Over the years I have worked across enterprise systems, infrastructure, support operations, troubleshooting, and modernization efforts. I wanted one professional space where I could connect that experience with what I am learning now in automation, AI tools, and modern platforms.",
 };
 
 const iconMap = {
@@ -203,7 +77,6 @@ const navItems = [
   { id: "enterprise", label: "Enterprise", icon: Server },
   { id: "projects", label: "Project Pages", icon: FolderKanban },
   { id: "contact", label: "Contact", icon: Mail },
-  { id: "admin", label: "Admin", icon: Settings },
 ];
 
 function SectionTitle({ eyebrow, title, description }) {
@@ -298,134 +171,38 @@ function CardGrid({ cards }) {
   );
 }
 
-const initialContent = {
-  ...defaultContent,
-  allCards: contentIndex,
-};
-
 export default function PersonalTechnologyPortal() {
-  const [content, setContent] = useState(initialContent);
   const [active, setActive] = useState("home");
   const [search, setSearch] = useState("");
-  const [adminOpen, setAdminOpen] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [adminUser, setAdminUser] = useState("admin");
-  const [adminPass, setAdminPass] = useState("demo123");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState(defaultContent.site.theme);
-  const [toast, setToast] = useState("");
+  const [theme, setTheme] = useState(siteContent.site.theme);
+
+  const allCards = contentIndex || [];
 
   const resourceCards = useMemo(
-    () => filterCards(getSectionCards(content.allCards || [], "Resources"), search),
-    [content.allCards, search]
+    () => filterCards(getSectionCards(allCards, "Resources"), search),
+    [allCards, search]
   );
 
   const certCards = useMemo(
-    () =>
-      filterCards(
-        getSectionCards(content.allCards || [], "Learning & Certifications"),
-        search
-      ),
-    [content.allCards, search]
+    () => filterCards(getSectionCards(allCards, "Learning & Certifications"), search),
+    [allCards, search]
   );
 
   const enterpriseCards = useMemo(
-    () => filterCards(getSectionCards(content.allCards || [], "Enterprise"), search),
-    [content.allCards, search]
+    () => filterCards(getSectionCards(allCards, "Enterprise"), search),
+    [allCards, search]
   );
 
   const projectCards = useMemo(
-    () => filterCards(getSectionCards(content.allCards || [], "Project Pages"), search),
-    [content.allCards, search]
+    () => filterCards(getSectionCards(allCards, "Project Pages"), search),
+    [allCards, search]
   );
 
   const featuredCards = useMemo(
-    () => (content.allCards || []).filter((card) => card.featured),
-    [content.allCards]
+    () => allCards.filter((card) => card.featured),
+    [allCards]
   );
-
-  const showToast = (message) => {
-    setToast(message);
-    window.setTimeout(() => setToast(""), 2200);
-  };
-
-  const handleLogin = () => {
-    if (adminUser === "admin" && adminPass === "demo123") {
-      setIsAuthed(true);
-      showToast("Admin access enabled.");
-    } else {
-      showToast("Invalid demo credentials. Use admin / demo123.");
-    }
-  };
-
-  const updateStory = (value) => {
-    setContent((prev) => ({ ...prev, story: value }));
-    showToast("Motivation story updated.");
-  };
-
-  const updateJourney = (field, value) => {
-    setContent((prev) => ({ ...prev, journey: { ...prev.journey, [field]: value } }));
-    showToast("Journey page updated.");
-  };
-
-  const updateHero = (field, value) => {
-    setContent((prev) => ({ ...prev, hero: { ...prev.hero, [field]: value } }));
-    showToast("Homepage hero updated.");
-  };
-
-  const addResourceCategory = () => {
-    const nextId = Math.max(...content.resources.map((r) => r.id), 0) + 1;
-    setContent((prev) => ({
-      ...prev,
-      resources: [
-        ...prev.resources,
-        {
-          id: nextId,
-          name: `New Category ${nextId}`,
-          icon: "BookOpen",
-          description: "Add description here.",
-          featured: false,
-          items: [],
-        },
-      ],
-    }));
-    showToast("New resource category added.");
-  };
-
-  const addProjectPage = () => {
-    const currentCards = content.allCards || [];
-    const nextId = Math.max(...currentCards.map((p) => p.id), 0) + 1;
-
-    const newCard = {
-      id: nextId,
-      title: `New Project Page ${nextId}`,
-      description: "Describe this linked HTML page.",
-      icon: "FolderKanban",
-      thumbnail:
-        "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
-      href: `/pages/page-${nextId}.html`,
-      newTab: true,
-      featured: false,
-      section: "Project Pages",
-      category: "Project Pages",
-      subcategory: "New",
-    };
-
-    setContent((prev) => ({
-      ...prev,
-      allCards: [...(prev.allCards || []), newCard],
-    }));
-
-    showToast("Linked project page added.");
-  };
-
-  const removeProjectPage = (id) => {
-    setContent((prev) => ({
-      ...prev,
-      allCards: (prev.allCards || []).filter((p) => p.id !== id),
-    }));
-    showToast("Linked page removed.");
-  };
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
@@ -439,10 +216,8 @@ export default function PersonalTechnologyPortal() {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                 <div>
-                  <div className="text-lg font-semibold tracking-tight">Rick Gamarra</div>
-                  <div className="text-sm text-muted-foreground">
-                    Enterprise Technology Portal
-                  </div>
+                  <div className="text-lg font-semibold tracking-tight">Richard Gamarra</div>
+                  <div className="text-sm text-muted-foreground">Enterprise Technology Portal</div>
                 </div>
                 <Button
                   variant="ghost"
@@ -535,71 +310,21 @@ export default function PersonalTechnologyPortal() {
                   </Button>
                   <div>
                     <div className="text-lg font-semibold tracking-tight">
-                      {content.site.title}
+                      {siteContent.site.title}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {content.site.tagline}
+                      {siteContent.site.tagline}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  >
-                    {theme === "dark" ? (
-                      <Sun className="h-4 w-4" />
-                    ) : (
-                      <Moon className="h-4 w-4" />
-                    )}
-                  </Button>
-
-                  <Dialog open={adminOpen} onOpenChange={setAdminOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="rounded-2xl">Admin Access</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Admin Login</DialogTitle>
-                        <DialogDescription>
-                          Demo authentication for content management preview.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-2">
-                        <div className="space-y-2">
-                          <Label>Username</Label>
-                          <Input
-                            value={adminUser}
-                            onChange={(e) => setAdminUser(e.target.value)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Password</Label>
-                          <Input
-                            type="password"
-                            value={adminPass}
-                            onChange={(e) => setAdminPass(e.target.value)}
-                          />
-                        </div>
-                        <div className="rounded-2xl border border-dashed p-3 text-sm text-muted-foreground">
-                          Demo credentials:{" "}
-                          <span className="font-medium">admin / demo123</span>
-                        </div>
-                        <Button
-                          className="w-full"
-                          onClick={() => {
-                            handleLogin();
-                            setAdminOpen(false);
-                          }}
-                        >
-                          Sign In
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </Button>
               </div>
             </div>
 
@@ -621,10 +346,10 @@ export default function PersonalTechnologyPortal() {
 
                             <div className="space-y-3">
                               <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                                {content.hero.headline}
+                                {siteContent.hero.headline}
                               </h1>
                               <p className="max-w-2xl text-base text-slate-200 sm:text-lg">
-                                {content.hero.summary}
+                                {siteContent.hero.summary}
                               </p>
                             </div>
 
@@ -633,14 +358,14 @@ export default function PersonalTechnologyPortal() {
                                 className="rounded-2xl bg-white text-slate-900 hover:bg-slate-100"
                                 onClick={() => setActive("resources")}
                               >
-                                {content.hero.ctaPrimary}
+                                {siteContent.hero.ctaPrimary}
                               </Button>
                               <Button
                                 variant="outline"
                                 className="rounded-2xl border-white/30 bg-transparent text-white hover:bg-white/10"
                                 onClick={() => setActive("journey")}
                               >
-                                {content.hero.ctaSecondary}
+                                {siteContent.hero.ctaSecondary}
                               </Button>
                             </div>
 
@@ -651,10 +376,7 @@ export default function PersonalTechnologyPortal() {
                                 ["Enterprise", String(enterpriseCards.length)],
                                 ["Projects", String(projectCards.length)],
                               ].map(([label, value]) => (
-                                <div
-                                  key={label}
-                                  className="rounded-2xl bg-white/10 p-4 backdrop-blur"
-                                >
+                                <div key={label} className="rounded-2xl bg-white/10 p-4 backdrop-blur">
                                   <div className="text-2xl font-semibold">{value}</div>
                                   <div className="text-sm text-slate-300">{label}</div>
                                 </div>
@@ -664,7 +386,7 @@ export default function PersonalTechnologyPortal() {
 
                           <div className="relative">
                             <img
-                              src={content.hero.image}
+                              src={siteContent.hero.image}
                               alt="Professional technology workspace"
                               className="h-full min-h-[280px] w-full rounded-[24px] object-cover shadow-xl"
                             />
@@ -682,13 +404,11 @@ export default function PersonalTechnologyPortal() {
                       <Card className="rounded-[28px] shadow-lg">
                         <CardHeader>
                           <CardTitle>Why I Built This Portal</CardTitle>
-                          <CardDescription>
-                            A short first-person motivation story.
-                          </CardDescription>
+                          <CardDescription>A short first-person motivation story.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <p className="text-sm leading-7 text-muted-foreground">
-                            {content.story}
+                            {siteContent.story}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             <Badge variant="secondary">Knowledge Hub</Badge>
@@ -696,11 +416,7 @@ export default function PersonalTechnologyPortal() {
                             <Badge variant="secondary">Curated Resources</Badge>
                             <Badge variant="secondary">Expandable Architecture</Badge>
                           </div>
-                          <a
-                            href="/pages/about-story.html"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
                             <Button className="mt-2 rounded-2xl">
                               Read Full Story
                               <ExternalLink className="ml-2 h-4 w-4" />
@@ -719,42 +435,12 @@ export default function PersonalTechnologyPortal() {
                     />
                     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                       {[
-                        [
-                          "My IT Journey",
-                          "Background, experience, and professional perspective.",
-                          User,
-                          "journey",
-                        ],
-                        [
-                          "Resources",
-                          "Curated reference pages and practical tools.",
-                          BookOpen,
-                          "resources",
-                        ],
-                        [
-                          "Learning & Certifications",
-                          "Study pages, certification material, and learning content.",
-                          Award,
-                          "certs",
-                        ],
-                        [
-                          "Enterprise",
-                          "Enterprise support, Windows, systems, and troubleshooting pages.",
-                          Server,
-                          "enterprise",
-                        ],
-                        [
-                          "Project Pages",
-                          "Temporary holding area for pages not yet classified.",
-                          FolderKanban,
-                          "projects",
-                        ],
-                        [
-                          "Contact",
-                          "Professional contact information and next steps.",
-                          Mail,
-                          "contact",
-                        ],
+                        ["My IT Journey", "Background, experience, and professional perspective.", User, "journey"],
+                        ["Resources", "Curated reference pages and practical tools.", BookOpen, "resources"],
+                        ["Learning & Certifications", "Study pages, certification material, and learning content.", Award, "certs"],
+                        ["Enterprise", "Enterprise support, Windows, systems, and troubleshooting pages.", Server, "enterprise"],
+                        ["Project Pages", "Temporary holding area for pages not yet classified.", FolderKanban, "projects"],
+                        ["Contact", "Professional contact information and next steps.", Mail, "contact"],
                       ].map(([title, description, Icon, target]) => (
                         <Card
                           key={title}
@@ -766,15 +452,9 @@ export default function PersonalTechnologyPortal() {
                             </div>
                             <div>
                               <div className="text-lg font-semibold">{title}</div>
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                {description}
-                              </p>
+                              <p className="mt-1 text-sm text-muted-foreground">{description}</p>
                             </div>
-                            <Button
-                              variant="ghost"
-                              className="px-0"
-                              onClick={() => setActive(target)}
-                            >
+                            <Button variant="ghost" className="px-0" onClick={() => setActive(target)}>
                               Open Section <ChevronRight className="ml-1 h-4 w-4" />
                             </Button>
                           </CardContent>
@@ -809,9 +489,7 @@ export default function PersonalTechnologyPortal() {
                           <CardContent className="space-y-2 p-6">
                             <div className="text-lg font-semibold">{label}</div>
                             <div className="text-3xl font-bold">{count}</div>
-                            <div className="text-sm text-muted-foreground">
-                              Linked pages in this section
-                            </div>
+                            <div className="text-sm text-muted-foreground">Linked pages in this section</div>
                           </CardContent>
                         </Card>
                       ))}
@@ -826,13 +504,9 @@ export default function PersonalTechnologyPortal() {
                     <SectionTitle
                       eyebrow="About Me"
                       title="My IT Journey"
-                      description="A personal account of 30+ years in enterprise technology."
+                      description="A personal account of enterprise technology experience and growth."
                     />
-                    <a
-                      href="/pages/about-story.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a href="/pages/about-story.html" target="_blank" rel="noopener noreferrer">
                       <Button variant="outline" className="shrink-0 rounded-2xl">
                         Open Full Page <ExternalLink className="ml-2 h-4 w-4" />
                       </Button>
@@ -909,23 +583,22 @@ export default function PersonalTechnologyPortal() {
                         <div>
                           <div className="text-lg font-semibold">Professional Contact</div>
                           <p className="mt-2 text-sm text-muted-foreground">
-                            Use this area for email, LinkedIn, downloadable resume links,
-                            or a contact form integration later.
+                            Use this area for email, LinkedIn, resume links, or a contact form later.
                           </p>
                         </div>
                         <div className="rounded-2xl border p-4 text-sm">
                           <div className="font-medium">Email</div>
                           <a
-                            href={`mailto:${content.site.contactEmail}`}
+                            href={`mailto:${siteContent.site.contactEmail}`}
                             className="text-sky-600 underline underline-offset-4"
                           >
-                            {content.site.contactEmail}
+                            {siteContent.site.contactEmail}
                           </a>
                         </div>
                         <div className="rounded-2xl border p-4 text-sm">
                           <div className="font-medium">LinkedIn</div>
                           <a
-                            href={content.site.linkedIn}
+                            href={siteContent.site.linkedIn}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sky-600 underline underline-offset-4"
@@ -933,16 +606,13 @@ export default function PersonalTechnologyPortal() {
                             Professional profile link
                           </a>
                         </div>
-                        <Button className="rounded-2xl">Download Resume</Button>
                       </CardContent>
                     </Card>
 
                     <Card className="rounded-[28px]">
                       <CardHeader>
                         <CardTitle>Recommended Extensions</CardTitle>
-                        <CardDescription>
-                          Easy next additions for a production deployment.
-                        </CardDescription>
+                        <CardDescription>Easy next additions for a production deployment.</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-3 text-sm text-muted-foreground">
                         <div className="rounded-2xl border p-4">
@@ -952,499 +622,19 @@ export default function PersonalTechnologyPortal() {
                           Analytics via Plausible or Vercel Analytics.
                         </div>
                         <div className="rounded-2xl border p-4">
-                          Protected admin authentication with NextAuth or Supabase Auth.
+                          Resume download and downloadable documents section.
                         </div>
                         <div className="rounded-2xl border p-4">
-                          Upload media to object storage and persist content to database.
+                          Optional protected admin later, only if you truly need CMS features.
                         </div>
                       </CardContent>
                     </Card>
                   </div>
                 </div>
               )}
-
-              {active === "admin" && (
-                <div className="space-y-6">
-                  <SectionTitle
-                    eyebrow="Admin Panel"
-                    title="Content Management Dashboard"
-                    description="This preview demonstrates editable sections, linked project page control, and portal configuration."
-                  />
-
-                  {!isAuthed ? (
-                    <Card className="rounded-[28px]">
-                      <CardContent className="space-y-4 p-8">
-                        <div className="text-lg font-semibold">
-                          Admin authentication required
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Use the Admin Access button in the header. Demo credentials:
-                          admin / demo123
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <Tabs defaultValue="hero" className="space-y-6">
-                      <TabsList className="flex h-auto flex-wrap gap-2 rounded-2xl bg-transparent p-0">
-                        <TabsTrigger value="hero" className="rounded-2xl border px-4 py-2">
-                          Homepage
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="journey"
-                          className="rounded-2xl border px-4 py-2"
-                        >
-                          Journey Page
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="resources"
-                          className="rounded-2xl border px-4 py-2"
-                        >
-                          Resources
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="linked"
-                          className="rounded-2xl border px-4 py-2"
-                        >
-                          Linked Pages
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="settings"
-                          className="rounded-2xl border px-4 py-2"
-                        >
-                          Settings
-                        </TabsTrigger>
-                      </TabsList>
-
-                      <TabsContent value="hero">
-                        <Card className="rounded-[28px]">
-                          <CardHeader>
-                            <CardTitle>Edit Homepage</CardTitle>
-                            <CardDescription>
-                              Update hero content and motivation story.
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="grid gap-6 lg:grid-cols-2">
-                            <div className="space-y-4">
-                              <div className="space-y-2">
-                                <Label>Headline</Label>
-                                <Input
-                                  value={content.hero.headline}
-                                  onChange={(e) => updateHero("headline", e.target.value)}
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Summary</Label>
-                                <Textarea
-                                  value={content.hero.summary}
-                                  onChange={(e) => updateHero("summary", e.target.value)}
-                                  rows={5}
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Hero Image URL</Label>
-                                <Input
-                                  value={content.hero.image}
-                                  onChange={(e) => updateHero("image", e.target.value)}
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Motivation Story</Label>
-                              <Textarea
-                                value={content.story}
-                                onChange={(e) => updateStory(e.target.value)}
-                                rows={12}
-                              />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-
-                      <TabsContent value="journey">
-                        <Card className="rounded-[28px]">
-                          <CardHeader>
-                            <CardTitle>Edit My IT Journey</CardTitle>
-                            <CardDescription>
-                              Manage the biography page content.
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                              <Label>Page Title</Label>
-                              <Input
-                                value={content.journey.title}
-                                onChange={(e) => updateJourney("title", e.target.value)}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Subtitle</Label>
-                              <Input
-                                value={content.journey.subtitle}
-                                onChange={(e) => updateJourney("subtitle", e.target.value)}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Body</Label>
-                              <Textarea
-                                value={content.journey.body}
-                                onChange={(e) => updateJourney("body", e.target.value)}
-                                rows={10}
-                              />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-
-                      <TabsContent value="resources">
-                        <Card className="rounded-[28px]">
-                          <CardHeader>
-                            <div className="flex items-center justify-between gap-3">
-                              <div>
-                                <CardTitle>Manage Resource Categories</CardTitle>
-                                <CardDescription>
-                                  Add, organize, and extend categories.
-                                </CardDescription>
-                              </div>
-                              <Button onClick={addResourceCategory}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add Category
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            {content.resources.map((resource) => (
-                              <div
-                                key={resource.id}
-                                className="grid gap-4 rounded-2xl border p-4 md:grid-cols-[1fr_1fr_auto]"
-                              >
-                                <Input
-                                  value={resource.name}
-                                  onChange={(e) =>
-                                    setContent((prev) => ({
-                                      ...prev,
-                                      resources: prev.resources.map((r) =>
-                                        r.id === resource.id
-                                          ? { ...r, name: e.target.value }
-                                          : r
-                                      ),
-                                    }))
-                                  }
-                                />
-                                <Input
-                                  value={resource.description}
-                                  onChange={(e) =>
-                                    setContent((prev) => ({
-                                      ...prev,
-                                      resources: prev.resources.map((r) =>
-                                        r.id === resource.id
-                                          ? { ...r, description: e.target.value }
-                                          : r
-                                      ),
-                                    }))
-                                  }
-                                />
-                                <div className="flex items-center gap-3">
-                                  <Label className="text-sm">Featured</Label>
-                                  <Switch
-                                    checked={resource.featured}
-                                    onCheckedChange={(checked) =>
-                                      setContent((prev) => ({
-                                        ...prev,
-                                        resources: prev.resources.map((r) =>
-                                          r.id === resource.id
-                                            ? { ...r, featured: checked }
-                                            : r
-                                        ),
-                                      }))
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                            <Button variant="outline">
-                              <Save className="mr-2 h-4 w-4" />
-                              Save Changes
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-
-                      <TabsContent value="linked">
-                        <Card className="rounded-[28px]">
-                          <CardHeader>
-                            <div className="flex items-center justify-between gap-3">
-                              <div>
-                                <CardTitle>Manage Linked HTML Pages</CardTitle>
-                                <CardDescription>
-                                  These links are configured to open project pages in new tabs.
-                                </CardDescription>
-                              </div>
-                              <Button onClick={addProjectPage}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add Linked Page
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            {(content.allCards || []).map((page) => (
-                              <div
-                                key={page.id}
-                                className="space-y-4 rounded-2xl border p-4"
-                              >
-                                <div className="grid gap-4 lg:grid-cols-2">
-                                  <div className="space-y-2">
-                                    <Label>Title</Label>
-                                    <Input
-                                      value={page.title}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, title: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Section</Label>
-                                    <Input
-                                      value={page.section || ""}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, section: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Category</Label>
-                                    <Input
-                                      value={page.category || ""}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, category: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Subcategory</Label>
-                                    <Input
-                                      value={page.subcategory || ""}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, subcategory: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2 lg:col-span-2">
-                                    <Label>Description</Label>
-                                    <Textarea
-                                      value={page.description}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, description: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                      rows={3}
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Destination URL / Path</Label>
-                                    <Input
-                                      value={page.href}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, href: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Thumbnail URL</Label>
-                                    <Input
-                                      value={page.thumbnail}
-                                      onChange={(e) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, thumbnail: e.target.value }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-6">
-                                  <div className="flex items-center gap-3">
-                                    <Label>Open in new tab</Label>
-                                    <Switch
-                                      checked={page.newTab !== false}
-                                      onCheckedChange={(checked) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, newTab: checked }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <div className="flex items-center gap-3">
-                                    <Label>Featured</Label>
-                                    <Switch
-                                      checked={!!page.featured}
-                                      onCheckedChange={(checked) =>
-                                        setContent((prev) => ({
-                                          ...prev,
-                                          allCards: prev.allCards.map((p) =>
-                                            p.id === page.id
-                                              ? { ...p, featured: checked }
-                                              : p
-                                          ),
-                                        }))
-                                      }
-                                    />
-                                  </div>
-                                  <Button variant="outline">
-                                    <Eye className="mr-2 h-4 w-4" />
-                                    Preview Link
-                                  </Button>
-                                  <Button
-                                    variant="destructive"
-                                    onClick={() => removeProjectPage(page.id)}
-                                  >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-
-                      <TabsContent value="settings">
-                        <Card className="rounded-[28px]">
-                          <CardHeader>
-                            <CardTitle>Portal Settings</CardTitle>
-                            <CardDescription>
-                              Branding, contact info, and visual preferences.
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="grid gap-4 lg:grid-cols-2">
-                            <div className="space-y-2">
-                              <Label>Site Title</Label>
-                              <Input
-                                value={content.site.title}
-                                onChange={(e) =>
-                                  setContent((prev) => ({
-                                    ...prev,
-                                    site: { ...prev.site, title: e.target.value },
-                                  }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Tagline</Label>
-                              <Input
-                                value={content.site.tagline}
-                                onChange={(e) =>
-                                  setContent((prev) => ({
-                                    ...prev,
-                                    site: { ...prev.site, tagline: e.target.value },
-                                  }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Contact Email</Label>
-                              <Input
-                                value={content.site.contactEmail}
-                                onChange={(e) =>
-                                  setContent((prev) => ({
-                                    ...prev,
-                                    site: { ...prev.site, contactEmail: e.target.value },
-                                  }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>LinkedIn URL</Label>
-                              <Input
-                                value={content.site.linkedIn}
-                                onChange={(e) =>
-                                  setContent((prev) => ({
-                                    ...prev,
-                                    site: { ...prev.site, linkedIn: e.target.value },
-                                  }))
-                                }
-                              />
-                            </div>
-                            <div className="flex items-center gap-3 rounded-2xl border p-4">
-                              <Label>Dark mode default</Label>
-                              <Switch
-                                checked={theme === "dark"}
-                                onCheckedChange={(checked) =>
-                                  setTheme(checked ? "dark" : "light")
-                                }
-                              />
-                            </div>
-                            <div className="flex items-center gap-3 rounded-2xl border p-4">
-                              <ImageIcon className="h-4 w-4" />
-                              <div className="text-sm text-muted-foreground">
-                                Media upload would connect to storage in production.
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-                    </Tabs>
-                  )}
-                </div>
-              )}
             </div>
           </main>
         </div>
-
-        {toast ? (
-          <div className="fixed bottom-5 right-5 z-50 rounded-2xl bg-slate-900 px-4 py-3 text-sm text-white shadow-2xl dark:bg-sky-600">
-            {toast}
-          </div>
-        ) : null}
       </div>
     </div>
   );
