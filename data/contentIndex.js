@@ -1,24 +1,24 @@
 export const contentIndex = [
   {
     id: 1,
-    title: "CompTIA Security+ Study Portal",
-    description: "Curated study resources and exam preparation material.",
-    section: "Certification",
-    category: "CompTIA",
-    subcategory: "Security+",
-    href: "/pages/CompTIASecurity.html",
+    title: "My IT Journey",
+    description:
+      "Professional journey, experience, and vision behind this personal technology portal.",
+    section: "About",
+    category: "Background",
+    subcategory: "Story",
+    href: "/pages/about-story.html",
     thumbnail:
-      "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1200&q=80",
-    icon: "Shield",
+      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+    icon: "User",
     featured: true,
     showInProjects: true,
   },
-
   {
     id: 2,
     title: "AI World",
     description:
-      "Local LLMs, Dockerized workflows, agentic platforms, and operational automation.",
+      "Local LLMs, dockerized workflows, agentic platforms, and operational automation.",
     section: "AI",
     category: "AI Resources",
     subcategory: "Tools",
@@ -29,63 +29,34 @@ export const contentIndex = [
     featured: true,
     showInProjects: true,
   },
-
   {
     id: 3,
-    title: "WireGuard Deployment Guide",
+    title: "CompTIA Security+ Study Portal",
     description:
-      "Guide for deploying WireGuard VPN between home network and remote servers.",
-    section: "Resources",
-    category: "Networking",
-    subcategory: "VPN",
-    href: "/pages/resources/networking/wireguard-guide.html",
+      "Curated study resources and exam preparation material for CompTIA Security+.",
+    section: "Certification",
+    category: "CompTIA",
+    subcategory: "Security+",
+    href: "/pages/certification/comptia/security-plus.html",
     thumbnail:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
-    icon: "Network",
-    featured: false,
+      "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1200&q=80",
+    icon: "Shield",
+    featured: true,
     showInProjects: true,
   },
-
   {
     id: 4,
-    title: "Exchange Online Mail Flow Guide",
+    title: "Windows 11 Troubleshooting Tools",
     description:
-      "Troubleshooting and configuration reference for Exchange Online mail routing.",
-    section: "Office365",
-    category: "Exchange Online",
-    subcategory: "Mail Flow",
-    href: "/pages/office365/exchange-online/mail-flow.html",
-    thumbnail:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80",
-    icon: "Mail",
-    featured: false,
-    showInProjects: true,
-  },
-
-  {
-    id: 5,
-    title: "Enterprise Endpoint Management",
-    description:
-      "Guides and notes about enterprise device management and deployment strategies.",
+      "Collection of diagnostic and troubleshooting tools used for enterprise Windows 11 support.",
     section: "Enterprise",
-    category: "Endpoint Management",
-    subcategory: "Intune",
-    href: "/pages/enterprise/endpoint-management/intune-guide.html",
+    category: "Windows",
+    subcategory: "Troubleshooting",
+    href: "/pages/enterprise/windows11/troubleshooting-tools-windows-11-richard-gamarra.html",
     thumbnail:
-      "https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=1200&q=80",
-    icon: "Briefcase",
-    featured: false,
+      "https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=1200&q=80",
+    icon: "Monitor",
+    featured: true,
     showInProjects: true,
   },
-  {
-  id: 100,
-  title: "About This Portal",
-  description: "Full story behind why this technology portal was created and how it evolved.",
-  icon: "User",
-  thumbnail: "https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1200&q=80",
-  href: "/pages/about-story.html",
-  newTab: true,
-  featured: true,
-  category: "About",
-  }
 ];

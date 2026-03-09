@@ -233,9 +233,13 @@ function ResourceIcon({ name, className = "h-5 w-5" }) {
   const Comp = iconMap[name] || LinkIcon;
   return <Comp className={className} />;
 }
+const initialContent = {
+  ...defaultContent,
+  projectPages: contentIndex,
+};
 
 export default function PersonalTechnologyPortal() {
-  const [content, setContent] = useState(defaultContent);
+  const [content, setContent] = useState(initialContent);
   const [active, setActive] = useState("home");
   const [search, setSearch] = useState("");
   const [adminOpen, setAdminOpen] = useState(false);
