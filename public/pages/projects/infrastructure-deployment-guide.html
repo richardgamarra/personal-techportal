@@ -1,0 +1,208 @@
+<!--
+PORTAL_META
+title: Infrastructure Deployment Guide
+description: Step-by-step deployment of the personal technology portal including DNS, hosting panel configuration, GitHub workflow, and Next.js build process.
+category: Projects
+icon: Server
+thumbnail: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop
+tags: DevOps, Deployment, DNS, Hosting, Nextjs
+order: 1
+PORTAL_META_END
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Tech Portal – Deployment & Website Guide</title>
+  <link rel="stylesheet" href="/styles/portal-docs.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <h1 class="site-title">
+        <a href="/" aria-label="Go to home page">Richard Gamarra | Enterprise Technology Portal</a>
+      </h1>
+      <p class="site-subtitle">Infrastructure, systems, automation, and practical technology leadership.</p>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <article class="card hero-main">
+        <span class="eyebrow">Deployment Guide</span>
+        <h2>Personal Tech Portal – Deployment &amp; Website Guide</h2>
+        <p>
+          This guide documents a clean, production-ready approach for deploying a personal technology portal using a domain,
+          DNS, web hosting control panel, Git-based source control, and a modern React/Next.js workflow.
+        </p>
+        <img
+          src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"
+          alt="Data center networking servers and infrastructure"
+          class="hero-image"
+        />
+      </article>
+
+      <aside class="card hero-side">
+        <h3>What this guide covers</h3>
+        <ul class="quick-list">
+          <li>Domain and DNS preparation</li>
+          <li>Control panel website configuration</li>
+          <li>HTTP and port validation</li>
+          <li>GitHub repository and deployment flow</li>
+          <li>Next.js production build process</li>
+          <li>Testing and troubleshooting</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="layout">
+      <aside class="card sidebar">
+        <h3>On this page</h3>
+        <nav class="nav">
+          <a href="#overview">Overview</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#domain-dns">Domain &amp; DNS</a>
+          <a href="#panel-setup">Control Panel Setup</a>
+          <a href="#port80">Port 80 Validation</a>
+          <a href="#github">GitHub Workflow</a>
+          <a href="#nextjs">Next.js Build Process</a>
+          <a href="#testing">Testing Checklist</a>
+          <a href="#troubleshooting">Troubleshooting</a>
+        </nav>
+      </aside>
+
+      <div class="content">
+        <section id="overview" class="card section">
+          <h3>Overview</h3>
+          <p>
+            The recommended model is straightforward: point the domain DNS to the server IP, configure the site in the hosting panel,
+            validate that the web server responds on HTTP, connect the application source to GitHub, and deploy the production build.
+          </p>
+        </section>
+
+        <section id="architecture" class="card section">
+          <h3>Architecture</h3>
+          <div class="code-block">Developer Workstation
+      │
+      ├── Local source code repository
+      ├── Next.js / React application
+      └── Git push to remote origin
+                │
+                ▼
+            GitHub Repository
+                │
+                ▼
+         Linux Server / VPS Instance
+                │
+      ┌─────────┴─────────┐
+      │                   │
+      ▼                   ▼
+Hosting Control Panel   Web Server (HTTP/HTTPS)
+      │                   │
+      └─────────┬─────────┘
+                ▼
+         Public Domain Name
+                │
+                ▼
+              End Users</div>
+        </section>
+
+        <section id="domain-dns" class="card section">
+          <h3>Domain &amp; DNS Configuration</h3>
+          <div class="step-list">
+            <div class="step">Identify the public server IP.</div>
+            <div class="step">Create or verify the A record.</div>
+            <div class="step">Create or verify the WWW record.</div>
+            <div class="step">Allow time for propagation.</div>
+          </div>
+        </section>
+
+        <section id="panel-setup" class="card section">
+          <h3>Control Panel Setup</h3>
+          <div class="grid-2">
+            <div class="mini-card">
+              <h4>Required</h4>
+              <ul>
+                <li>Add the domain in the hosting panel</li>
+                <li>Enable hosting</li>
+                <li>Confirm the correct document root</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <h4>Recommended</h4>
+              <ul>
+                <li>Use a generic release path</li>
+                <li>Keep backup-friendly structure</li>
+                <li>Verify domain/IP bindings</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="port80" class="card section">
+          <h3>Port 80 Validation</h3>
+          <div class="code-block">sudo ss -tulpn | grep ':80'
+sudo systemctl status nginx
+sudo systemctl status apache2
+curl -I http://example.com
+curl -I http://SERVER_PUBLIC_IP</div>
+        </section>
+
+        <section id="github" class="card section">
+          <h3>GitHub Workflow</h3>
+          <div class="code-block">cd /path/to/project
+git status
+git add .
+git commit -m "Update deployment content"
+git push origin main</div>
+        </section>
+
+        <section id="nextjs" class="card section">
+          <h3>Next.js Build Process</h3>
+          <div class="code-block">npm install
+npm run dev
+npm run build
+npm run start</div>
+        </section>
+
+        <section id="testing" class="card section">
+          <h3>Testing Checklist</h3>
+          <ul class="checklist">
+            <li>Domain resolves to the intended public IP</li>
+            <li>HTTP responds correctly</li>
+            <li>Build succeeds without errors</li>
+            <li>Static assets and routes load properly</li>
+          </ul>
+        </section>
+
+        <section id="troubleshooting" class="card section">
+          <h3>Troubleshooting</h3>
+          <div class="grid-2">
+            <div class="mini-card">
+              <h4>DNS resolves incorrectly</h4>
+              <p>Review A and CNAME records and confirm the target IP.</p>
+            </div>
+            <div class="mini-card">
+              <h4>No page loads on HTTP</h4>
+              <p>Check firewall rules, service status, and virtual host configuration.</p>
+            </div>
+            <div class="mini-card">
+              <h4>Default page appears</h4>
+              <p>The wrong vhost or document root is taking precedence.</p>
+            </div>
+            <div class="mini-card">
+              <h4>Build fails on server</h4>
+              <p>Compare Node.js version, env vars, permissions, and dependencies.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Generic deployment documentation page for a personal technology portal.
+    </footer>
+  </main>
+</body>
+</html>

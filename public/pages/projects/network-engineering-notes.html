@@ -1,0 +1,278 @@
+<!--
+PORTAL_META
+title: Network Engineering Notes
+description: Practical networking notes, troubleshooting workflows, and architecture references for real-world infrastructure environments.
+category: Projects
+icon: Network
+thumbnail: https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop
+tags: Networking, Infrastructure, Troubleshooting
+order: 5
+PORTAL_META_END
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Engineering Notes</title>
+
+<link rel="stylesheet" href="/styles/portal-docs.css">
+
+</head>
+<body>
+
+<header class="site-header">
+<div class="site-header-inner">
+<h1 class="site-title">
+<a href="/">Richard Gamarra | Enterprise Technology Portal</a>
+</h1>
+<p class="site-subtitle">
+Infrastructure, systems, automation, and practical technology leadership.
+</p>
+</div>
+</header>
+
+
+<main class="shell">
+
+<section class="hero">
+
+<article class="card hero-main">
+
+<span class="eyebrow">Engineering Notes</span>
+
+<h2>Network Engineering Notes</h2>
+
+<p>
+This section collects practical networking knowledge used in real-world infrastructure
+environments. It includes troubleshooting procedures, architecture patterns,
+routing concepts, firewall strategies, and operational lessons learned while
+maintaining enterprise systems.
+</p>
+
+<img
+src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop"
+alt="Network infrastructure and data flow visualization"
+class="hero-image"
+/>
+
+</article>
+
+<aside class="card hero-side">
+
+<h3>What this page includes</h3>
+
+<ul class="quick-list">
+<li>Network troubleshooting workflows</li>
+<li>Infrastructure architecture patterns</li>
+<li>Routing and segmentation strategies</li>
+<li>Operational diagnostics tools</li>
+<li>Common network failure scenarios</li>
+</ul>
+
+</aside>
+</section>
+
+
+<section class="layout">
+
+<aside class="card sidebar">
+
+<h3>On this page</h3>
+
+<nav class="nav">
+
+<a href="#overview">Overview</a>
+<a href="#network-architecture">Network Architecture</a>
+<a href="#troubleshooting">Troubleshooting Workflow</a>
+<a href="#diagnostic-tools">Diagnostic Tools</a>
+<a href="#security">Network Security</a>
+<a href="#operational-lessons">Operational Lessons</a>
+
+</nav>
+
+</aside>
+
+
+<div class="content">
+
+<section id="overview" class="card section">
+
+<h3>Overview</h3>
+
+<p>
+Network infrastructure remains one of the most critical layers of enterprise IT
+operations. Understanding routing, DNS behavior, firewall policy, and packet
+flow is essential for diagnosing outages and ensuring reliable connectivity.
+These notes document practical techniques used when analyzing network problems
+in production environments.
+</p>
+
+</section>
+
+
+<section id="network-architecture" class="card section">
+
+<h3>Network Architecture</h3>
+
+<div class="grid-2">
+
+<div class="mini-card">
+
+<h4>Core Layers</h4>
+
+<ul>
+<li>Edge connectivity and ISP links</li>
+<li>Firewall and perimeter security</li>
+<li>Internal routing infrastructure</li>
+<li>Server network segments</li>
+</ul>
+
+</div>
+
+
+<div class="mini-card">
+
+<h4>Segmentation Strategy</h4>
+
+<ul>
+<li>Infrastructure VLANs</li>
+<li>Server network segments</li>
+<li>Management networks</li>
+<li>Isolated test environments</li>
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section id="troubleshooting" class="card section">
+
+<h3>Troubleshooting Workflow</h3>
+
+<div class="code-block">
+
+Layer 1 — Physical
+Check cabling, link lights, hardware
+
+Layer 2 — Switching
+Verify VLAN membership and MAC tables
+
+Layer 3 — Routing
+Confirm gateway reachability and routes
+
+Layer 4 — Firewall
+Check policy rules and port filtering
+
+Layer 7 — Application
+Confirm service availability
+
+</div>
+
+</section>
+
+
+
+<section id="diagnostic-tools" class="card section">
+
+<h3>Diagnostic Tools</h3>
+
+<div class="grid-2">
+
+<div class="mini-card">
+
+<h4>Connectivity Tests</h4>
+
+<ul>
+<li>ping</li>
+<li>traceroute</li>
+<li>pathping</li>
+<li>mtr</li>
+</ul>
+
+</div>
+
+
+<div class="mini-card">
+
+<h4>DNS Diagnostics</h4>
+
+<ul>
+<li>nslookup</li>
+<li>dig</li>
+<li>host</li>
+<li>DNS propagation tools</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="code-block">
+
+# Example checks
+
+ping example.com
+traceroute example.com
+nslookup example.com
+dig example.com
+
+</div>
+
+</section>
+
+
+
+<section id="security" class="card section">
+
+<h3>Network Security</h3>
+
+<ul class="checklist">
+
+<li>Segmentation between production and test environments</li>
+
+<li>Firewall rules following least privilege principle</li>
+
+<li>Secure remote access through VPN gateways</li>
+
+<li>Continuous monitoring of network anomalies</li>
+
+<li>Controlled administrative access paths</li>
+
+</ul>
+
+</section>
+
+
+
+<section id="operational-lessons" class="card section">
+
+<h3>Operational Lessons</h3>
+
+<p>
+Many network incidents are caused by small configuration mistakes or DNS
+misconfigurations rather than hardware failures. Maintaining clear
+documentation, structured troubleshooting procedures, and network diagrams
+can significantly reduce recovery time during incidents.
+</p>
+
+</section>
+
+
+</div>
+</section>
+
+
+<footer class="footer">
+Network engineering reference page within the Enterprise Technology Portal.
+</footer>
+
+</main>
+
+</body>
+</html>
