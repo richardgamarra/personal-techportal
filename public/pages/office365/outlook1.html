@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--
+  PORTAL_META
+  title: Outlook Basic and Advanced Troubleshooting for Tier 3 Support
+  description: Practical Outlook troubleshooting resource directory for Microsoft Office experts and Tier 3 support, including common issue patterns, fast triage workflows, CMD and PowerShell commands, best practices, and high-value external references.
+  category: Microsoft 365
+  section: office365
+  subcategory: Outlook Troubleshooting
+  icon: Mail
+  thumbnail: /images/thumbnails/outlook1.jpg
+  featured: true
+  tags: outlook, office365, microsoft 365, tier 3, troubleshooting, powershell, cmd, exchange online, mail profile, connectivity
+  order: 18
+  PORTAL_META_END
+  -->
+  <title>Outlook Basic and Advanced Troubleshooting for Tier 3 Support</title>
+  <style>
+    :root {
+      --bg: #0a1020;
+      --bg-soft: #0f172d;
+      --panel: rgba(16, 24, 45, 0.9);
+      --panel-2: rgba(20, 30, 56, 0.94);
+      --card: rgba(18, 28, 52, 0.9);
+      --card-2: rgba(11, 18, 33, 0.95);
+      --line: rgba(126, 146, 196, 0.2);
+      --line-strong: rgba(126, 146, 196, 0.35);
+      --text: #eef4ff;
+      --muted: #a7b7d8;
+      --soft: #d5e2ff;
+      --accent: #7aa2ff;
+      --accent-2: #5eead4;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --good: #86efac;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1360px;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.14), transparent 22%),
+        radial-gradient(circle at top right, rgba(20,184,166,0.1), transparent 20%),
+        linear-gradient(180deg, #08101d 0%, #0a1020 100%);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #a7c0ff; }
+
+    .page-shell {
+      width: min(var(--max), calc(100% - 28px));
+      margin: 26px auto 60px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(19, 29, 56, 0.96), rgba(11, 18, 34, 0.95)),
+        linear-gradient(180deg, rgba(122, 162, 255, 0.08), transparent);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.9fr;
+      gap: 24px;
+      padding: 30px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(122, 162, 255, 0.08);
+      color: var(--soft);
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--soft);
+      font-size: 1rem;
+      max-width: 760px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(94, 234, 212, 0.08);
+      color: var(--soft);
+      font-size: 0.86rem;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(8, 14, 27, 0.5);
+      padding: 16px;
+      min-height: 112px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.22rem;
+      margin-bottom: 6px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, var(--panel), rgba(11, 18, 33, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .inner { padding: 20px; }
+
+    .sidebar h2,
+    .section h2 {
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar h2 {
+      font-size: 0.98rem;
+      color: var(--soft);
+    }
+
+    .toc a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      transition: 0.18s ease;
+      font-size: 0.95rem;
+    }
+
+    .toc a:hover {
+      color: var(--text);
+      background: rgba(122, 162, 255, 0.08);
+      border-color: var(--line);
+    }
+
+    .quick-notes ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .quick-notes li + li { margin-top: 8px; }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .section .inner { padding: 26px; }
+
+    .section h2 {
+      font-size: 1.55rem;
+    }
+
+    .section h3 {
+      margin: 22px 0 10px;
+      color: var(--soft);
+      font-size: 1.04rem;
+    }
+
+    .section p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, var(--card), var(--card-2));
+      padding: 18px;
+    }
+
+    .card strong, .card h3, .card h4 {
+      display: block;
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+
+    .card p, .card li {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .card li + li { margin-top: 8px; }
+
+    .callout {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 14px;
+      background: rgba(94, 234, 212, 0.08);
+      color: var(--soft);
+    }
+
+    .callout.warn {
+      border-left-color: var(--warn);
+      background: rgba(251, 191, 36, 0.08);
+    }
+
+    .callout.danger {
+      border-left-color: var(--danger);
+      background: rgba(248, 113, 113, 0.08);
+    }
+
+    .code-block {
+      margin-top: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #071120;
+      overflow-x: auto;
+      padding: 16px;
+    }
+
+    .code-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(122, 162, 255, 0.08);
+      color: var(--soft);
+      font-size: 0.82rem;
+    }
+
+    pre, code {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbe8ff;
+    }
+
+    .mini-steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .num {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(122, 162, 255, 0.12);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(122, 162, 255, 0.08);
+      color: var(--soft);
+      font-size: 0.86rem;
+    }
+
+    .cmd-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .cmd-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(17, 27, 51, 0.94), rgba(10, 17, 31, 0.98));
+      padding: 18px;
+    }
+
+    .cmd-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .cmd-head h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(122, 162, 255, 0.08);
+      color: var(--soft);
+      font-size: 0.78rem;
+    }
+
+    .badge.good { background: rgba(134, 239, 172, 0.1); }
+    .badge.warn { background: rgba(251, 191, 36, 0.1); }
+    .badge.danger { background: rgba(248, 113, 113, 0.1); }
+
+    .resource-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 190px;
+    }
+
+    .resource-card .kicker {
+      color: var(--accent-2);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .resource-card a.button {
+      margin-top: auto;
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: rgba(122, 162, 255, 0.09);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .resource-card a.button:hover {
+      background: rgba(122, 162, 255, 0.16);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .kbd {
+      font-family: var(--mono);
+      font-size: 0.84rem;
+      padding: 2px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--soft);
+    }
+
+    @media (max-width: 1120px) {
+      .hero-grid,
+      .layout,
+      .grid-4,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2,
+      .hero-side {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .sidebar { position: static; }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        width: min(var(--max), calc(100% - 18px));
+        margin: 14px auto 40px;
+      }
+
+      .hero-grid,
+      .section .inner {
+        padding: 20px;
+      }
+
+      .grid-2,
+      .hero-side {
+        grid-template-columns: 1fr;
+      }
+
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Featured Office 365 Page • Outlook • Tier 3 Support</div>
+          <h1>Outlook Basic and Advanced Troubleshooting for Microsoft Office Experts</h1>
+          <p class="lead">
+            A practical Outlook troubleshooting resource directory for Tier 3 support teams, with fast triage paths,
+            common issue patterns, profile and connectivity checks, high-value CMD and PowerShell commands, and small
+            external resource cards for deeper Microsoft guidance.
+          </p>
+          <div class="hero-tags">
+            <span class="pill">Mixed audience</span>
+            <span class="pill">Practical technical guide</span>
+            <span class="pill">Resource directory</span>
+            <span class="pill">Anchor navigation enabled</span>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="metric">
+            <strong>Profiles</strong>
+            <span>Quick checks for corrupt profiles, startup issues, safe mode, and profile picker workflows.</span>
+          </div>
+          <div class="metric">
+            <strong>Connectivity</strong>
+            <span>Focus on Microsoft 365, auth prompts, Exchange Online, and send/receive failures.</span>
+          </div>
+          <div class="metric">
+            <strong>Commands</strong>
+            <span>Includes commonly used CMD and PowerShell commands that support engineers actually reuse.</span>
+          </div>
+          <div class="metric">
+            <strong>Escalation</strong>
+            <span>Designed for faster triage, cleaner notes, and better handoffs between support tiers.</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <nav class="panel toc">
+          <div class="inner">
+            <h2>On this page</h2>
+            <a href="#overview">Overview</a>
+            <a href="#requirements">Requirements</a>
+            <a href="#steps">Steps</a>
+            <a href="#commands">Most Used CMD and PowerShell</a>
+            <a href="#best-practices">Best Practices</a>
+            <a href="#references">References</a>
+            <a href="#faq">FAQ</a>
+          </div>
+        </nav>
+
+        <div class="panel quick-notes">
+          <div class="inner">
+            <h2>Fast triage notes</h2>
+            <ul>
+              <li>Confirm whether the user is on classic Outlook or new Outlook first.</li>
+              <li>Check whether the issue is profile, auth, cache, add-in, transport, or service-side.</li>
+              <li>Time-bounding the failure usually saves time during escalation.</li>
+              <li>Prefer quick local checks before rebuilding profiles.</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section id="overview" class="section panel">
+          <div class="inner">
+            <h2>Overview</h2>
+            <p>
+              This page is built for Microsoft Office experts and Tier 3 support engineers who need a structured but
+              fast Outlook troubleshooting reference. It covers common Outlook startup and performance problems, mail
+              flow and connectivity checks, profile-related issues, add-in isolation, and practical escalation habits.
+            </p>
+
+            <div class="grid-3">
+              <div class="card">
+                <strong>Basic troubleshooting focus</strong>
+                <p>App won’t open, freezes, stays on loading profile, slow launch, search issues, password prompts, or send/receive failures.</p>
+              </div>
+              <div class="card">
+                <strong>Advanced troubleshooting focus</strong>
+                <p>Profile rebuild decisions, service-side checks, Exchange Online validation, diagnostics, and command-based support workflows.</p>
+              </div>
+              <div class="card">
+                <strong>Best use of this page</strong>
+                <p>Use it as a quick-reference portal page during live ticket work, remote sessions, or escalation handoffs.</p>
+              </div>
+            </div>
+
+            <div class="callout">
+              Good Tier 3 rhythm: identify whether the root cause is <strong>local client</strong>, <strong>profile</strong>, <strong>authentication</strong>, <strong>mailbox/service-side</strong>, or <strong>known issue</strong> before changing too much.
+            </div>
+          </div>
+        </section>
+
+        <section id="requirements" class="section panel">
+          <div class="inner">
+            <h2>Requirements</h2>
+            <p>
+              Effective Outlook troubleshooting works best when a few support prerequisites are already in place.
+            </p>
+
+            <div class="grid-2">
+              <div class="card">
+                <h3>Technical prerequisites</h3>
+                <ul>
+                  <li>Administrative access when profile reset, Office repair, or cache cleanup is needed</li>
+                  <li>Knowledge of whether the mailbox is Exchange Online, hybrid, shared, POP/IMAP, or delegated</li>
+                  <li>Awareness of whether the user is on classic Outlook or the newer Outlook client</li>
+                  <li>Ability to test connectivity, launch Outlook with switches, and collect useful evidence</li>
+                </ul>
+              </div>
+
+              <div class="card">
+                <h3>Support prerequisites</h3>
+                <ul>
+                  <li>Exact error wording or screenshot when possible</li>
+                  <li>Approximate start time of the issue</li>
+                  <li>Scope: one user, one machine, one mailbox, or broader tenant impact</li>
+                  <li>Whether the issue affects Outlook desktop only or also OWA/mobile</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout warn">
+              Do not rebuild the Outlook profile as the first step for every issue. You can lose useful evidence and spend time unnecessarily when the root cause is service-side or known and widespread.
+            </div>
+          </div>
+        </section>
+
+        <section id="steps" class="section panel">
+          <div class="inner">
+            <h2>Steps</h2>
+            <p>
+              Use this order for most Outlook incidents. It keeps the investigation efficient and helps separate local
+              client issues from tenant-side or service-side problems.
+            </p>
+
+            <div class="mini-steps">
+              <div class="step">
+                <div class="num">1</div>
+                <div>
+                  <strong>Identify the Outlook flavor</strong>
+                  <p>Confirm whether the user is on classic Outlook or new Outlook. Startup switches and troubleshooting paths are not identical.</p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="num">2</div>
+                <div>
+                  <strong>Determine the symptom category</strong>
+                  <p>Classify the issue as launch, profile, authentication, search, send/receive, calendar, add-in, or transport.</p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="num">3</div>
+                <div>
+                  <strong>Test a minimal local workaround</strong>
+                  <p>Try Safe Mode, profile picker, or a quick client restart before deeper changes. These steps often isolate add-ins and profile corruption quickly.</p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="num">4</div>
+                <div>
+                  <strong>Cross-check with OWA or service-side diagnostics</strong>
+                  <p>If OWA works and Outlook desktop fails, the issue may be local. If both fail, think mailbox, policy, auth, or service-side.</p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="num">5</div>
+                <div>
+                  <strong>Escalate with clean evidence</strong>
+                  <p>Capture the command used, the result, affected mailbox, exact symptom, timeline, and what changed after each step.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3>Common investigation paths</h3>
+            <div class="grid-3">
+              <div class="card">
+                <strong>Startup and freezes</strong>
+                <p>Use Safe Mode, check add-ins, validate Office health, and isolate profile-specific behavior.</p>
+              </div>
+              <div class="card">
+                <strong>Password prompts and connectivity</strong>
+                <p>Validate auth flow, modern auth assumptions, OWA behavior, account health, and Exchange Online diagnostics.</p>
+              </div>
+              <div class="card">
+                <strong>Mail flow and delivery confusion</strong>
+                <p>Check whether the issue is Outlook display, transport, mailbox rules, shared mailbox behavior, or actual delivery failure.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="commands" class="section panel">
+          <div class="inner">
+            <h2>Most Used CMD and PowerShell</h2>
+            <p>
+              These are compact, practical commands commonly used by support engineers during Outlook troubleshooting.
+            </p>
+
+            <div class="cmd-grid">
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Launch Outlook in Safe Mode</h4>
+                  <span class="badge good">CMD / Run</span>
+                  <span class="badge">Add-in isolation</span>
+                </div>
+                <p>Use this first when Outlook hangs, crashes, or behaves differently with add-ins enabled.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>outlook.exe /safe</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Open the profile picker</h4>
+                  <span class="badge good">CMD / Run</span>
+                  <span class="badge">Profile check</span>
+                </div>
+                <p>Useful for testing whether the issue is tied to one Outlook profile or for selecting an alternate profile.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>outlook.exe /profiles</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Reset the Navigation Pane</h4>
+                  <span class="badge warn">CMD / Run</span>
+                  <span class="badge">UI corruption</span>
+                </div>
+                <p>Good for navigation pane corruption, startup oddities, or folder pane layout issues.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>outlook.exe /resetnavpane</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Check classic Outlook executable path</h4>
+                  <span class="badge">CMD</span>
+                  <span class="badge">Install validation</span>
+                </div>
+                <p>Quick local validation when shortcuts fail or users report Outlook cannot be found.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>dir "C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE"</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Check name resolution and reachability</h4>
+                  <span class="badge">CMD</span>
+                  <span class="badge">Connectivity</span>
+                </div>
+                <p>Use when Outlook connectivity is suspect and you need a quick DNS or path check.</p>
+                <div class="code-block">
+                  <div class="code-label">Commands</div>
+                  <pre><code>nslookup outlook.office365.com
+ping autodiscover.outlook.com</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Repair Windows system files if Office behavior seems broader</h4>
+                  <span class="badge warn">CMD as Admin</span>
+                  <span class="badge">OS health</span>
+                </div>
+                <p>Useful when Outlook issues appear alongside broader Windows component problems.</p>
+                <div class="code-block">
+                  <div class="code-label">Commands</div>
+                  <pre><code>sfc /scannow
+DISM /Online /Cleanup-Image /RestoreHealth</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Connect to Exchange Online PowerShell</h4>
+                  <span class="badge good">PowerShell</span>
+                  <span class="badge">Service-side checks</span>
+                </div>
+                <p>Start here when the issue may be mailbox-side, policy-side, or tenant-side.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Connect-ExchangeOnline</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Check mailbox basics</h4>
+                  <span class="badge">PowerShell</span>
+                  <span class="badge">Mailbox verification</span>
+                </div>
+                <p>Fast way to confirm mailbox identity and key status information during escalation.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Get-EXOMailbox user@domain.com</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Review mailbox statistics</h4>
+                  <span class="badge">PowerShell</span>
+                  <span class="badge">Size and item count</span>
+                </div>
+                <p>Helpful when performance, sync, archive, or storage issues are suspected.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Get-EXOMailboxStatistics user@domain.com</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Check inbox rules</h4>
+                  <span class="badge">PowerShell</span>
+                  <span class="badge">Mail flow confusion</span>
+                </div>
+                <p>Useful when mail is moving unexpectedly, disappearing, or auto-forwarding.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Get-InboxRule -Mailbox user@domain.com</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Check calendar permissions</h4>
+                  <span class="badge">PowerShell</span>
+                  <span class="badge">Delegation</span>
+                </div>
+                <p>Good for shared calendar and delegate access problems.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Get-MailboxFolderPermission user@domain.com:\Calendar</code></pre>
+                </div>
+              </article>
+
+              <article class="cmd-card">
+                <div class="cmd-head">
+                  <h4>Quick installed app verification</h4>
+                  <span class="badge warn">PowerShell</span>
+                  <span class="badge">Client presence</span>
+                </div>
+                <p>Useful when Outlook appears partially installed or users have conflicting client assumptions.</p>
+                <div class="code-block">
+                  <div class="code-label">Command</div>
+                  <pre><code>Get-Command outlook.exe -ErrorAction SilentlyContinue</code></pre>
+                </div>
+              </article>
+            </div>
+
+            <h3>Command usage notes</h3>
+            <div class="grid-2">
+              <div class="card">
+                <strong>Run / CMD favorites</strong>
+                <p><span class="kbd">/safe</span>, <span class="kbd">/profiles</span>, and <span class="kbd">/resetnavpane</span> are three of the most practical switches for Outlook desktop troubleshooting.</p>
+              </div>
+              <div class="card">
+                <strong>PowerShell favorites</strong>
+                <p><span class="kbd">Connect-ExchangeOnline</span> plus mailbox, rule, and permission checks usually cover many service-side Outlook escalations.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="best-practices" class="section panel">
+          <div class="inner">
+            <h2>Best Practices</h2>
+
+            <div class="grid-2">
+              <div class="card">
+                <h3>Separate client from service quickly</h3>
+                <p>If OWA is healthy but Outlook desktop is broken, prioritize local profile, add-in, cache, and Office client checks.</p>
+              </div>
+              <div class="card">
+                <h3>Use known-issue pages early</h3>
+                <p>Before deep repair steps, check current Microsoft known-issue guidance for classic Outlook and supported workarounds.</p>
+              </div>
+              <div class="card">
+                <h3>Use diagnostic tools strategically</h3>
+                <p>Support and Recovery Assistant style diagnostics can save time when symptoms match known Outlook problem patterns.</p>
+              </div>
+              <div class="card">
+                <h3>Keep escalation evidence clean</h3>
+                <p>Document exact command used, result returned, whether OWA worked, whether Safe Mode changed the outcome, and what time the issue started.</p>
+              </div>
+            </div>
+
+            <div class="callout danger">
+              Avoid making multiple destructive changes at once. If you remove the profile, reset settings, clear caches, and repair Office in one pass, you lose the ability to identify what actually fixed the issue.
+            </div>
+
+            <h3>High-value support habits</h3>
+            <div class="tag-row">
+              <span class="tag">Verify classic vs new Outlook</span>
+              <span class="tag">Test OWA early</span>
+              <span class="tag">Use Safe Mode first</span>
+              <span class="tag">Check known issues</span>
+              <span class="tag">Collect clean evidence</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="references" class="section panel">
+          <div class="inner">
+            <h2>References</h2>
+            <p>
+              These small cards link to valuable Microsoft resources for Outlook support, diagnostics, command switches,
+              Exchange Online checks, and current issue tracking.
+            </p>
+
+            <div class="grid-4">
+              <div class="card resource-card">
+                <span class="kicker">Official Support</span>
+                <h3>Troubleshoot Outlook for Windows Issues</h3>
+                <p>Microsoft’s main support page for automated and guided Outlook troubleshooting on Windows.</p>
+                <a class="button" href="https://support.microsoft.com/en-us/office/troubleshoot-outlook-for-windows-issues-241bb0fc-b201-4bb2-98d3-74750a27029e" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Diagnostics</span>
+                <h3>Outlook Support and Recovery Diagnostics</h3>
+                <p>Useful for structured diagnostics and generating detailed Outlook configuration reports.</p>
+                <a class="button" href="https://learn.microsoft.com/en-us/troubleshoot/outlook/performance/how-to-scan-outlook-by-using-microsoft-support-and-recovery-assistant" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Command Reference</span>
+                <h3>Office Command-Line Switches</h3>
+                <p>Reference page for Office startup switches, including classic Outlook and newer Outlook executable names.</p>
+                <a class="button" href="https://support.microsoft.com/en-us/office/command-line-switches-for-microsoft-office-products-079164cd-4ef5-4178-b235-441737deb3a6" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Known Issues</span>
+                <h3>Recent Classic Outlook Issues</h3>
+                <p>Good page to review before deep remediation when the issue may already be known and documented.</p>
+                <a class="button" href="https://support.microsoft.com/en-us/office/fixes-or-workarounds-for-recent-issues-in-classic-outlook-for-windows-ecf61305-f84f-4e13-bb73-95a214ac1230" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Profiles</span>
+                <h3>Create an Outlook Profile</h3>
+                <p>Useful for profile testing, alternate profile workflows, and controlled rebuilds.</p>
+                <a class="button" href="https://support.microsoft.com/en-us/office/create-an-outlook-profile-f544c1ba-3352-4b3b-be0b-8d42a540459d" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Exchange Online</span>
+                <h3>Connect to Exchange Online PowerShell</h3>
+                <p>Baseline Microsoft reference for connecting and performing service-side mailbox validation.</p>
+                <a class="button" href="https://learn.microsoft.com/en-us/powershell/exchange/connect-to-exchange-online-powershell?view=exchange-ps" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Admin Diagnostics</span>
+                <h3>Exchange Self-Help Diagnostics</h3>
+                <p>Helpful admin-side diagnostics for Outlook connectivity and password prompt investigations.</p>
+                <a class="button" href="https://learn.microsoft.com/en-us/troubleshoot/exchange/administration/self-help-diagnostics" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+
+              <div class="card resource-card">
+                <span class="kicker">Connectivity</span>
+                <h3>Fix Outlook Connection Problems</h3>
+                <p>Focused Microsoft guidance for diagnosing Microsoft 365 Outlook connection issues.</p>
+                <a class="button" href="https://learn.microsoft.com/en-us/troubleshoot/exchange/outlook-issues/outlook-connection-issues" target="_blank" rel="noopener noreferrer">Open resource</a>
+              </div>
+            </div>
+
+            <p class="footer-note" style="margin-top:14px;">
+              For Tier 3 work, these references are most useful when combined with exact error wording, user scope, test results in OWA, and the outcome of Safe Mode or profile selection tests.
+            </p>
+          </div>
+        </section>
+
+        <section id="faq" class="section panel">
+          <div class="inner">
+            <h2>FAQ</h2>
+
+            <div class="grid-2">
+              <div class="card">
+                <h3>What is the fastest first step when Outlook is unstable?</h3>
+                <p>Try <span class="kbd">outlook.exe /safe</span> to isolate whether add-ins or startup customizations are contributing to the issue.</p>
+              </div>
+
+              <div class="card">
+                <h3>When should I rebuild the Outlook profile?</h3>
+                <p>Only after simpler checks suggest profile corruption or profile-specific behavior, and after confirming the issue is not a broader service or known product issue.</p>
+              </div>
+
+              <div class="card">
+                <h3>What if Outlook desktop fails but OWA works?</h3>
+                <p>That usually points toward a local client, cache, profile, or add-in problem rather than a mailbox outage.</p>
+              </div>
+
+              <div class="card">
+                <h3>What if both Outlook and OWA fail?</h3>
+                <p>Look harder at account state, tenant-side policy, mailbox condition, service diagnostics, and any current Microsoft known issue.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
