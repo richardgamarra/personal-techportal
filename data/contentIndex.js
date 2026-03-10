@@ -1,19 +1,5 @@
 export const contentIndex = [
-  {
-    id: 1,
-    title: "AI World",
-    description:
-      "Curated AI resources, tools, platforms, and practical references for modern AI exploration.",
-    section: "Resources",
-    category: "AI",
-    subcategory: "Reference",
-    href: "/pages/ai/airesources/AIWorld.html",
-    thumbnail:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
-    icon: "Cpu",
-    featured: true,
-    newTab: true,
-  },
+
   {
     id: 2,
     title: "CompTIA Security+ Study Portal",
