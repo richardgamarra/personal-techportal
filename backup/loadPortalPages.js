@@ -3,207 +3,161 @@ import path from "path";
 
 const PAGES_DIR = path.join(process.cwd(), "public", "pages");
 
-const FOLDER_CONFIG = {
-  ai: {
-    label: "AI",
-    category: "AI",
-    section: "AI",
-    icon: "Cpu",
-  },
-  certification: {
-    label: "Certification",
-    category: "Certification",
-    section: "Certification",
-    icon: "Shield",
-  },
-  enterprise: {
-    label: "Enterprise",
-    category: "Enterprise",
-    section: "Enterprise",
-    icon: "Server",
-  },
-  office365: {
-    label: "Office 365",
-    category: "Office 365",
-    section: "Office 365",
-    icon: "Cloud",
-  },
-  projects: {
-    label: "Projects",
-    category: "Projects",
-    section: "Projects",
-    icon: "FolderKanban",
-  },
-  resources: {
-    label: "Resources",
-    category: "Resources",
-    section: "Resources",
-    icon: "BookOpen",
-  },
+const SECTION_LABELS = {
+  projects: "Projects",
+  resources: "Resources",
+  certification: "Learning & Certifications",
+  enterprise: "Enterprise",
+  ai: "AI",
+  cloud: "Cloud",
+  office365: "Office 365",
+  root: "Project Pages",
 };
 
-const ROOT_DEFAULTS = {
-  label: "Project Pages",
-  category: "Project Pages",
-  section: "Project Pages",
-  icon: "FileText",
-};
-
-function slugToTitle(slug) {
+function slugToTitle(slug = "") {
   return slug
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    .replace(/\.html?$/i, "")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function slugifyHeading(text, fallback = "section") {
-  return (
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/&/g, " and ")
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-") || fallback
-  );
+function parseBool(value) {
+  return /^(true|yes|1)$/i.test(String(value || "").trim());
 }
 
-function extractHeadings(content) {
-  const headingRegex = /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi;
-  const headings = [];
-  let match;
-
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = Number(match[1]);
-    const attrs = match[2] || "";
-    const innerHtml = match[3] || "";
-
-    const text = innerHtml
-      .replace(/<[^>]+>/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/&nbsp;/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (!text) continue;
-
-    const idMatch = attrs.match(/id=["']([^"']+)["']/i);
-    const id =
-      idMatch?.[1] || slugifyHeading(text, `section-${headings.length + 1}`);
-
-    headings.push({ id, text, level });
-  }
-
-  return headings;
-}
-
-function parsePortalMeta(content, fallbackSlug, folderName = null) {
-  const metaMatch = content.match(/PORTAL_META\s*([\s\S]*?)PORTAL_META_END/);
-
-  const defaults = folderName
-    ? FOLDER_CONFIG[folderName] || {
-        label: slugToTitle(folderName),
-        category: slugToTitle(folderName),
-        section: slugToTitle(folderName),
-        icon: "FolderKanban",
-      }
-    : ROOT_DEFAULTS;
-
-  const basePath = folderName
-    ? `/pages/${folderName}/${fallbackSlug}.html`
-    : `/pages/${fallbackSlug}.html`;
-
-  const meta = {
-    id: folderName ? `${folderName}-${fallbackSlug}` : `root-${fallbackSlug}`,
-    title: slugToTitle(fallbackSlug),
-    description: "Portal documentation page.",
-    category: defaults.category,
-    section: defaults.section,
-    subcategory: defaults.label,
-    icon: defaults.icon,
-    thumbnail: "",
-    tags: [],
-    order: 999,
-    path: basePath,
-    href: basePath,
-    newTab: true,
-    featured: false,
-    source: "html",
-    folder: folderName || "root",
-    headings: extractHeadings(content),
-  };
-
-  if (!metaMatch) return meta;
-
-  const lines = metaMatch[1]
-    .split("\n")
-    .map((line) => line.trim())
+function parseTags(value) {
+  return String(value || "")
+    .split(",")
+    .map((v) => v.trim())
     .filter(Boolean);
-
-  for (const line of lines) {
-    const [rawKey, ...rawValue] = line.split(":");
-    if (!rawKey || rawValue.length === 0) continue;
-
-    const key = rawKey.trim();
-    const value = rawValue.join(":").trim();
-
-    if (key === "title") meta.title = value;
-    if (key === "description") meta.description = value;
-    if (key === "category") meta.category = value;
-    if (key === "section") meta.section = value;
-    if (key === "subcategory") meta.subcategory = value;
-    if (key === "icon") meta.icon = value;
-    if (key === "thumbnail") meta.thumbnail = value;
-    if (key === "featured") meta.featured = value.toLowerCase() === "true";
-    if (key === "newTab") meta.newTab = value.toLowerCase() !== "false";
-    if (key === "tags") {
-      meta.tags = value
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean);
-    }
-    if (key === "order") meta.order = Number(value) || 999;
-  }
-
-  return meta;
 }
 
-export function loadPortalHtmlPages() {
-  if (!fs.existsSync(PAGES_DIR)) return [];
+function parsePortalMeta(fileContent) {
+  const match = fileContent.match(/PORTAL_META([\s\S]*?)PORTAL_META_END/i);
+  if (!match) return {};
 
-  const results = [];
+  const block = match[1];
+  const meta = {};
 
-  const rootFiles = fs
-    .readdirSync(PAGES_DIR, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".html"))
-    .map((entry) => entry.name);
-
-  for (const file of rootFiles) {
-    const fullPath = path.join(PAGES_DIR, file);
-    const content = fs.readFileSync(fullPath, "utf8");
-    const slug = file.replace(/\.html$/i, "");
-    results.push(parsePortalMeta(content, slug, null));
+  for (const line of block.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || !trimmed.includes(":")) continue;
+    const idx = trimmed.indexOf(":");
+    const key = trimmed.slice(0, idx).trim();
+    const value = trimmed.slice(idx + 1).trim();
+    meta[key] = value;
   }
 
-  for (const folderName of Object.keys(FOLDER_CONFIG)) {
-    const folderPath = path.join(PAGES_DIR, folderName);
-    if (!fs.existsSync(folderPath)) continue;
+  return {
+    title: meta.title || "",
+    description: meta.description || "",
+    category: meta.category || "",
+    section: meta.section || "",
+    subcategory: meta.subcategory || "",
+    icon: meta.icon || "FileText",
+    thumbnail: meta.thumbnail || "",
+    featured: parseBool(meta.featured),
+    tags: parseTags(meta.tags),
+    order: Number(meta.order || 999),
+  };
+}
 
-    const files = fs
-      .readdirSync(folderPath)
-      .filter((file) => file.toLowerCase().endsWith(".html"));
+function getHtmlFilesRecursive(dir) {
+  if (!fs.existsSync(dir)) return [];
 
-    for (const file of files) {
-      const fullPath = path.join(folderPath, file);
-      const content = fs.readFileSync(fullPath, "utf8");
-      const slug = file.replace(/\.html$/i, "");
-      results.push(parsePortalMeta(content, slug, folderName));
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...getHtmlFilesRecursive(fullPath));
+      continue;
+    }
+
+    if (entry.isFile() && /\.html?$/i.test(entry.name)) {
+      files.push(fullPath);
     }
   }
 
-  return results.sort(
-    (a, b) =>
-      a.section.localeCompare(b.section) ||
-      a.order - b.order ||
-      a.title.localeCompare(b.title)
-  );
+  return files;
+}
+
+function getRelativeWebPath(fullPath) {
+  const relative = path.relative(path.join(process.cwd(), "public"), fullPath);
+  return "/" + relative.replace(/\\/g, "/");
+}
+
+function inferSectionFromPath(fullPath) {
+  const relative = path.relative(PAGES_DIR, fullPath);
+  const parts = relative.split(path.sep).filter(Boolean);
+
+  if (parts.length <= 1) return "root";
+  return parts[0].toLowerCase();
+}
+
+function inferSubcategoryFromPath(fullPath) {
+  const relative = path.relative(PAGES_DIR, fullPath);
+  const parts = relative.split(path.sep).filter(Boolean);
+
+  if (parts.length >= 3) {
+    return slugToTitle(parts[1]);
+  }
+
+  return "";
+}
+
+export async function loadPortalPages() {
+  const htmlFiles = getHtmlFilesRecursive(PAGES_DIR);
+
+  const pages = htmlFiles.map((filePath) => {
+    const raw = fs.readFileSync(filePath, "utf8");
+    const stats = fs.statSync(filePath);
+    const meta = parsePortalMeta(raw);
+
+    const fileName = path.basename(filePath);
+    const sectionKey = (meta.section || inferSectionFromPath(filePath) || "root").toLowerCase();
+    const section = SECTION_LABELS[sectionKey] || slugToTitle(sectionKey);
+    const subcategory =
+      meta.subcategory || inferSubcategoryFromPath(filePath) || section;
+
+    const title = meta.title || slugToTitle(fileName);
+    const description =
+      meta.description || `${title} portal page.`;
+
+    const href = getRelativeWebPath(filePath);
+
+    return {
+      id: href,
+      title,
+      description,
+      href,
+      path: href,
+      section,
+      category: section,
+      subcategory,
+      icon: meta.icon || "FileText",
+      thumbnail: meta.thumbnail || "",
+      featured: Boolean(meta.featured),
+      tags: Array.isArray(meta.tags) ? meta.tags : [],
+      order: Number.isFinite(meta.order) ? meta.order : 999,
+      source: "html",
+      modifiedAt: stats.mtime.toISOString(),
+      createdAt: stats.birthtime.toISOString(),
+      fileName,
+      filePath,
+      sectionKey,
+    };
+  });
+
+  return pages.sort((a, b) => {
+    const aTime = new Date(a.modifiedAt).getTime();
+    const bTime = new Date(b.modifiedAt).getTime();
+
+    if (bTime !== aTime) return bTime - aTime;
+    return a.title.localeCompare(b.title);
+  });
 }

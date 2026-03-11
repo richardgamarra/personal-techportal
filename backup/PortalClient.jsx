@@ -14,9 +14,9 @@ import {
   FolderKanban,
   FileText,
   Star,
-  X,
   Sun,
   Home,
+  Mail,
 } from "lucide-react";
 
 const ICON_MAP = {
@@ -31,6 +31,7 @@ const ICON_MAP = {
   FileText,
   Star,
   Home,
+  Mail,
 };
 
 const SECTION_META = {
@@ -52,12 +53,12 @@ const SECTION_META = {
   Enterprise: {
     icon: Server,
     description: "Enterprise support, Windows administration, troubleshooting, and operational content.",
-    label: "Operations",
+    label: "Enterprise",
   },
   AI: {
     icon: Cpu,
     description: "Experiments, workflows, model notes, and automation ideas.",
-    label: "AI / Automation",
+    label: "AI",
   },
   Cloud: {
     icon: Cloud,
@@ -95,7 +96,8 @@ const PRIORITY_SECTION_ORDER = [
 
 const INTERNET_FALLBACKS = {
   ai: "https://images.pexels.com/photos/18069697/pexels-photo-18069697.png?cs=srgb&dl=pexels-googledeepmind-18069697.jpg&fm=jpg",
-  infra: "https://images.pexels.com/photos/17323801/pexels-photo-17323801.jpeg?cs=srgb&dl=pexels-cookiecutter-17323801.jpg&fm=jpg",
+  infra:
+    "https://images.pexels.com/photos/17323801/pexels-photo-17323801.jpeg?cs=srgb&dl=pexels-cookiecutter-17323801.jpg&fm=jpg",
   abstract:
     "https://images.pexels.com/photos/17486100/pexels-photo-17486100.png?cs=srgb&dl=pexels-googledeepmind-17486100.jpg&fm=jpg",
   cloud:
@@ -112,10 +114,6 @@ function getItemHref(item) {
 
 function getItemSection(item) {
   return normalizeText(item?.section) || normalizeText(item?.category) || "Other";
-}
-
-function getItemCategory(item) {
-  return normalizeText(item?.category) || getItemSection(item);
 }
 
 function getItemIcon(item) {
@@ -160,9 +158,8 @@ function Card({ children, className = "" }) {
 
 export default function PortalClient({ initialContent = [] }) {
   const [query, setQuery] = useState("");
-  const [activeSection, setActiveSection] = useState("All");
+  const [activeSection] = useState("All");
   const [selectedItemId, setSelectedItemId] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [viewMode, setViewMode] = useState("home");
   const [selectedSection, setSelectedSection] = useState(null);
 
@@ -174,29 +171,22 @@ export default function PortalClient({ initialContent = [] }) {
 
   const groupedSections = useMemo(() => {
     const groups = new Map();
-
     for (const item of allItems) {
       const section = getItemSection(item);
       if (!groups.has(section)) groups.set(section, []);
       groups.get(section).push(item);
     }
-
     return Array.from(groups.entries())
       .sort((a, b) => sortSections(a[0], b[0]))
-      .map(([section, items]) => ({
-        section,
-        items: [...items].sort(sortItems),
-      }));
+      .map(([section, items]) => ({ section, items: [...items].sort(sortItems) }));
   }, [allItems]);
 
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
-
     return allItems.filter((item) => {
       const matchesSection = activeSection === "All" || getItemSection(item) === activeSection;
       if (!matchesSection) return false;
       if (!q) return true;
-
       const haystack = [
         item.title,
         item.description,
@@ -207,7 +197,6 @@ export default function PortalClient({ initialContent = [] }) {
       ]
         .join(" ")
         .toLowerCase();
-
       return haystack.includes(q);
     });
   }, [allItems, activeSection, query]);
@@ -215,10 +204,7 @@ export default function PortalClient({ initialContent = [] }) {
   const filteredGroupedSections = useMemo(() => {
     const ids = new Set(filteredItems.map((item) => item.id));
     return groupedSections
-      .map((group) => ({
-        ...group,
-        items: group.items.filter((item) => ids.has(item.id)),
-      }))
+      .map((group) => ({ ...group, items: group.items.filter((item) => ids.has(item.id)) }))
       .filter((group) => group.items.length > 0);
   }, [groupedSections, filteredItems]);
 
@@ -226,6 +212,10 @@ export default function PortalClient({ initialContent = [] }) {
     const featured = allItems.filter((item) => item.featured);
     return (featured.length ? featured : allItems.slice(0, 6)).slice(0, 6);
   }, [allItems]);
+
+  const keyAreaSections = useMemo(() => {
+    return groupedSections.slice(0, 6);
+  }, [groupedSections]);
 
   const selectedItem = useMemo(() => {
     if (!allItems.length) return null;
@@ -237,7 +227,6 @@ export default function PortalClient({ initialContent = [] }) {
       setSelectedItemId(null);
       return;
     }
-
     const stillExists = allItems.some((item) => item.id === selectedItemId);
     if (!selectedItemId || !stillExists) {
       setSelectedItemId(allItems[0].id);
@@ -250,22 +239,12 @@ export default function PortalClient({ initialContent = [] }) {
     return inFilteredSet ? selectedItem : filteredItems[0] || selectedItem;
   }, [allItems, filteredItems, selectedItem]);
 
-  const quickSections = useMemo(() => {
-    return PRIORITY_SECTION_ORDER.filter((section) =>
-      groupedSections.some((group) => group.section === section)
-    ).map((section) => ({
-      section,
-      count: groupedSections.find((group) => group.section === section)?.items.length || 0,
-    }));
-  }, [groupedSections]);
-
   function getItemsForSection(section) {
     return groupedSections.find((g) => g.section === section)?.items || [];
   }
 
   function getAutoImage(item, index = 0) {
     if (item?.thumbnail) return item.thumbnail;
-
     const title = (item?.title || "").toLowerCase();
     const section = (item?.section || item?.category || "").toLowerCase();
 
@@ -274,9 +253,7 @@ export default function PortalClient({ initialContent = [] }) {
       title.includes("comptia") ||
       section.includes("learning") ||
       section.includes("certification")
-    ) {
-      return INTERNET_FALLBACKS.abstract;
-    }
+    ) return INTERNET_FALLBACKS.abstract;
 
     if (section.includes("cloud") || title.includes("azure") || title.includes("aws")) {
       return INTERNET_FALLBACKS.cloud;
@@ -287,31 +264,23 @@ export default function PortalClient({ initialContent = [] }) {
       title.includes("troubleshooting") ||
       title.includes("server") ||
       section.includes("enterprise")
-    ) {
-      return INTERNET_FALLBACKS.infra;
-    }
+    ) return INTERNET_FALLBACKS.infra;
 
     if (
       title.includes("ai") ||
       title.includes("automation") ||
       title.includes("llm") ||
       section.includes("ai")
-    ) {
-      return INTERNET_FALLBACKS.ai;
-    }
+    ) return INTERNET_FALLBACKS.ai;
 
     if (
       title.includes("network") ||
       title.includes("lab") ||
       title.includes("infrastructure") ||
       section.includes("projects")
-    ) {
-      return INTERNET_FALLBACKS.infra;
-    }
+    ) return INTERNET_FALLBACKS.infra;
 
-    if (section.includes("resources")) {
-      return INTERNET_FALLBACKS.abstract;
-    }
+    if (section.includes("resources")) return INTERNET_FALLBACKS.abstract;
 
     const fallbacks = [
       INTERNET_FALLBACKS.ai,
@@ -319,26 +288,27 @@ export default function PortalClient({ initialContent = [] }) {
       INTERNET_FALLBACKS.abstract,
       INTERNET_FALLBACKS.cloud,
     ];
-
     return fallbacks[index % fallbacks.length];
   }
 
   function handleOpenPage(item) {
     setSelectedItemId(item.id);
     setViewMode("page");
-    setMobileMenuOpen(false);
   }
 
   function handleOpenSection(section) {
     setSelectedSection(section);
     setViewMode("section");
-    setMobileMenuOpen(false);
   }
 
   function goHome() {
     setViewMode("home");
     setSelectedSection(null);
-    setMobileMenuOpen(false);
+  }
+
+  function handleOpenContact() {
+    setViewMode("contact");
+    setSelectedSection(null);
   }
 
   function openStoryPage() {
@@ -347,10 +317,8 @@ export default function PortalClient({ initialContent = [] }) {
         item.title?.toLowerCase().includes("story") ||
         item.title?.toLowerCase().includes("journey")
     );
-
     if (storyItem) {
       handleOpenPage(storyItem);
-      setActiveSection("All");
     }
   }
 
@@ -358,7 +326,14 @@ export default function PortalClient({ initialContent = [] }) {
     return (
       <div className="flex h-full flex-col bg-[#050d1b] text-slate-100">
         <div className="border-b border-white/10 p-5">
-          <div className="flex items-start gap-3">
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = "/";
+            }}
+            className="flex items-start gap-3"
+          >
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-[#0d1930] text-sky-300">
               <LayoutDashboard className="h-5 w-5" />
             </div>
@@ -366,7 +341,7 @@ export default function PortalClient({ initialContent = [] }) {
               <p className="text-lg font-semibold leading-tight text-white">Richard Gamarra</p>
               <p className="text-sm text-slate-400">Enterprise Technology Portal</p>
             </div>
-          </div>
+          </a>
 
           <div className="relative mt-5">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -381,46 +356,18 @@ export default function PortalClient({ initialContent = [] }) {
         </div>
 
         <div className="border-b border-white/10 p-4">
-          <div className="space-y-2">
-            <button
-              type="button"
-              onClick={goHome}
-              className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
-                viewMode === "home"
-                  ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
-                  : "text-slate-200 hover:bg-white/7"
-              }`}
-            >
-              <Home className="h-4 w-4" />
-              <span className="text-sm font-medium">Home</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="border-b border-white/10 p-4">
-          <p className="mb-3 px-1 text-xs font-semibold uppercase tracking-[0.26em] text-sky-200/80">
-            Sections
-          </p>
-          <div className="space-y-2">
-            {quickSections.map(({ section }) => {
-              const isSectionView = viewMode === "section" && selectedSection === section;
-              return (
-                <button
-                  key={section}
-                  type="button"
-                  onClick={() => handleOpenSection(section)}
-                  className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
-                    isSectionView
-                      ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
-                      : "text-slate-200 hover:bg-white/7"
-                  }`}
-                >
-                  <SectionIcon section={section} className="h-4 w-4" />
-                  <span className="text-sm font-medium">{section}</span>
-                </button>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            onClick={goHome}
+            className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
+              viewMode === "home"
+                ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
+                : "text-slate-200 hover:bg-white/7"
+            }`}
+          >
+            <Home className="h-4 w-4" />
+            <span className="text-sm font-medium">Home</span>
+          </button>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
@@ -466,13 +413,10 @@ export default function PortalClient({ initialContent = [] }) {
                           >
                             <Icon className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-300"}`} />
                           </div>
+
                           <div className="min-w-0">
                             <div className="truncate text-sm font-medium">{item.title}</div>
-                            <div
-                              className={`truncate text-xs ${
-                                isActive ? "text-sky-100/80" : "text-slate-400"
-                              }`}
-                            >
+                            <div className={`truncate text-xs ${isActive ? "text-sky-100/80" : "text-slate-400"}`}>
                               {item.subcategory || item.category || item.section}
                             </div>
                           </div>
@@ -482,6 +426,24 @@ export default function PortalClient({ initialContent = [] }) {
                   </div>
                 </div>
               ))}
+
+              <div className="border-t border-white/10 pt-4">
+                <p className="mb-3 px-1 text-xs font-semibold uppercase tracking-[0.26em] text-sky-200/80">
+                  Contact
+                </p>
+                <button
+                  type="button"
+                  onClick={handleOpenContact}
+                  className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
+                    viewMode === "contact"
+                      ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
+                      : "text-slate-200 hover:bg-white/7"
+                  }`}
+                >
+                  <Mail className="h-4 w-4" />
+                  <span className="text-sm font-medium">Contact</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -491,7 +453,6 @@ export default function PortalClient({ initialContent = [] }) {
 
   function FeaturedCard({ item, index = 0, compact = false }) {
     const Icon = getItemIcon(item);
-
     return (
       <button
         key={item.id}
@@ -510,32 +471,23 @@ export default function PortalClient({ initialContent = [] }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-[#151515]/30 to-transparent" />
         </div>
-
         <div className="p-6">
           <div className="flex items-start gap-3">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#0d1930] text-sky-300">
               <Icon className="h-5 w-5" />
             </div>
-
             <div className="min-w-0 flex-1">
               <div className="text-2xl font-bold text-white">{item.title}</div>
-              <div className="mt-1 text-sm text-slate-400">
-                {item.section} • {item.subcategory || item.category}
-              </div>
+              <div className="mt-1 text-sm text-slate-400">{item.section} • {item.subcategory || item.category}</div>
             </div>
-
-            {item.featured ? (
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-900">
+            {item.featured && (
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-800">
                 Featured
               </span>
-            ) : null}
+            )}
           </div>
-
-          <p className="mt-5 text-sm leading-8 text-slate-300">
-            {item.description || "Portal section page."}
-          </p>
-
-          <div className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900">
+          <p className="mt-5 line-clamp-3 text-sm leading-8 text-slate-300">{item.description}</p>
+          <div className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition group-hover:bg-sky-300">
             Open Page
             <ExternalLink className="h-4 w-4" />
           </div>
@@ -544,333 +496,318 @@ export default function PortalClient({ initialContent = [] }) {
     );
   }
 
-  function HomeView() {
+  function SectionCard({ group }) {
+    const meta = SECTION_META[group.section] || {
+      label: group.section,
+      description: "Curated portal content.",
+    };
+
     return (
-      <div className="space-y-6">
-        <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#071225]/88 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 lg:px-6">
-            <div>
-              <h1 className="text-2xl font-bold text-white lg:text-3xl">
-                Richard Gamarra | Enterprise Technology Portal
-              </h1>
-              <p className="mt-1 text-sm text-slate-400">
-                Infrastructure, systems, automation, and practical technology leadership.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className="rounded-2xl border border-white/10 bg-white/5 p-3 text-slate-200 hover:bg-white/10"
-              aria-label="Theme toggle"
-            >
-              <Sun className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="grid gap-5 p-5 xl:grid-cols-[minmax(0,1.65fr)_420px] lg:p-6">
-            <div className="rounded-[32px] border border-sky-400/10 bg-[linear-gradient(135deg,#13213c_0%,#1d3150_60%,#0f5f8f_100%)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)] lg:p-10">
-              <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.1fr)_260px]">
-                <div>
-                  <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white">
-                    Personal Homepage + Resource Portal
-                  </span>
-
-                  <h2 className="mt-6 max-w-[540px] text-5xl font-bold leading-[0.95] tracking-tight text-white lg:text-7xl">
-                    Enterprise IT Experience, Modern Technology Thinking
-                  </h2>
-
-                  <p className="mt-6 max-w-[560px] text-lg leading-9 text-slate-200">
-                    A professional portal that brings together my IT journey, curated resources,
-                    practical tools, and the pages I build along the way.
-                  </p>
-
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenSection("Resources")}
-                      className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
-                    >
-                      Explore Resources
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={openStoryPage}
-                      className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                    >
-                      Read My Journey
-                    </button>
-                  </div>
-
-                  <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
-                    {[
-                      {
-                        label: "Resources",
-                        value: groupedSections.find((g) => g.section === "Resources")?.items.length || 0,
-                      },
-                      {
-                        label: "Learning & Certs",
-                        value:
-                          groupedSections.find((g) => g.section === "Learning & Certifications")?.items.length || 0,
-                      },
-                      {
-                        label: "Enterprise",
-                        value: groupedSections.find((g) => g.section === "Enterprise")?.items.length || 0,
-                      },
-                      {
-                        label: "Projects",
-                        value: groupedSections.find((g) => g.section === "Projects")?.items.length || 0,
-                      },
-                    ].map((stat) => (
-                      <div
-                        key={stat.label}
-                        className="rounded-[22px] bg-white/10 px-4 py-5 text-white backdrop-blur-sm"
-                      >
-                        <div className="text-3xl font-bold">{stat.value}</div>
-                        <div className="mt-2 text-sm text-slate-200">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 min-h-[520px]">
-                  <img
-                    src={INTERNET_FALLBACKS.infra}
-                    alt="Portal hero"
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-
-                  <div className="absolute bottom-5 left-5 right-5 rounded-[24px] border border-white/10 bg-[#0f172a]/65 p-5 backdrop-blur-md">
-                    <p className="text-lg font-semibold text-white">Professional Focus</p>
-                    <p className="mt-2 text-sm leading-7 text-slate-200">
-                      Enterprise systems, support operations, infrastructure, automation,
-                      and continuous growth.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Card className="h-full bg-[#151515]/88">
-              <div className="p-6">
-                <h3 className="text-3xl font-bold text-white">Why I Built This Portal</h3>
-                <p className="mt-2 text-base text-slate-300">
-                  A short first-person motivation story.
-                </p>
-
-                <div className="mt-8 space-y-5 text-base leading-9 text-slate-300">
-                  <p>
-                    I created this portal to organize the things that matter most in my professional
-                    journey: knowledge, experience, useful references, and the constant evolution of technology.
-                  </p>
-                  <p>
-                    Over the years I have worked across enterprise systems, infrastructure, support
-                    operations, troubleshooting, and modernization efforts.
-                  </p>
-                  <p>
-                    I wanted one professional space where I could connect that experience with what
-                    I am learning now in automation, AI tools, and modern platforms.
-                  </p>
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {[
-                    "Knowledge Hub",
-                    "Professional Profile",
-                    "Curated Resources",
-                    "Expandable Architecture",
-                  ].map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-white/8 px-3 py-1 text-xs font-medium text-slate-200"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-8">
-                  <button
-                    type="button"
-                    onClick={openStoryPage}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
-                  >
-                    Read Full Story
-                    <ExternalLink className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </Card>
-          </div>
+      <button
+        type="button"
+        onClick={() => handleOpenSection(group.section)}
+        className="group overflow-hidden rounded-[30px] border border-white/10 bg-[#161616]/95 p-6 text-left shadow-[0_10px_40px_rgba(0,0,0,0.22)] transition hover:border-sky-400/30 hover:bg-[#1a1a1a]"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-[#0d1930] text-sky-300">
+          <SectionIcon section={group.section} className="h-5 w-5" />
         </div>
 
-        <div className="px-2 pt-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">
-            Highlights
-          </p>
-          <h2 className="mt-3 text-4xl font-bold text-white">Explore Key Areas</h2>
-          <p className="mt-2 text-base text-slate-300">
-            Quick entry points into the main sections of the portal.
-          </p>
+        <h3 className="mt-6 text-2xl font-bold text-white">{group.section}</h3>
+        <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-300">
+          {meta.description}
+        </p>
+
+        <div className="mt-5 flex items-center justify-between">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+            Open Section
+          </span>
+          <ChevronRight className="h-4 w-4 text-slate-400 transition group-hover:text-white" />
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {quickSections.slice(0, 6).map(({ section, count }) => {
-            const Icon = SECTION_META[section]?.icon || FileText;
-            return (
-              <button
-                key={section}
-                type="button"
-                onClick={() => handleOpenSection(section)}
-                className="rounded-[28px] border border-white/10 bg-[#121212]/92 p-6 text-left shadow-[0_10px_35px_rgba(0,0,0,0.24)] transition hover:border-sky-400/30 hover:bg-[#171717]"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-[#0d1930] text-sky-300">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-6 text-2xl font-bold text-white">{section}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">
-                  {SECTION_META[section]?.description || "Organized documentation pages."}
-                </p>
-                <div className="mt-6 flex items-center justify-between text-sm font-semibold text-white">
-                  <span>Open Section</span>
-                  <ChevronRight className="h-4 w-4" />
-                </div>
-                <div className="mt-4 text-xs uppercase tracking-[0.22em] text-slate-400">
-                  {count} page{count === 1 ? "" : "s"}
-                </div>
-              </button>
-            );
-          })}
+        <div className="mt-4 text-xs uppercase tracking-[0.24em] text-slate-500">
+          {group.items.length} page{group.items.length === 1 ? "" : "s"}
         </div>
-
-        <div className="pt-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">
-            Featured Pages
-          </p>
-          <h2 className="mt-3 text-4xl font-bold text-white">Highlighted Portal Content</h2>
-          <p className="mt-2 text-base text-slate-300">
-            Featured HTML pages from across resources, learning, enterprise, and project sections.
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {featuredItems.map((item, index) => (
-            <FeaturedCard key={item.id} item={item} index={index} compact />
-          ))}
-        </div>
-      </div>
+      </button>
     );
   }
 
-  function SectionView() {
-    const sectionItems = getItemsForSection(selectedSection);
+  function SectionHero({ section }) {
+    const meta = SECTION_META[section] || {
+      label: section,
+      description: "Curated portal content.",
+      icon: FileText,
+    };
+    const items = getItemsForSection(section);
 
-    return (
-      <div className="space-y-6">
-        <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#071225]/88 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
-          <div className="border-b border-white/10 px-6 py-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">
-              {SECTION_META[selectedSection]?.label || "Section"}
-            </p>
-            <h1 className="mt-3 text-5xl font-bold text-white">{selectedSection}</h1>
-            <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-300">
-              {SECTION_META[selectedSection]?.description || "Portal section overview."}
-            </p>
-          </div>
-
-          <div className="grid gap-6 p-6 md:grid-cols-2 xl:grid-cols-3">
-            {sectionItems.map((item, index) => (
-              <FeaturedCard key={item.id} item={item} index={index} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function PageView() {
     return (
       <Card className="overflow-hidden">
-        <div className="border-b border-white/10 px-5 py-4 lg:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold text-white">{visibleSelectedItem?.title}</h1>
-              {visibleSelectedItem?.description ? (
-                <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
-                  {visibleSelectedItem.description}
-                </p>
-              ) : null}
-            </div>
-
-            {visibleSelectedItem ? (
-              <a
-                href={getItemHref(visibleSelectedItem)}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-100 transition hover:bg-white/10"
-              >
-                Open raw HTML
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            ) : null}
+        <div className="border-b border-white/10 px-6 py-6 md:px-8">
+          <div className="mb-2 flex items-center gap-3">
+            <SectionIcon section={section} className="h-5 w-5 text-sky-300" />
+            <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">{section}</span>
           </div>
-        </div>
-
-        <div className="h-[84vh] min-h-[760px] bg-[#06111f]">
-          {visibleSelectedItem ? (
-            <iframe
-              key={getItemHref(visibleSelectedItem)}
-              name="portal-content-frame"
-              title={visibleSelectedItem.title}
-              src={getItemHref(visibleSelectedItem)}
-              className="h-full w-full rounded-b-[28px] border-0 bg-[#06111f]"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center p-10 text-center text-sm text-slate-400">
-              No page selected.
-            </div>
-          )}
+          <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">{meta.label}</h1>
+          <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">{meta.description}</p>
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-400">
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-200">
+              {items.length} page{items.length === 1 ? "" : "s"}
+            </span>
+            <span>Practical documentation and reference material</span>
+          </div>
         </div>
       </Card>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#030817] text-slate-100">
-      <div className="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_28%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_24%),linear-gradient(180deg,#020817_0%,#041028_100%)]">
-        <div className="mx-auto flex min-h-screen max-w-[1850px] gap-5 p-3 lg:p-4">
-          <aside className="hidden w-[320px] shrink-0 overflow-hidden rounded-[30px] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.35)] lg:block">
-            <SidebarContent />
-          </aside>
+  function PageCanvas() {
+    if (viewMode === "contact") {
+      return (
+        <Card className="overflow-hidden">
+          <div className="border-b border-white/10 px-6 py-6 md:px-8">
+            <div className="mb-2 flex items-center gap-3">
+              <Mail className="h-5 w-5 text-sky-300" />
+              <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">Contact</span>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">Get in Touch</h1>
+            <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">
+              Connect for collaboration, questions, professional networking, and technical discussion.
+            </p>
+          </div>
 
-          {mobileMenuOpen && (
-            <div className="fixed inset-0 z-50 bg-black/60 lg:hidden" onClick={() => setMobileMenuOpen(false)}>
-              <div
-                className="h-full w-[88vw] max-w-[340px] bg-[#050d1b] shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-center justify-between border-b border-white/10 p-4">
-                  <p className="font-semibold text-white">Navigation</p>
-                  <button
-                    type="button"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-200"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-                <SidebarContent />
+          <div className="grid gap-6 p-6 md:grid-cols-[1.15fr_0.85fr] md:p-8">
+            <div className="rounded-[26px] border border-white/10 bg-[#151515]/95 p-8">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-sky-200/80">
+                Professional Contact
+              </div>
+              <h2 className="text-3xl font-bold text-white">Richard Gamarra</h2>
+              <p className="mt-4 text-base leading-8 text-slate-300">
+                IT Systems Specialist and Analyst / Enterprise Technology Advisor focused on infrastructure,
+                operations, troubleshooting, automation, and modern platform enablement.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="mailto:richard@example.com"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-sky-300"
+                >
+                  <Mail className="h-4 w-4" />
+                  Email
+                </a>
               </div>
             </div>
-          )}
 
-          <main className="min-w-0 flex-1 space-y-5">
-            {viewMode === "home" && <HomeView />}
-            {viewMode === "section" && <SectionView />}
-            {viewMode === "page" && <PageView />}
+            <div className="rounded-[26px] border border-white/10 bg-[#151515]/95 p-8">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-sky-200/80">
+                Focus Areas
+              </div>
+              <div className="space-y-3 text-sm leading-7 text-slate-300">
+                <p>Enterprise systems and operations</p>
+                <p>Windows and Microsoft 365 troubleshooting</p>
+                <p>Automation and AI experimentation</p>
+                <p>Knowledge portal design and technical documentation</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+      );
+    }
+
+    if (viewMode === "section" && selectedSection) {
+      const sectionItems = getItemsForSection(selectedSection);
+      return (
+        <div className="space-y-6">
+          <SectionHero section={selectedSection} />
+          <div className="grid gap-6 xl:grid-cols-2 2xl:grid-cols-3">
+            {sectionItems.map((item, index) => (
+              <FeaturedCard key={item.id} item={item} index={index} compact />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (viewMode === "page" && visibleSelectedItem) {
+      const item = visibleSelectedItem;
+      return (
+        <Card className="overflow-hidden">
+          <div className="border-b border-white/10 px-6 py-6 md:px-8">
+            <div className="mb-2 flex items-center gap-3">
+              <SectionIcon section={item.section} className="h-5 w-5 text-sky-300" />
+              <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">{item.section}</span>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">{item.title}</h1>
+            <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">{item.description}</p>
+          </div>
+
+          <div className="p-6 md:p-8">
+            <iframe
+              src={getItemHref(item)}
+              title={item.title}
+              className="h-[75vh] w-full rounded-[24px] border border-white/10 bg-white"
+            />
+          </div>
+        </Card>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <Card className="overflow-hidden">
+          <div className="grid gap-6 border-b border-white/10 px-6 py-6 md:grid-cols-[1.2fr_0.8fr] md:px-8">
+            <div className="rounded-[30px] border border-sky-400/15 bg-[#243a63] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <div className="mb-3 inline-flex rounded-full bg-white/20 px-4 py-1 text-xs font-semibold text-white">
+                Personal Homepage + Resource Portal
+              </div>
+              <h1 className="max-w-3xl text-5xl font-bold leading-none tracking-tight text-white md:text-7xl">
+                Enterprise IT Experience, Modern Technology Thinking
+              </h1>
+              <p className="mt-8 max-w-3xl text-lg leading-9 text-slate-100/90">
+                A professional portal that brings together my IT journey, curated resources,
+                practical tools, and the pages I build along the way.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedSection(groupedSections[0]?.section || null);
+                    setViewMode("section");
+                  }}
+                  className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-sky-300"
+                >
+                  Explore Resources
+                </button>
+                <button
+                  type="button"
+                  onClick={openStoryPage}
+                  className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Read My Journey
+                </button>
+              </div>
+              <div className="mt-10 grid gap-3 sm:grid-cols-4">
+                <div className="rounded-[20px] bg-white/10 p-5 text-white">
+                  <div className="text-4xl font-bold">{groupedSections.find((g) => g.section === "Resources")?.items.length || 0}</div>
+                  <div className="mt-1 text-sm text-slate-200">Resources</div>
+                </div>
+                <div className="rounded-[20px] bg-white/10 p-5 text-white">
+                  <div className="text-4xl font-bold">{groupedSections.find((g) => g.section === "Learning & Certifications")?.items.length || 0}</div>
+                  <div className="mt-1 text-sm text-slate-200">Learning &amp; Certs</div>
+                </div>
+                <div className="rounded-[20px] bg-white/10 p-5 text-white">
+                  <div className="text-4xl font-bold">{groupedSections.find((g) => g.section === "Enterprise")?.items.length || 0}</div>
+                  <div className="mt-1 text-sm text-slate-200">Enterprise</div>
+                </div>
+                <div className="rounded-[20px] bg-white/10 p-5 text-white">
+                  <div className="text-4xl font-bold">{groupedSections.find((g) => g.section === "Projects")?.items.length || 0}</div>
+                  <div className="mt-1 text-sm text-slate-200">Projects</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-[30px] border border-white/10 bg-[#151515]/95 p-8">
+              <h2 className="text-4xl font-bold leading-tight text-white">Why I Built This Portal</h2>
+              <p className="mt-3 text-base text-slate-300">A short first-person motivation story.</p>
+              <div className="mt-8 space-y-5 text-base leading-9 text-slate-300">
+                <p>
+                  I created this portal to organize the things that matter most in my professional journey:
+                  knowledge, experience, useful references, and the constant evolution of technology.
+                </p>
+                <p>
+                  Over the years I have worked across enterprise systems, infrastructure, support operations,
+                  troubleshooting, and modernization efforts.
+                </p>
+                <p>
+                  I wanted one professional space where I could connect that experience with what I am learning now in
+                  automation, AI tools, and modern platforms.
+                </p>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-2">
+                {["Knowledge Hub", "Professional Profile", "Curated Resources", "Expandable Architecture"].map((tag) => (
+                  <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-200">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={openStoryPage}
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-sky-300"
+              >
+                Read Full Story
+                <ExternalLink className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </Card>
+
+        {keyAreaSections.length > 0 && (
+          <div>
+            <div className="mb-6 px-1">
+              <div className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+                Highlights
+              </div>
+              <h2 className="mt-2 text-4xl font-bold text-white">Explore Key Areas</h2>
+              <p className="mt-2 text-base text-slate-300">
+                Quick entry points into the main sections of the portal.
+              </p>
+            </div>
+            <div className="grid gap-6 xl:grid-cols-2 2xl:grid-cols-3">
+              {keyAreaSections.map((group) => (
+                <SectionCard key={group.section} group={group} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {featuredItems.length > 0 && (
+          <div>
+            <div className="mb-6 mt-10 px-1">
+              <div className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+                Featured Space
+              </div>
+              <h2 className="mt-2 text-4xl font-bold text-white">Highlighted Portal Content</h2>
+              <p className="mt-2 text-base text-slate-300">
+                Featured HTML pages from across resources, learning, enterprise, and project sections.
+              </p>
+            </div>
+            <div className="grid gap-6 xl:grid-cols-2 2xl:grid-cols-3">
+              {featuredItems.slice(0, 6).map((item, index) => (
+                <FeaturedCard key={item.id} item={item} index={index} compact />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#030b17] text-white">
+      <div className="mx-auto max-w-[1920px] px-3 py-3 md:px-5">
+        <div className="grid gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
+          <aside className="hidden lg:block">
+            <Card className="sticky top-3 overflow-hidden">
+              <SidebarContent />
+            </Card>
+          </aside>
+
+          <main className="min-w-0">
+            <Card className="overflow-hidden">
+              <div className="flex items-start justify-between border-b border-white/10 px-5 py-4 md:px-6">
+                <div>
+                  <div className="text-4xl font-bold tracking-tight text-white">Richard Gamarra | Enterprise Technology Portal</div>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Infrastructure, systems, automation, and practical technology leadership.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="rounded-2xl border border-white/10 bg-white/5 p-3 text-slate-300 transition hover:bg-white/10"
+                >
+                  <Sun className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="p-3 md:p-4">{PageCanvas()}</div>
+            </Card>
           </main>
         </div>
       </div>

@@ -1,22 +1,14 @@
-import { contentIndex } from "@/data/contentIndex";
-import { loadPortalHtmlPages } from "@/lib/loadPortalPages";
-import PortalClient from "@/components/PortalClient";
+import PortalClient from "../components/PortalClient";
+import { loadPortalPages } from "@/lib/loadPortalPages";
 
-export default function Page() {
-  const autoHtmlPages = loadPortalHtmlPages();
+export const metadata = {
+  title: "Richard Gamarra Portal",
+  description:
+    "Richard Gamarra Portal - infrastructure, systems, automation, and practical technology leadership.",
+};
 
-  const mergedContent = [
-    ...autoHtmlPages,
-    ...contentIndex.filter(
-      (manualItem) =>
-        !autoHtmlPages.some(
-          (autoItem) =>
-            autoItem.href === manualItem.href ||
-            autoItem.path === manualItem.path ||
-            autoItem.id === manualItem.id
-        )
-    ),
-  ];
+export default async function Page() {
+  const portalPages = await loadPortalPages();
 
-  return <PortalClient initialContent={mergedContent} />;
+  return <PortalClient initialContent={portalPages} />;
 }
