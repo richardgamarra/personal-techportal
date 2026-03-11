@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 
+  PORTAL_META
+  title: OneNote 365 Resource Directory
+  description: A curated portal page for learning, organizing, and using Microsoft OneNote across Microsoft 365.
+  category: office365
+  icon: 📝
+  thumbnail: https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20OneNote%20Icon%20%282025%20-%20present%29.svg
+  featured: yes
+  tags: OneNote, Microsoft 365, notes, productivity, collaboration, learning, support, office365
+  order: 10
+  PORTAL_META_END
+  -->
+  <meta name="description" content="Explore a curated OneNote 365 resource directory with setup guidance, best practices, official Microsoft links, and quick answers for mixed-skill users." />
+  <meta name="keywords" content="OneNote 365, Microsoft 365, OneNote resources, OneNote guide, OneNote support, office365" />
+  <meta name="author" content="Richard Gamarra" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="/pages/office365/onenote365.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="OneNote 365 Resource Directory" />
+  <meta property="og:description" content="A curated portal page for learning, organizing, and using Microsoft OneNote across Microsoft 365." />
+  <meta property="og:image" content="https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20OneNote%20Icon%20%282025%20-%20present%29.svg" />
+  <meta property="og:url" content="/pages/office365/onenote365.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OneNote 365 Resource Directory" />
+  <meta name="twitter:description" content="Official OneNote 365 references, setup help, workflow ideas, and support resources in one portal page." />
+  <meta name="twitter:image" content="https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20OneNote%20Icon%20%282025%20-%20present%29.svg" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "OneNote 365 Resource Directory",
+      "description": "A curated portal page for learning, organizing, and using Microsoft OneNote across Microsoft 365.",
+      "author": {
+        "@type": "Person",
+        "name": "Richard Gamarra"
+      },
+      "datePublished": "2026-03-11",
+      "dateModified": "2026-03-11",
+      "about": ["Microsoft OneNote", "Microsoft 365", "Productivity", "Knowledge Management"]
+    }
+  </script>
+  <title>OneNote 365 Resource Directory</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-soft: #111a2e;
+      --panel: rgba(17, 26, 46, 0.88);
+      --panel-strong: rgba(19, 31, 55, 0.96);
+      --line: rgba(148, 163, 184, 0.16);
+      --line-strong: rgba(148, 163, 184, 0.28);
+      --text: #e5ecf6;
+      --muted: #9db0c9;
+      --accent: #a855f7;
+      --accent-2: #c084fc;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1280px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 28%),
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.12), transparent 26%),
+        linear-gradient(180deg, #09111f 0%, #0b1220 48%, #0a1020 100%);
+      line-height: 1.65;
+    }
+
+    a {
+      color: #d8b4fe;
+      text-decoration: none;
+    }
+
+    a:hover { color: #f3e8ff; }
+
+    .page {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(168, 85, 247, 0.18), rgba(15, 23, 42, 0.94));
+      border: 1px solid rgba(192, 132, 252, 0.22);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 38px 32px;
+      margin-bottom: 26px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(192, 132, 252, 0.16), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(192, 132, 252, 0.22);
+      color: #edd5ff;
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4.4vw, 3.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      max-width: 840px;
+      margin: 0 0 22px;
+      font-size: 1.02rem;
+      color: var(--muted);
+    }
+
+    .meta-lines {
+      display: grid;
+      gap: 2px;
+      color: #d9e4f4;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 10px 24px rgba(168, 85, 247, 0.22);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+    }
+
+    .button:hover,
+    .button-secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .sidebar,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      padding: 22px;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 14px;
+      font-size: 0.98rem;
+      color: #f3e8ff;
+    }
+
+    .nav-list,
+    .quick-list,
+    .faq-list,
+    .requirements-list,
+    .steps-list,
+    .best-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-list li + li,
+    .quick-list li + li,
+    .faq-list li + li,
+    .requirements-list li + li,
+    .steps-list li + li,
+    .best-list li + li {
+      margin-top: 10px;
+    }
+
+    .nav-list a,
+    .quick-list a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+    }
+
+    .nav-list a:hover,
+    .quick-list a:hover {
+      border-color: rgba(192, 132, 252, 0.22);
+      background: rgba(168, 85, 247, 0.08);
+      color: var(--text);
+    }
+
+    .sidebar-card {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(168, 85, 247, 0.14), rgba(168, 85, 247, 0.04));
+      border: 1px solid rgba(192, 132, 252, 0.18);
+    }
+
+    .sidebar-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sidebar-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .content {
+      display: grid;
+      gap: 22px;
+    }
+
+    .panel {
+      padding: 26px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel h3 {
+      margin: 22px 0 10px;
+      font-size: 1.08rem;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cards,
+    .links-grid,
+    .reference-grid,
+    .summary-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .links-grid,
+    .reference-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat,
+    .card,
+    .link-card,
+    .reference-card,
+    .faq-item {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .stat small,
+    .card small,
+    .reference-card small,
+    .link-card small {
+      color: #c9d6e8;
+      display: block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.9rem;
+      margin-bottom: 6px;
+      color: #faf5ff;
+    }
+
+    .card h3,
+    .link-card h3,
+    .reference-card h3,
+    .faq-item h3 {
+      margin: 0 0 8px;
+      font-size: 1.03rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      color: #d7e3f5;
+      font-size: 0.88rem;
+    }
+
+    .requirements-list li,
+    .best-list li,
+    .steps-list li {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .requirements-list strong,
+    .best-list strong,
+    .steps-list strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .steps-list {
+      counter-reset: step;
+    }
+
+    .steps-list li {
+      position: relative;
+      padding-left: 66px;
+    }
+
+    .steps-list li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      background: rgba(168, 85, 247, 0.14);
+      color: #f5e8ff;
+      border: 1px solid rgba(192, 132, 252, 0.24);
+    }
+
+    .link-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 100%;
+    }
+
+    .link-card p,
+    .reference-card p,
+    .faq-item p,
+    .card p,
+    .stat p {
+      color: var(--muted);
+    }
+
+    .link-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.16);
+      color: #c9f7d9;
+      font-size: 0.78rem;
+      margin-top: auto;
+    }
+
+    .faq-item {
+      margin-top: 14px;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: #90a4bf;
+      font-size: 0.92rem;
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.16);
+      color: #fde7b0;
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .summary-grid,
+      .cards,
+      .links-grid,
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 20px 14px 64px;
+      }
+
+      .hero,
+      .sidebar,
+      .panel {
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .button,
+      .button-secondary {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">📝 Office 365 Featured Resource</div>
+      <h1>OneNote 365</h1>
+      <p>
+        A curated resource directory for Microsoft OneNote in the Microsoft 365 ecosystem. This page is designed for mixed-skill users who need a single, practical portal for getting started, finding official guidance, improving workflow habits, and locating reliable support.
+      </p>
+      <div class="meta-lines">
+        <div>11 March 2026</div>
+        <div>By Richard Gamarra</div>
+      </div>
+      <div class="hero-actions">
+        <a class="button" href="#links">Explore 12 Official Links</a>
+        <a class="button-secondary" href="#steps">Start with the Core Workflow</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Page navigation">
+        <h2>On this page</h2>
+        <ul class="nav-list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#steps">Steps</a></li>
+          <li><a href="#best-practices">Best Practices</a></li>
+          <li><a href="#references">References</a></li>
+          <li><a href="#links">Links</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+
+        <div class="sidebar-card">
+          <h3>Best fit for</h3>
+          <p>Users who want one reliable launch point for note-taking, collaboration, syncing, templates, keyboard shortcuts, export options, and training.</p>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>Quick jumps</h3>
+          <ul class="quick-list">
+            <li><a href="https://support.microsoft.com/en-us/onenote" target="_blank" rel="noopener noreferrer">OneNote Help &amp; Learning</a></li>
+            <li><a href="https://www.onenote.com/" target="_blank" rel="noopener noreferrer">Open OneNote on the web</a></li>
+            <li><a href="https://www.microsoft.com/en-us/microsoft-365/onenote/digital-note-taking-app" target="_blank" rel="noopener noreferrer">Official product page</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="panel" id="overview">
+          <h2>Overview</h2>
+          <p>
+            OneNote 365 works best when it is treated as a structured knowledge system rather than just a note pad. In a typical Microsoft 365 workflow, users create notebooks in OneDrive or SharePoint-backed storage, organize content into sections and pages, capture information from meetings and web pages, and then return to the same notebook across desktop, web, and mobile experiences.
+          </p>
+          <div class="summary-grid">
+            <article class="stat">
+              <small>Primary use</small>
+              <strong>Knowledge capture</strong>
+              <p>Centralize notes, research, quick thoughts, and project material in one searchable place.</p>
+            </article>
+            <article class="stat">
+              <small>Strongest value</small>
+              <strong>Cross-device continuity</strong>
+              <p>Work across Windows, web, Mac, mobile, and education scenarios without rebuilding your structure.</p>
+            </article>
+            <article class="stat">
+              <small>Portal focus</small>
+              <strong>Official resources</strong>
+              <p>Prioritize Microsoft and Microsoft Learn references for cleaner support and lower troubleshooting friction.</p>
+            </article>
+          </div>
+          <div class="pill-row" aria-label="Topic highlights">
+            <span class="pill">Microsoft 365 aligned</span>
+            <span class="pill">Mixed audience friendly</span>
+            <span class="pill">Training + support</span>
+            <span class="pill">Reference-first design</span>
+          </div>
+        </section>
+
+        <section class="panel" id="requirements">
+          <h2>Requirements</h2>
+          <ul class="requirements-list">
+            <li>
+              <strong>Microsoft account or Microsoft 365 identity</strong>
+              Use a personal Microsoft account, work account, or school account so notebooks can sync correctly across devices and services.
+            </li>
+            <li>
+              <strong>Preferred storage location</strong>
+              Keep notebooks in OneDrive or SharePoint-backed locations when collaboration, reliability, and multi-device access matter.
+            </li>
+            <li>
+              <strong>Supported OneNote access point</strong>
+              Choose the desktop app, OneNote on the web, or mobile depending on the task, but keep one primary workflow to reduce confusion.
+            </li>
+            <li>
+              <strong>Basic organization model</strong>
+              Decide early on how you will separate notebooks, sections, and pages for work, school, projects, or personal knowledge management.
+            </li>
+          </ul>
+          <div class="callout">
+            For the cleanest long-term experience, use OneNote with synced cloud storage and a consistent naming convention from day one.
+          </div>
+        </section>
+
+        <section class="panel" id="steps">
+          <h2>Steps</h2>
+          <ul class="steps-list">
+            <li>
+              <strong>Create or open your primary notebook</strong>
+              Start with a notebook dedicated to a single context such as Work, School, Projects, or Personal Operations. Avoid mixing everything into one notebook at the beginning.
+            </li>
+            <li>
+              <strong>Build a simple structure</strong>
+              Add a few meaningful sections and keep page naming predictable. Good structure reduces search time and makes shared notebooks easier for others to follow.
+            </li>
+            <li>
+              <strong>Capture consistently</strong>
+              Use typed notes, quick notes, screen clippings, links, and file references in a repeatable pattern so pages stay readable and reusable.
+            </li>
+            <li>
+              <strong>Sync and verify access</strong>
+              Confirm that your notebook syncs across your main devices or browsers before you rely on it for critical work.
+            </li>
+            <li>
+              <strong>Use templates and shortcuts</strong>
+              Introduce page templates for recurring meeting notes, project logs, or study notes, and learn shortcuts that remove repetitive friction.
+            </li>
+            <li>
+              <strong>Publish or share intentionally</strong>
+              Export to PDF for static distribution, or share the notebook when collaboration and live updates are needed.
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel" id="best-practices">
+          <h2>Best Practices</h2>
+          <div class="cards">
+            <article class="card">
+              <small>Structure</small>
+              <h3>Use notebooks for contexts, not random themes</h3>
+              <p>Separate long-term categories such as business operations, certification study, team projects, or client work. This keeps permissions, ownership, and search results cleaner.</p>
+            </article>
+            <article class="card">
+              <small>Consistency</small>
+              <h3>Standardize page titles</h3>
+              <p>Patterns such as YYYY-MM-DD Meeting Name or Project - Decision Log make browsing easier and improve notebook longevity.</p>
+            </article>
+            <article class="card">
+              <small>Collaboration</small>
+              <h3>Share the right thing</h3>
+              <p>Share notebooks when collaboration matters. Export PDFs when you need a fixed snapshot and do not want downstream edits.</p>
+            </article>
+            <article class="card">
+              <small>Efficiency</small>
+              <h3>Learn a few high-value shortcuts</h3>
+              <p>Keyboard shortcuts, screen clipping, and quick notes save more time than advanced features for most users.</p>
+            </article>
+          </div>
+          <h3>Operational habits worth keeping</h3>
+          <ul class="best-list">
+            <li>
+              <strong>Review notebook sprawl monthly</strong>
+              Archive stale sections, rename unclear pages, and move one-off content into clearer homes.
+            </li>
+            <li>
+              <strong>Prefer official support pages first</strong>
+              Microsoft’s support hub and Microsoft Learn content are usually the safest first stop for feature behavior and version differences.
+            </li>
+            <li>
+              <strong>Use web and desktop intentionally</strong>
+              The web experience is great for access and lighter work, while the desktop experience is better when you need deeper feature coverage and established templates.
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel" id="references">
+          <h2>References</h2>
+          <p>
+            These reference areas are the most useful entry points when building a strong OneNote 365 workflow, supporting end users, or maintaining a knowledge-friendly team environment.
+          </p>
+          <div class="reference-grid">
+            <article class="reference-card">
+              <small>Official support</small>
+              <h3>OneNote Help &amp; Learning hub</h3>
+              <p>The best single support landing page for trending topics, getting started guidance, sync help, and shortcut references.</p>
+            </article>
+            <article class="reference-card">
+              <small>Product overview</small>
+              <h3>Microsoft 365 OneNote product page</h3>
+              <p>A concise overview of current positioning, collaboration value, and Microsoft 365 integration points.</p>
+            </article>
+            <article class="reference-card">
+              <small>Training</small>
+              <h3>Microsoft Learn and educator modules</h3>
+              <p>Useful for self-paced learning, education deployment scenarios, and structured onboarding.</p>
+            </article>
+            <article class="reference-card">
+              <small>Task execution</small>
+              <h3>Feature-specific support articles</h3>
+              <p>Use targeted articles for templates, syncing, exporting, screen clipping, notebooks, and shortcut-driven workflows.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="links">
+          <h2>Links</h2>
+          <p>
+            The directory below includes 12 curated external links selected to cover product access, setup, training, structure, syncing, export, templates, shortcuts, and education use cases.
+          </p>
+          <div class="links-grid">
+            <article class="link-card">
+              <small>1 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/onenote" target="_blank" rel="noopener noreferrer">OneNote Help &amp; Learning</a></h3>
+              <p>Central support hub for OneNote topics, trending help content, troubleshooting, and core user guidance.</p>
+              <span class="link-meta">Microsoft Support</span>
+            </article>
+            <article class="link-card">
+              <small>2 of 12</small>
+              <h3><a href="https://www.onenote.com/" target="_blank" rel="noopener noreferrer">OneNote for the web</a></h3>
+              <p>Launch point for browser-based access to notebooks and a simple way to validate account and sync availability.</p>
+              <span class="link-meta">Official access point</span>
+            </article>
+            <article class="link-card">
+              <small>3 of 12</small>
+              <h3><a href="https://www.microsoft.com/en-us/microsoft-365/onenote/digital-note-taking-app" target="_blank" rel="noopener noreferrer">OneNote digital note-taking app</a></h3>
+              <p>Official Microsoft 365 product page covering core value, collaboration, and modern feature positioning.</p>
+              <span class="link-meta">Microsoft 365</span>
+            </article>
+            <article class="link-card">
+              <small>4 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/start-using-onenote-6f4d0683-9b32-4467-9d38-76424d355673" target="_blank" rel="noopener noreferrer">Start using OneNote</a></h3>
+              <p>Beginner-friendly orientation for navigating notebooks, pages, sections, and core interaction patterns.</p>
+              <span class="link-meta">Getting started</span>
+            </article>
+            <article class="link-card">
+              <small>5 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/create-a-new-notebook-5db754d4-165d-4eb0-82a0-6e30ea13aa0a" target="_blank" rel="noopener noreferrer">Create a new notebook</a></h3>
+              <p>Useful when establishing fresh notebook structures for departments, projects, courses, or personal systems.</p>
+              <span class="link-meta">Notebook setup</span>
+            </article>
+            <article class="link-card">
+              <small>6 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/sync-a-notebook-in-onenote-1986c4cf-7716-4c78-b7e7-479be30992c7" target="_blank" rel="noopener noreferrer">Sync a notebook in OneNote</a></h3>
+              <p>Key reference for validating cloud-backed notebook access and addressing device-to-device continuity.</p>
+              <span class="link-meta">Syncing</span>
+            </article>
+            <article class="link-card">
+              <small>7 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/keyboard-shortcuts-in-onenote-44b8b3f4-c274-4bcc-a089-e80fdcc87950" target="_blank" rel="noopener noreferrer">Keyboard shortcuts in OneNote</a></h3>
+              <p>High-value shortcut reference for productivity gains, especially for heavy note takers and support users.</p>
+              <span class="link-meta">Productivity</span>
+            </article>
+            <article class="link-card">
+              <small>8 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/insert-a-screen-clipping-on-a-page-e12e1d20-e54b-466b-a156-123643414c47" target="_blank" rel="noopener noreferrer">Insert a screen clipping on a page</a></h3>
+              <p>Helpful for capturing reference material, process screenshots, dashboards, and temporary web information.</p>
+              <span class="link-meta">Capture workflow</span>
+            </article>
+            <article class="link-card">
+              <small>9 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/create-or-customize-page-templates-2c92ef65-06aa-4b01-9bae-4fc2e7361806" target="_blank" rel="noopener noreferrer">Create or customize page templates</a></h3>
+              <p>Essential when standardizing recurring pages such as meeting notes, training logs, project updates, or study sheets.</p>
+              <span class="link-meta">Templates</span>
+            </article>
+            <article class="link-card">
+              <small>10 of 12</small>
+              <h3><a href="https://support.microsoft.com/en-us/office/export-notes-from-onenote-as-a-pdf-13d173b5-7f4c-45a8-94eb-9354d63af5cd" target="_blank" rel="noopener noreferrer">Export notes from OneNote as a PDF</a></h3>
+              <p>Best for static sharing, controlled handoff, or preserving a page snapshot outside the live notebook.</p>
+              <span class="link-meta">Publishing</span>
+            </article>
+            <article class="link-card">
+              <small>11 of 12</small>
+              <h3><a href="https://learn.microsoft.com/en-us/training/modules/get-started-with-onenote/" target="_blank" rel="noopener noreferrer">Get started with OneNote for education</a></h3>
+              <p>Structured Microsoft Learn training that is also useful for general onboarding and workflow standardization.</p>
+              <span class="link-meta">Microsoft Learn</span>
+            </article>
+            <article class="link-card">
+              <small>12 of 12</small>
+              <h3><a href="https://learn.microsoft.com/en-us/microsoft-365/education/guide/2-baseline/applications/baseline-apps-onenote" target="_blank" rel="noopener noreferrer">Set up OneNote Class Notebooks</a></h3>
+              <p>Strong reference for education scenarios, shared notebook planning, and understanding structured collaboration models.</p>
+              <span class="link-meta">Education guide</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="faq">
+          <h2>FAQ</h2>
+          <div class="faq-item">
+            <h3>Is OneNote 365 the same as OneNote in Microsoft 365?</h3>
+            <p>In practical portal usage, yes. This page treats OneNote 365 as the OneNote experience aligned with Microsoft 365 accounts, services, storage, and workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Should I use the desktop app or the web version?</h3>
+            <p>Use the web version for quick access and convenience, and prefer the desktop app when you need deeper feature coverage, established templates, or a more mature editing workflow.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the fastest way to improve daily use?</h3>
+            <p>Learn a small set of shortcuts, keep page titles consistent, and use one repeatable notebook structure before exploring advanced features.</p>
+          </div>
+          <div class="faq-item">
+            <h3>When should I export instead of share?</h3>
+            <p>Export to PDF when you need a fixed snapshot or formal handoff. Share the notebook when you want live collaboration and ongoing updates.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is this page suitable for both business and education users?</h3>
+            <p>Yes. The resources are intentionally mixed to support general productivity, onboarding, structured learning, and classroom-style collaboration scenarios.</p>
+          </div>
+          <div class="footer-note">
+            This resource directory is designed to function as a portal-friendly standalone page with metadata, internal anchors, responsive layout behavior, and production-ready styling for the personal-techportal project.
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

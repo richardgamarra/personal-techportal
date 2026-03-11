@@ -15,6 +15,7 @@ import {
   FileText,
   Star,
   Sun,
+  Moon,
   Home,
   Mail,
 } from "lucide-react";
@@ -148,7 +149,7 @@ function Card({ children, className = "" }) {
   return (
     <div
       className={[
-        "rounded-[28px] border border-white/10 bg-[#0b1220]/92 shadow-[0_10px_40px_rgba(0,0,0,0.28)] backdrop-blur-sm",
+        "rounded-[28px] border backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.28)]",
         className,
       ].join(" ")}
     >
@@ -163,6 +164,40 @@ export default function PortalClient({ initialContent = [] }) {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [viewMode, setViewMode] = useState("home");
   const [selectedSection, setSelectedSection] = useState(null);
+  const [theme, setTheme] = useState("dark");
+
+  const isDark = theme === "dark";
+
+  const shellClass = isDark
+    ? "min-h-screen bg-[#030b17] text-white"
+    : "min-h-screen bg-[#eef3fb] text-slate-900";
+
+  const outerCardClass = isDark
+    ? "border-white/10 bg-[#0b1220]/92"
+    : "border-slate-200 bg-white";
+
+  const sidebarClass = isDark
+    ? "flex h-full flex-col bg-[#050d1b] text-slate-100"
+    : "flex h-full flex-col bg-[#f8fbff] text-slate-900";
+
+  const borderClass = isDark ? "border-white/10" : "border-slate-200";
+  const mutedTextClass = isDark ? "text-slate-400" : "text-slate-500";
+  const softTextClass = isDark ? "text-slate-300" : "text-slate-600";
+  const strongCardClass = isDark
+    ? "rounded-[30px] border border-white/10 bg-[#161616]/95"
+    : "rounded-[30px] border border-slate-200 bg-white";
+  const innerCardClass = isDark
+    ? "rounded-[26px] border border-white/10 bg-[#151515]/95"
+    : "rounded-[26px] border border-slate-200 bg-white";
+  const accentPanelClass = isDark
+    ? "rounded-[30px] border border-sky-400/15 bg-[#243a63] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+    : "rounded-[30px] border border-sky-200 bg-gradient-to-br from-sky-100 to-white p-8";
+  const buttonGhostClass = isDark
+    ? "rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+    : "rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100";
+  const themeButtonClass = isDark
+    ? "rounded-2xl border border-white/10 bg-white/5 p-3 text-slate-300 transition hover:bg-white/10"
+    : "rounded-2xl border border-slate-300 bg-white p-3 text-slate-700 transition hover:bg-slate-100";
 
   const allItems = useMemo(() => {
     return [...initialContent]
@@ -339,10 +374,14 @@ export default function PortalClient({ initialContent = [] }) {
     }
   }
 
+  function toggleTheme() {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  }
+
   function SidebarContent() {
     return (
-      <div className="flex h-full flex-col bg-[#050d1b] text-slate-100">
-        <div className="border-b border-white/10 p-5">
+      <div className={sidebarClass}>
+        <div className={`border-b p-5 ${borderClass}`}>
           <a
             href="/"
             onClick={(e) => {
@@ -351,35 +390,53 @@ export default function PortalClient({ initialContent = [] }) {
             }}
             className="flex items-start gap-3"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-[#0d1930] text-sky-300">
+            <div
+              className={`flex h-11 w-11 items-center justify-center rounded-2xl border ${
+                isDark
+                  ? "border-sky-400/20 bg-[#0d1930] text-sky-300"
+                  : "border-sky-200 bg-sky-50 text-sky-700"
+              }`}
+            >
               <LayoutDashboard className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-lg font-semibold leading-tight text-white">Richard Gamarra</p>
-              <p className="text-sm text-slate-400">Enterprise Technology Portal</p>
+              <p className={`text-lg font-semibold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+                Richard Gamarra
+              </p>
+              <p className={`text-sm ${mutedTextClass}`}>Enterprise Technology Portal</p>
             </div>
           </a>
 
           <div className="relative mt-5">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <Search
+              className={`pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                isDark ? "text-slate-500" : "text-slate-400"
+              }`}
+            />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search resources, pages, topics..."
-              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-sky-400/40 focus:bg-white/10"
+              className={`w-full rounded-2xl border py-3 pl-11 pr-4 text-sm outline-none transition placeholder:text-slate-500 ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-slate-100 focus:border-sky-400/40 focus:bg-white/10"
+                  : "border-slate-200 bg-white text-slate-900 focus:border-sky-400 focus:bg-white"
+              }`}
             />
           </div>
         </div>
 
-        <div className="border-b border-white/10 p-4">
+        <div className={`border-b p-4 ${borderClass}`}>
           <button
             type="button"
             onClick={goHome}
             className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
               viewMode === "home"
                 ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
-                : "text-slate-200 hover:bg-white/7"
+                : isDark
+                ? "text-slate-200 hover:bg-white/7"
+                : "text-slate-700 hover:bg-slate-100"
             }`}
           >
             <Home className="h-4 w-4" />
@@ -389,7 +446,13 @@ export default function PortalClient({ initialContent = [] }) {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           {filteredGroupedSections.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-4 text-sm text-slate-400">
+            <div
+              className={`rounded-2xl border border-dashed p-4 text-sm ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-slate-400"
+                  : "border-slate-300 bg-slate-50 text-slate-500"
+              }`}
+            >
               No pages matched your search.
             </div>
           ) : (
@@ -401,7 +464,11 @@ export default function PortalClient({ initialContent = [] }) {
                     <button
                       type="button"
                       onClick={() => handleOpenSection(group.section)}
-                      className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-100/80 hover:text-white"
+                      className={`text-xs font-semibold uppercase tracking-[0.24em] ${
+                        isDark
+                          ? "text-sky-100/80 hover:text-white"
+                          : "text-sky-700 hover:text-sky-900"
+                      }`}
                     >
                       {group.section}
                     </button>
@@ -420,16 +487,24 @@ export default function PortalClient({ initialContent = [] }) {
                           className={`flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
                             isActive
                               ? "bg-sky-500/90 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
-                              : "text-slate-200 hover:bg-white/7"
+                              : isDark
+                              ? "text-slate-200 hover:bg-white/7"
+                              : "text-slate-700 hover:bg-slate-100"
                           }`}
                         >
                           <div
                             className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                              isActive ? "bg-white/15" : "bg-white/5"
+                              isActive
+                                ? "bg-white/15"
+                                : isDark
+                                ? "bg-white/5"
+                                : "bg-slate-100"
                             }`}
                           >
                             <Icon
-                              className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-300"}`}
+                              className={`h-4 w-4 ${
+                                isActive ? "text-white" : isDark ? "text-slate-300" : "text-slate-600"
+                              }`}
                             />
                           </div>
 
@@ -437,7 +512,7 @@ export default function PortalClient({ initialContent = [] }) {
                             <div className="truncate text-sm font-medium">{item.title}</div>
                             <div
                               className={`truncate text-xs ${
-                                isActive ? "text-sky-100/80" : "text-slate-400"
+                                isActive ? "text-sky-100/80" : isDark ? "text-slate-400" : "text-slate-500"
                               }`}
                             >
                               {item.subcategory || item.category || item.section}
@@ -450,8 +525,12 @@ export default function PortalClient({ initialContent = [] }) {
                 </div>
               ))}
 
-              <div className="border-t border-white/10 pt-4">
-                <p className="mb-3 px-1 text-xs font-semibold uppercase tracking-[0.26em] text-sky-200/80">
+              <div className={`border-t pt-4 ${borderClass}`}>
+                <p
+                  className={`mb-3 px-1 text-xs font-semibold uppercase tracking-[0.26em] ${
+                    isDark ? "text-sky-200/80" : "text-sky-700"
+                  }`}
+                >
                   Contact
                 </p>
                 <button
@@ -460,7 +539,9 @@ export default function PortalClient({ initialContent = [] }) {
                   className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
                     viewMode === "contact"
                       ? "bg-sky-500 text-white shadow-[0_10px_30px_rgba(14,165,233,0.22)]"
-                      : "text-slate-200 hover:bg-white/7"
+                      : isDark
+                      ? "text-slate-200 hover:bg-white/7"
+                      : "text-slate-700 hover:bg-slate-100"
                   }`}
                 >
                   <Mail className="h-4 w-4" />
@@ -482,7 +563,7 @@ export default function PortalClient({ initialContent = [] }) {
         key={item.id}
         type="button"
         onClick={() => handleOpenPage(item)}
-        className="group overflow-hidden rounded-[30px] border border-white/10 bg-[#161616]/95 text-left shadow-[0_10px_40px_rgba(0,0,0,0.22)] transition hover:border-sky-400/30 hover:bg-[#1a1a1a]"
+        className={`group overflow-hidden ${strongCardClass} text-left shadow-[0_10px_40px_rgba(0,0,0,0.22)] transition hover:border-sky-400/30`}
       >
         <div className={`relative overflow-hidden ${compact ? "h-[220px]" : "h-[280px]"}`}>
           <img
@@ -493,18 +574,26 @@ export default function PortalClient({ initialContent = [] }) {
               e.currentTarget.style.display = "none";
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-[#151515]/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         </div>
 
         <div className="p-6">
           <div className="flex items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#0d1930] text-sky-300">
+            <div
+              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${
+                isDark
+                  ? "border-white/10 bg-[#0d1930] text-sky-300"
+                  : "border-slate-200 bg-sky-50 text-sky-700"
+              }`}
+            >
               <Icon className="h-5 w-5" />
             </div>
 
             <div className="min-w-0 flex-1">
-              <div className="text-2xl font-bold text-white">{item.title}</div>
-              <div className="mt-1 text-sm text-slate-400">
+              <div className={`text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                {item.title}
+              </div>
+              <div className={`mt-1 text-sm ${mutedTextClass}`}>
                 {item.section} • {item.subcategory || item.category}
               </div>
             </div>
@@ -516,9 +605,7 @@ export default function PortalClient({ initialContent = [] }) {
             )}
           </div>
 
-          <p className="mt-5 line-clamp-3 text-sm leading-8 text-slate-300">
-            {item.description}
-          </p>
+          <p className={`mt-5 line-clamp-3 text-sm leading-8 ${softTextClass}`}>{item.description}</p>
 
           <div className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition group-hover:bg-sky-300">
             Open Page
@@ -539,23 +626,31 @@ export default function PortalClient({ initialContent = [] }) {
       <button
         type="button"
         onClick={() => handleOpenSection(group.section)}
-        className="group overflow-hidden rounded-[30px] border border-white/10 bg-[#161616]/95 p-6 text-left shadow-[0_10px_40px_rgba(0,0,0,0.22)] transition hover:border-sky-400/30 hover:bg-[#1a1a1a]"
+        className={`group overflow-hidden ${strongCardClass} p-6 text-left shadow-[0_10px_40px_rgba(0,0,0,0.22)] transition hover:border-sky-400/30`}
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-[#0d1930] text-sky-300">
+        <div
+          className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${
+            isDark
+              ? "border-white/10 bg-[#0d1930] text-sky-300"
+              : "border-slate-200 bg-sky-50 text-sky-700"
+          }`}
+        >
           <SectionIcon section={group.section} className="h-5 w-5" />
         </div>
 
-        <h3 className="mt-6 text-2xl font-bold text-white">{group.section}</h3>
-        <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-300">{meta.description}</p>
+        <h3 className={`mt-6 text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+          {group.section}
+        </h3>
+        <p className={`mt-3 line-clamp-3 text-sm leading-7 ${softTextClass}`}>{meta.description}</p>
 
         <div className="mt-5 flex items-center justify-between">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+          <span className={`inline-flex items-center gap-2 text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
             Open Section
           </span>
-          <ChevronRight className="h-4 w-4 text-slate-400 transition group-hover:text-white" />
+          <ChevronRight className={`h-4 w-4 ${isDark ? "text-slate-400" : "text-slate-500"} transition group-hover:text-sky-500`} />
         </div>
 
-        <div className="mt-4 text-xs uppercase tracking-[0.24em] text-slate-500">
+        <div className={`mt-4 text-xs uppercase tracking-[0.24em] ${isDark ? "text-slate-500" : "text-slate-400"}`}>
           {group.items.length} page{group.items.length === 1 ? "" : "s"}
         </div>
       </button>
@@ -572,22 +667,28 @@ export default function PortalClient({ initialContent = [] }) {
     const items = getItemsForSection(section);
 
     return (
-      <Card className="overflow-hidden">
-        <div className="border-b border-white/10 px-6 py-6 md:px-8">
+      <Card className={`overflow-hidden ${outerCardClass}`}>
+        <div className={`border-b px-6 py-6 md:px-8 ${borderClass}`}>
           <div className="mb-2 flex items-center gap-3">
             <SectionIcon section={section} className="h-5 w-5 text-sky-300" />
-            <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+            <span className={`text-xs font-semibold uppercase tracking-[0.34em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
               {section}
             </span>
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+          <h1 className={`text-4xl font-bold tracking-tight md:text-5xl ${isDark ? "text-white" : "text-slate-900"}`}>
             {meta.label}
           </h1>
-          <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">{meta.description}</p>
+          <p className={`mt-3 max-w-3xl text-base leading-8 ${softTextClass}`}>{meta.description}</p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-400">
-            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-200">
+          <div className={`mt-5 flex flex-wrap items-center gap-3 text-sm ${mutedTextClass}`}>
+            <span
+              className={`rounded-full border px-4 py-2 ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-slate-200"
+                  : "border-slate-200 bg-slate-50 text-slate-700"
+              }`}
+            >
               {items.length} page{items.length === 1 ? "" : "s"}
             </span>
             <span>Practical documentation and reference material</span>
@@ -600,34 +701,34 @@ export default function PortalClient({ initialContent = [] }) {
   function PageCanvas() {
     if (viewMode === "contact") {
       return (
-        <Card className="overflow-hidden">
-          <div className="border-b border-white/10 px-6 py-6 md:px-8">
+        <Card className={`overflow-hidden ${outerCardClass}`}>
+          <div className={`border-b px-6 py-6 md:px-8 ${borderClass}`}>
             <div className="mb-2 flex items-center gap-3">
               <Mail className="h-5 w-5 text-sky-300" />
-              <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+              <span className={`text-xs font-semibold uppercase tracking-[0.34em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 Contact
               </span>
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+            <h1 className={`text-4xl font-bold tracking-tight md:text-5xl ${isDark ? "text-white" : "text-slate-900"}`}>
               Get in Touch
             </h1>
-            <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">
-              Connect for collaboration, questions, professional networking, and technical
-              discussion.
+            <p className={`mt-3 max-w-3xl text-base leading-8 ${softTextClass}`}>
+              Connect for collaboration, questions, professional networking, and technical discussion.
             </p>
           </div>
 
           <div className="grid gap-6 p-6 md:grid-cols-[1.15fr_0.85fr] md:p-8">
-            <div className="rounded-[26px] border border-white/10 bg-[#151515]/95 p-8">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-sky-200/80">
+            <div className={`${innerCardClass} p-8`}>
+              <div className={`mb-3 text-xs font-semibold uppercase tracking-[0.32em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 Professional Contact
               </div>
-              <h2 className="text-3xl font-bold text-white">Richard Gamarra</h2>
-              <p className="mt-4 text-base leading-8 text-slate-300">
-                IT Systems Specialist and Analyst / Enterprise Technology Advisor focused on
-                infrastructure, operations, troubleshooting, automation, and modern platform
-                enablement.
+              <h2 className={`text-3xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                Richard Gamarra
+              </h2>
+              <p className={`mt-4 text-base leading-8 ${softTextClass}`}>
+                IT Systems Specialist and Analyst / Enterprise Technology Advisor focused on infrastructure,
+                operations, troubleshooting, automation, and modern platform enablement.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -641,11 +742,11 @@ export default function PortalClient({ initialContent = [] }) {
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-[#151515]/95 p-8">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-sky-200/80">
+            <div className={`${innerCardClass} p-8`}>
+              <div className={`mb-3 text-xs font-semibold uppercase tracking-[0.32em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 Focus Areas
               </div>
-              <div className="space-y-3 text-sm leading-7 text-slate-300">
+              <div className={`space-y-3 text-sm leading-7 ${softTextClass}`}>
                 <p>Enterprise systems and operations</p>
                 <p>Windows and Microsoft 365 troubleshooting</p>
                 <p>Automation and AI experimentation</p>
@@ -676,19 +777,19 @@ export default function PortalClient({ initialContent = [] }) {
       const item = visibleSelectedItem;
 
       return (
-        <Card className="overflow-hidden">
-          <div className="border-b border-white/10 px-6 py-6 md:px-8">
+        <Card className={`overflow-hidden ${outerCardClass}`}>
+          <div className={`border-b px-6 py-6 md:px-8 ${borderClass}`}>
             <div className="mb-2 flex items-center gap-3">
               <SectionIcon section={item.section} className="h-5 w-5 text-sky-300" />
-              <span className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+              <span className={`text-xs font-semibold uppercase tracking-[0.34em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 {item.section}
               </span>
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+            <h1 className={`text-4xl font-bold tracking-tight md:text-5xl ${isDark ? "text-white" : "text-slate-900"}`}>
               {item.title}
             </h1>
-            <p className="mt-3 max-w-3xl text-base leading-8 text-slate-300">
+            <p className={`mt-3 max-w-3xl text-base leading-8 ${softTextClass}`}>
               {item.description}
             </p>
           </div>
@@ -697,7 +798,9 @@ export default function PortalClient({ initialContent = [] }) {
             <iframe
               src={getItemHref(item)}
               title={item.title}
-              className="h-[calc(100vh-160px)] min-h-[950px] w-full rounded-[24px] border border-white/10 bg-white"
+              className={`h-[calc(100vh-160px)] min-h-[950px] w-full rounded-[24px] border ${
+                isDark ? "border-white/10 bg-white" : "border-slate-200 bg-white"
+              }`}
             />
           </div>
         </Card>
@@ -706,18 +809,18 @@ export default function PortalClient({ initialContent = [] }) {
 
     return (
       <div className="space-y-6">
-        <Card className="overflow-hidden">
-          <div className="grid gap-6 border-b border-white/10 px-6 py-6 md:grid-cols-[1.2fr_0.8fr] md:px-8">
-            <div className="rounded-[30px] border border-sky-400/15 bg-[#243a63] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <Card className={`overflow-hidden ${outerCardClass}`}>
+          <div className={`grid gap-6 border-b px-6 py-6 md:grid-cols-[1.2fr_0.8fr] md:px-8 ${borderClass}`}>
+            <div className={accentPanelClass}>
               <div className="mb-3 inline-flex rounded-full bg-white/20 px-4 py-1 text-xs font-semibold text-white">
                 Personal Homepage + Resource Portal
               </div>
 
-              <h1 className="max-w-3xl text-5xl font-bold leading-none tracking-tight text-white md:text-7xl">
+              <h1 className={`max-w-3xl text-5xl font-bold leading-none tracking-tight md:text-7xl ${isDark ? "text-white" : "text-slate-900"}`}>
                 Enterprise IT Experience, Modern Technology Thinking
               </h1>
 
-              <p className="mt-8 max-w-3xl text-lg leading-9 text-slate-100/90">
+              <p className={`mt-8 max-w-3xl text-lg leading-9 ${isDark ? "text-slate-100/90" : "text-slate-700"}`}>
                 A professional portal that brings together my IT journey, curated resources,
                 practical tools, and the pages I build along the way.
               </p>
@@ -737,7 +840,7 @@ export default function PortalClient({ initialContent = [] }) {
                 <button
                   type="button"
                   onClick={openStoryPage}
-                  className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                  className={buttonGhostClass}
                 >
                   Read My Journey
                 </button>
@@ -775,11 +878,13 @@ export default function PortalClient({ initialContent = [] }) {
               </div>
             </div>
 
-            <div className="rounded-[30px] border border-white/10 bg-[#151515]/95 p-8">
-              <h2 className="text-4xl font-bold leading-tight text-white">Why I Built This Portal</h2>
-              <p className="mt-3 text-base text-slate-300">A short first-person motivation story.</p>
+            <div className={`${innerCardClass} p-8`}>
+              <h2 className={`text-4xl font-bold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+                Why I Built This Portal
+              </h2>
+              <p className={`mt-3 text-base ${softTextClass}`}>A short first-person motivation story.</p>
 
-              <div className="mt-8 space-y-5 text-base leading-9 text-slate-300">
+              <div className={`mt-8 space-y-5 text-base leading-9 ${softTextClass}`}>
                 <p>
                   I created this portal to organize the things that matter most in my professional
                   journey: knowledge, experience, useful references, and the constant evolution of
@@ -804,7 +909,9 @@ export default function PortalClient({ initialContent = [] }) {
                 ].map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-200"
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                      isDark ? "bg-white/10 text-slate-200" : "bg-slate-100 text-slate-700"
+                    }`}
                   >
                     {tag}
                   </span>
@@ -826,11 +933,13 @@ export default function PortalClient({ initialContent = [] }) {
         {keyAreaSections.length > 0 && (
           <div>
             <div className="mb-6 px-1">
-              <div className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+              <div className={`text-xs font-semibold uppercase tracking-[0.34em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 Highlights
               </div>
-              <h2 className="mt-2 text-4xl font-bold text-white">Explore Key Areas</h2>
-              <p className="mt-2 text-base text-slate-300">
+              <h2 className={`mt-2 text-4xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                Explore Key Areas
+              </h2>
+              <p className={`mt-2 text-base ${softTextClass}`}>
                 Quick entry points into the main sections of the portal.
               </p>
             </div>
@@ -846,13 +955,14 @@ export default function PortalClient({ initialContent = [] }) {
         {featuredItems.length > 0 && (
           <div>
             <div className="mb-6 mt-10 px-1">
-              <div className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/80">
+              <div className={`text-xs font-semibold uppercase tracking-[0.34em] ${isDark ? "text-sky-200/80" : "text-sky-700"}`}>
                 Featured Space
               </div>
-              <h2 className="mt-2 text-4xl font-bold text-white">Highlighted Portal Content</h2>
-              <p className="mt-2 text-base text-slate-300">
-                Featured HTML pages from across resources, learning, enterprise, and project
-                sections.
+              <h2 className={`mt-2 text-4xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                Highlighted Portal Content
+              </h2>
+              <p className={`mt-2 text-base ${softTextClass}`}>
+                Featured HTML pages from across resources, learning, enterprise, and project sections.
               </p>
             </div>
 
@@ -868,32 +978,29 @@ export default function PortalClient({ initialContent = [] }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#030b17] text-white">
+    <div className={shellClass}>
       <div className="mx-auto max-w-[1920px] px-3 py-3 md:px-5">
         <div className="grid gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
           <aside className="hidden lg:block">
-            <Card className="sticky top-3 overflow-hidden">
+            <Card className={`sticky top-3 overflow-hidden ${outerCardClass}`}>
               <SidebarContent />
             </Card>
           </aside>
 
           <main className="min-w-0">
-            <Card className="overflow-hidden">
-              <div className="flex items-start justify-between border-b border-white/10 px-5 py-4 md:px-6">
+            <Card className={`overflow-hidden ${outerCardClass}`}>
+              <div className={`flex items-start justify-between border-b px-5 py-4 md:px-6 ${borderClass}`}>
                 <div>
-                  <div className="text-4xl font-bold tracking-tight text-white">
+                  <div className={`text-4xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
                     Richard Gamarra | Enterprise Technology Portal
                   </div>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <p className={`mt-1 text-sm ${mutedTextClass}`}>
                     Infrastructure, systems, automation, and practical technology leadership.
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  className="rounded-2xl border border-white/10 bg-white/5 p-3 text-slate-300 transition hover:bg-white/10"
-                >
-                  <Sun className="h-4 w-4" />
+                <button type="button" onClick={toggleTheme} className={themeButtonClass}>
+                  {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </button>
               </div>
 
