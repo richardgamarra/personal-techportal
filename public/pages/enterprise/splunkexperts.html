@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 
+  PORTAL_META
+  title: Splunk Commands for Experienced Users
+  description: Premium SOC-focused Splunk SPL cheat sheet for Tier 2 and Tier 3 analysts investigating Windows Active Directory activity, DUO MFA events, network issues, and log source health.
+  category: enterprise
+  icon: 🛡️
+  thumbnail: https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-5380590.jpg&fm=jpg
+  featured: yes
+  tags: splunk, soc, active directory, windows security, duo, spl, detection engineering, incident response
+  order: 10
+  PORTAL_META_END
+  -->
+  <meta name="description" content="Splunk Tier 2 / Tier 3 SOC Cheat Sheet for Windows Active Directory investigations, authentication failures, DUO MFA, lateral movement, process execution, network health, and SPL examples." />
+  <meta name="keywords" content="Splunk, SPL, SOC, Active Directory, Windows Security, EventCode 4740, 4625, 4624, Duo, incident response, security operations" />
+  <meta name="author" content="Richard Gamarra" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Splunk Tier 2 / Tier 3 SOC Cheat Sheet" />
+  <meta property="og:description" content="Advanced Splunk command reference for SOC analysts working Windows AD, DUO MFA, network, and detection workflows." />
+  <meta property="og:image" content="https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-5380590.jpg&fm=jpg" />
+  <meta property="og:image:alt" content="Dark cybersecurity operations workstation with multiple monitors" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Splunk Tier 2 / Tier 3 SOC Cheat Sheet" />
+  <meta name="twitter:description" content="Advanced SOC-ready Splunk search command guide for Windows AD and incident response use cases." />
+  <meta name="twitter:image" content="https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-5380590.jpg&fm=jpg" />
+  <title>Splunk Tier 2 / Tier 3 SOC Cheat Sheet</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Splunk Tier 2 / Tier 3 SOC Cheat Sheet",
+    "author": {
+      "@type": "Person",
+      "name": "Richard Gamarra"
+    },
+    "about": ["Splunk", "Windows Active Directory", "SOC Operations", "DUO MFA", "Detection Engineering"],
+    "keywords": ["Splunk", "SPL", "SOC", "Active Directory", "DUO", "Windows Security"],
+    "image": "https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-5380590.jpg&fm=jpg"
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #07101b;
+      --bg-soft: #0c1627;
+      --panel: rgba(15, 23, 42, 0.82);
+      --panel-2: rgba(17, 24, 39, 0.92);
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #e5eefc;
+      --muted: #97a6ba;
+      --accent: #60a5fa;
+      --accent-2: #22d3ee;
+      --green: #34d399;
+      --amber: #fbbf24;
+      --red: #fb7185;
+      --violet: #a78bfa;
+      --shadow: 0 24px 70px rgba(2, 8, 23, 0.45);
+      --radius: 22px;
+      --code-bg: #060b16;
+      --chip: rgba(96, 165, 250, 0.12);
+      --max: 1480px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.10), transparent 26%),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 24%),
+        linear-gradient(180deg, #040814 0%, #07101b 40%, #091220 100%);
+      line-height: 1.55;
+    }
+
+    a { color: #8ec5ff; text-decoration: none; }
+    a:hover { color: #c5e1ff; }
+    .container { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+
+    .hero {
+      padding: 42px 0 26px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card, .thumb-card, .section-card, .command-card, .mini-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(9, 14, 24, 0.92));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-card { padding: 28px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.10);
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      color: #b5d4ff;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(2rem, 3vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin: 0 0 14px;
+      color: #bfd0e4;
+      font-size: 1.02rem;
+      max-width: 900px;
+    }
+
+    .byline {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .hero-metrics {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(10, 16, 28, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+      color: #eff6ff;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .thumb-card {
+      overflow: hidden;
+      position: relative;
+      min-height: 280px;
+    }
+
+    .thumb-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.1) contrast(1.02);
+    }
+
+    .thumb-overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 18px;
+      background: linear-gradient(180deg, transparent, rgba(2, 8, 23, 0.92));
+      color: #dcecff;
+      font-size: 0.92rem;
+    }
+
+    .top-tools {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      padding-bottom: 16px;
+    }
+
+    .tool-wrap {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(8, 14, 26, 0.88);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(96, 165, 250, 0.22);
+      background: rgba(6, 11, 22, 0.96);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: rgba(96, 165, 250, 0.7);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+    }
+
+    .result-pill {
+      padding: 11px 14px;
+      border-radius: 12px;
+      background: rgba(96, 165, 250, 0.10);
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      color: #c8defb;
+      min-width: 150px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .anchor-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .anchor-nav a {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid rgba(96, 165, 250, 0.14);
+      color: #d6e9ff;
+      font-size: 0.92rem;
+    }
+
+    main { padding-bottom: 56px; }
+    section.page-section { margin: 22px 0; }
+    .section-card { padding: 24px; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-copy { color: var(--muted); max-width: 920px; }
+
+    .grid-2, .grid-3, .link-grid, .faq-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .faq-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .mini-card {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(12, 20, 34, 0.95), rgba(8, 13, 23, 0.95));
+    }
+
+    .mini-card h3, .command-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.02rem;
+      letter-spacing: -0.01em;
+    }
+
+    .mini-card p, .command-desc, .small-note, .faq-answer { color: var(--muted); margin: 0; }
+
+    .command-section { margin-top: 20px; }
+    .command-section + .command-section { margin-top: 28px; }
+    .command-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .command-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #eff6ff;
+    }
+
+    .command-count {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.18);
+      color: #bdf5df;
+      font-size: 0.85rem;
+    }
+
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .command-card {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .command-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      opacity: 0.9;
+    }
+
+    .command-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(167, 139, 250, 0.12);
+      border: 1px solid rgba(167, 139, 250, 0.16);
+      color: #dacdff;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      background: rgba(96, 165, 250, 0.10);
+      color: #d7eaff;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(96, 165, 250, 0.15);
+      border-color: rgba(96, 165, 250, 0.36);
+    }
+
+    .spl-code {
+      margin: 0 0 10px;
+      padding: 14px 14px 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #030712, #081120);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      overflow-x: auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .spl-code code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, Monaco, Liberation Mono, monospace;
+      font-size: 0.93rem;
+      color: #ebf5ff;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tok-pipe { color: #7dd3fc; }
+    .tok-cmd { color: #c4b5fd; font-weight: 600; }
+    .tok-field { color: #93c5fd; }
+    .tok-str { color: #86efac; }
+    .tok-num { color: #fbbf24; }
+    .tok-op { color: #fda4af; }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    ul.clean {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    ul.clean li + li { margin-top: 8px; }
+
+    .link-card {
+      display: block;
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(12, 20, 34, 0.95), rgba(8, 13, 23, 0.95));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      min-height: 100%;
+    }
+
+    .link-card strong { display: block; color: #eff6ff; margin-bottom: 6px; }
+    .link-card span { color: var(--muted); font-size: 0.95rem; }
+
+    .hidden-card { display: none !important; }
+    .empty-state {
+      display: none;
+      padding: 22px;
+      border-radius: 18px;
+      border: 1px dashed rgba(148, 163, 184, 0.25);
+      background: rgba(8, 13, 23, 0.6);
+      color: #c8d6ea;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    footer {
+      padding: 28px 0 50px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-grid,
+      .grid-3,
+      .commands-grid,
+      .faq-grid,
+      .grid-2,
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(var(--max), calc(100% - 18px)); }
+      .hero { padding-top: 20px; }
+      .hero-card, .thumb-card, .section-card, .command-card { border-radius: 18px; }
+      .hero-card, .section-card { padding: 18px; }
+      .search-row { grid-template-columns: 1fr; }
+      .hero-metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-card">
+        <div class="eyebrow">🛡️ Enterprise Security Reference • Splunk • Active Directory • DUO</div>
+        <h1>Splunk Tier 2 / Tier 3 SOC Cheat Sheet</h1>
+        <p class="lead">A polished, high-density SPL reference for experienced SOC analysts working in Windows Active Directory environments. This page prioritizes fast pivots, reusable detections, incident triage speed, and practical query patterns that map to real security operations workflows.</p>
+        <div class="byline">12 March 2026<br />By Richard Gamarra</div>
+        <div class="hero-metrics">
+          <div class="metric"><strong>57 Commands</strong><span>Copy-ready SPL examples</span></div>
+          <div class="metric"><strong>11 Domains</strong><span>AD, DUO, network, Wi-Fi, health</span></div>
+          <div class="metric"><strong>Advanced Audience</strong><span>Tier 2 / Tier 3 SOC analysts</span></div>
+          <div class="metric"><strong>Live Filter</strong><span>Search by keyword, event ID, or use case</span></div>
+        </div>
+      </div>
+      <aside class="thumb-card" aria-label="Featured cybersecurity thumbnail">
+        <img src="https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-5380590.jpg&fm=jpg" alt="Dark cybersecurity operations workstation with multiple monitors" />
+        <div class="thumb-overlay">Recommended remote thumbnail for featured portal placement. Suitable for enterprise, security operations, or incident response content cards.</div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="container top-tools">
+    <div class="tool-wrap">
+      <div class="search-row">
+        <input id="commandFilter" class="search-input" type="search" placeholder="Filter commands by keyword, EventCode, use case, field, or section... e.g. 4740, brute force, powershell, duo, transaction" aria-label="Filter cheat sheet commands" />
+        <div class="result-pill"><span id="visibleCount">57</span> visible commands</div>
+      </div>
+      <nav class="anchor-nav" aria-label="Internal section navigation">
+        <a href="#overview">Overview</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#list-of-commands">List of Commands</a>
+        <a href="#best-practices">Best Practices</a>
+        <a href="#useful-links">Useful External Links</a>
+        <a href="#references">References with Links</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="page-section" id="overview">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>Overview</h2>
+            <p class="section-copy">This cheat sheet is designed for analysts who already understand base Windows eventing and Splunk search behavior, and need a premium reference page for recurring SOC tasks. The examples assume Windows Security logs, domain controller visibility, endpoint telemetry, DUO authentication data, and infrastructure logs are already normalized into Splunk.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="mini-card">
+            <h3>Primary Focus</h3>
+            <p>Account lockouts, authentication failures, AD object changes, privileged activity, process execution, lateral movement, network operations, and SPL operator examples relevant to enterprise triage.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Why This Format Works</h3>
+            <p>Every entry is intentionally short: title, full SPL query, and one-line analyst guidance. This keeps the page usable during active investigations, bridge calls, and escalations.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Important Assumption</h3>
+            <p>Field names vary by TA, data model, and source onboarding. Treat these queries as solid starting patterns and adjust host, user, src, ComputerName, AuthenticationPackageName, or Duo field names to match your environment.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="requirements">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>Requirements</h2>
+            <p class="section-copy">Before these searches produce useful results, make sure your SOC pipeline exposes the right telemetry, retention, and field extraction coverage.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <article class="mini-card">
+            <h3>Recommended Data Sources</h3>
+            <ul class="clean">
+              <li>Windows Security logs from workstations, servers, and domain controllers</li>
+              <li>Sysmon or endpoint process telemetry for command-line visibility</li>
+              <li>DUO authentication and admin reporting data</li>
+              <li>DNS, DHCP, VPN, firewall, wireless controller, and infrastructure logs</li>
+              <li>Asset or identity lookup tables for owner, location, or tier enrichment</li>
+            </ul>
+          </article>
+          <article class="mini-card">
+            <h3>Analyst Notes</h3>
+            <ul class="clean">
+              <li>Prefer scoped indexes over index=* in production except during discovery or emergency triage</li>
+              <li>Correlate DC events with endpoint telemetry to separate user mistakes from attacker workflow</li>
+              <li>Use earliest/latest bounds aggressively to reduce cost and accelerate pivots</li>
+              <li>Pair lockout and 4625 searches with source host, LogonType, and authentication package fields</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="list-of-commands">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>List of Commands</h2>
+            <p class="section-copy">Use the live filter to narrow by event ID, field, or scenario. Every card below contains a copy-ready query and a one-line operational description.</p>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Account Lockouts">
+          <div class="command-header">
+            <h3>Account Lockouts</h3>
+            <div class="command-count">6 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="account lockouts locked-out account search 4740 username recent source machine domain controller frequency top locked accounts">
+              <div class="command-meta">
+                <h3>Locked-Out Account Search</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=* EventCode=4740 Username="&lt;username&gt;"</code></pre>
+              <p class="command-desc">Searches for account lockout events by username and is the fastest first pivot for a locked user report.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="account lockouts source machine caller computer name 4740 workstation">
+              <div class="command-meta">
+                <h3>Lockouts by Source Machine</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 Username="jdoe" | stats count values(Caller_Computer_Name) as source_hosts by Username</code></pre>
+              <p class="command-desc">Shows which workstation or member server is triggering repeated lockouts for a specific account.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="account lockouts domain controller 4740 computername dc">
+              <div class="command-meta">
+                <h3>Lockouts by Domain Controller</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 Username="svc_sqlbackup" | stats count by ComputerName, Caller_Computer_Name</code></pre>
+              <p class="command-desc">Identifies which domain controller logged the lockout and the calling host associated with the event.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="account lockouts frequency 4740 timechart spike trend">
+              <div class="command-meta">
+                <h3>Lockout Frequency Trend</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 earliest=-24h | timechart span=30m count by Username limit=10</code></pre>
+              <p class="command-desc">Trends lockouts over time so analysts can spot bursts, persistence, or after-hours spikes.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="account lockouts top locked accounts 4740 stats top">
+              <div class="command-meta">
+                <h3>Top Locked Accounts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 earliest=-7d | stats count by Username | sort - count | head 15</code></pre>
+              <p class="command-desc">Ranks the most frequently locked accounts and helps identify chronic service, stale, or targeted users.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="account lockouts recent last hour 4740 latest triage">
+              <div class="command-meta">
+                <h3>Recent Lockouts Snapshot</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 earliest=-60m | table _time Username Caller_Computer_Name ComputerName | sort - _time</code></pre>
+              <p class="command-desc">Provides a fast most-recent table view for current lockout escalations and help desk bridge calls.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Authentication Failures">
+          <div class="command-header">
+            <h3>Authentication Failures</h3>
+            <div class="command-count">6 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="authentication failures 4625 failed logins username">
+              <div class="command-meta">
+                <h3>Failed Login Search by User</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 Account_Name="jdoe" earliest=-24h | table _time host Account_Name Failure_Reason Source_Network_Address Logon_Type</code></pre>
+              <p class="command-desc">Pulls failed logons for a user with context fields needed to distinguish typo noise from real attack traffic.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="authentication failures bad password status substatus 4625">
+              <div class="command-meta">
+                <h3>Bad Password Attempts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 Status="0xC000006A" earliest=-24h | stats count by Account_Name Source_Network_Address Workstation_Name | sort - count</code></pre>
+              <p class="command-desc">Targets bad-password failures to isolate repeated credential guessing or stale credential use.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="authentication failures brute force pattern threshold 4625 source ip">
+              <div class="command-meta">
+                <h3>Brute Force Pattern by Source</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 earliest=-1h | stats count dc(Account_Name) as unique_users values(Account_Name) as targeted_users by Source_Network_Address | where count&gt;20 OR unique_users&gt;5 | sort - count</code></pre>
+              <p class="command-desc">Highlights source IPs generating enough failures across one or many users to look like password spraying or brute force activity.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="authentication failures failed logins by source ip 4625 table">
+              <div class="command-meta">
+                <h3>Failed Logins by Source IP</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 earliest=-4h | stats count values(Account_Name) as users by Source_Network_Address | sort - count | head 20</code></pre>
+              <p class="command-desc">Shows which IPs are driving the highest failed login volume over the selected period.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="authentication failures disabled locked expired 4625 status substatus">
+              <div class="command-meta">
+                <h3>Disabled or Locked Account Failures</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 (Status="0xC0000072" OR Status="0xC0000234") earliest=-24h | table _time Account_Name Status Sub_Status Source_Network_Address Workstation_Name</code></pre>
+              <p class="command-desc">Surfaces sign-in attempts against disabled or already locked accounts, useful for persistence or stale service credentials.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="authentication failures spray against many users 4625 bin stats">
+              <div class="command-meta">
+                <h3>Password Spray Window Detection</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 earliest=-2h | bin _time span=10m | stats dc(Account_Name) as unique_users count by _time, Source_Network_Address | where unique_users&gt;8 AND count&gt;8 | sort - _time</code></pre>
+              <p class="command-desc">Finds short windows where one source touches many usernames, a classic password spraying pattern.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="User Activity AD Environment">
+          <div class="command-header">
+            <h3>User Activity in Active Directory</h3>
+            <div class="command-count">8 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="user activity password changes 4723 4724">
+              <div class="command-meta">
+                <h3>Password Change Attempts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4723 OR EventCode=4724) Target_Account="jdoe" earliest=-7d | table _time EventCode Subject_Account_Name Target_Account host</code></pre>
+              <p class="command-desc">Shows self-service and administrative password change or reset events for a targeted user.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity account creation 4720 new account">
+              <div class="command-meta">
+                <h3>New Account Creation</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4720 earliest=-7d | table _time Target_Account Subject_Account_Name ComputerName | sort - _time</code></pre>
+              <p class="command-desc">Lists newly created accounts and who created them, making it useful for daily identity hygiene reviews.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity account deletion 4726 removed">
+              <div class="command-meta">
+                <h3>Account Deletion Events</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4726 earliest=-30d | table _time Target_Account Subject_Account_Name ComputerName</code></pre>
+              <p class="command-desc">Identifies deleted user accounts and the administrators or systems responsible for the action.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity group membership changes 4728 4732 admin groups">
+              <div class="command-meta">
+                <h3>Group Membership Changes</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4728 OR EventCode=4732) earliest=-7d | table _time Member_Name Group_Name Subject_Account_Name ComputerName | sort - _time</code></pre>
+              <p class="command-desc">Tracks users added to security groups and supports privilege escalation investigations.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity logon logoff 4624 4634 session trail">
+              <div class="command-meta">
+                <h3>Logon and Logoff Trail</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4624 OR EventCode=4634) Account_Name="jdoe" earliest=-24h | table _time EventCode host Logon_Type Source_Network_Address</code></pre>
+              <p class="command-desc">Builds a user session timeline showing where the user logged in and when the session ended.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity explicit credentials 4648 runas remote admin">
+              <div class="command-meta">
+                <h3>Explicit Credential Use</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4648 earliest=-24h | table _time Subject_Account_Name Target_Server_Name Process_Name Account_Whose_Credentials_Were_Used</code></pre>
+              <p class="command-desc">Useful for spotting RunAs-style behavior, explicit credential use, or administrative pivots.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity logon types remote interactive batch service">
+              <div class="command-meta">
+                <h3>Logon Types by User</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Account_Name="jdoe" earliest=-7d | stats count by Logon_Type host | sort - count</code></pre>
+              <p class="command-desc">Shows whether a user is authenticating interactively, remotely, via batch jobs, or through services.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="user activity privilege use 4673 4674 sensitive operation">
+              <div class="command-meta">
+                <h3>Privilege Use Attempts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4673 OR EventCode=4674) earliest=-48h | table _time host Account_Name Process_Name PrivilegeList ObjectName</code></pre>
+              <p class="command-desc">Surfaces sensitive privilege use and can help explain suspicious account or process behavior around escalation.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Privilege Escalation and Suspicious Account Activity">
+          <div class="command-header">
+            <h3>Privilege Escalation &amp; Suspicious Account Activity</h3>
+            <div class="command-count">6 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="privilege escalation admin logins privileged users domain admins 4624">
+              <div class="command-meta">
+                <h3>Admin Logins to Critical Hosts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Logon_Type IN (2,10) Account_Name IN ("adm_jdoe","domainadmin01") host IN ("dc01","dc02","fileserver01") earliest=-24h</code></pre>
+              <p class="command-desc">Checks where privileged accounts logged in interactively or via RDP to critical systems.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="privilege escalation sensitive privilege use 4672">
+              <div class="command-meta">
+                <h3>Sensitive Privileges Assigned</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4672 earliest=-24h | table _time host Account_Name PrivilegeList Logon_ID | sort - _time</code></pre>
+              <p class="command-desc">Shows logons where sensitive privileges were granted, a strong pivot for elevated or high-risk sessions.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="privilege escalation new admin accounts group add domain admins 4728 4732">
+              <div class="command-meta">
+                <h3>New Admin Group Additions</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4728 OR EventCode=4732) (Group_Name="Domain Admins" OR Group_Name="Administrators") earliest=-30d | table _time Member_Name Group_Name Subject_Account_Name</code></pre>
+              <p class="command-desc">Finds identities recently added to highly privileged groups, one of the clearest privilege escalation indicators.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="privilege escalation service account anomaly interactive login 4624">
+              <div class="command-meta">
+                <h3>Service Account Interactive Logons</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Logon_Type IN (2,10) Account_Name="svc_backup" earliest=-14d | table _time host Account_Name Logon_Type Source_Network_Address</code></pre>
+              <p class="command-desc">Flags service accounts authenticating like humans, which often indicates misuse, password disclosure, or hands-on-keyboard activity.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="privilege escalation dormant admin account reactivation 4722 enabled">
+              <div class="command-meta">
+                <h3>Re-Enabled Privileged Accounts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4722 earliest=-30d | search Target_Account="adm_*" | table _time Target_Account Subject_Account_Name ComputerName</code></pre>
+              <p class="command-desc">Shows admin-style accounts being re-enabled, which can indicate emergency access use or suspicious reactivation.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="privilege escalation privileged login from unusual source 4624 4672 join">
+              <div class="command-meta">
+                <h3>Privileged Session with Source IP</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4624 OR EventCode=4672) Account_Name="adm_jdoe" earliest=-24h | stats values(Source_Network_Address) as src values(host) as hosts values(PrivilegeList) as privileges count by Logon_ID Account_Name</code></pre>
+              <p class="command-desc">Correlates privileged session identifiers to source IP and privilege assignment details for rapid escalation review.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Computer Objects">
+          <div class="command-header">
+            <h3>Computer Objects</h3>
+            <div class="command-count">4 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="computer objects new computer added domain 4741">
+              <div class="command-meta">
+                <h3>New Computer Objects Added</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4741 earliest=-30d | table _time Target_Account Subject_Account_Name ComputerName</code></pre>
+              <p class="command-desc">Finds newly created computer accounts, useful during rogue asset or domain join investigations.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="computer objects computer account changes 4742 renamed modified">
+              <div class="command-meta">
+                <h3>Computer Account Changes</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4742 earliest=-14d | table _time Target_Account Subject_Account_Name ServicePrincipalNames UserAccountControl</code></pre>
+              <p class="command-desc">Shows modifications to computer account attributes that may affect authentication or delegation behavior.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="computer objects machine logon events computer accounts 4624 endswith dollar">
+              <div class="command-meta">
+                <h3>Computer Account Logons</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Account_Name="*$" earliest=-24h | stats count by Account_Name host Logon_Type | sort - count</code></pre>
+              <p class="command-desc">Highlights machine account authentications and can help investigate trust, service, or lateral movement behavior.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="computer objects deleted computer account 4743">
+              <div class="command-meta">
+                <h3>Deleted Computer Objects</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4743 earliest=-30d | table _time Target_Account Subject_Account_Name ComputerName</code></pre>
+              <p class="command-desc">Useful for asset lifecycle review and identifying unauthorized removal of computer objects from the domain.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="DUO Security">
+          <div class="command-header">
+            <h3>DUO Security</h3>
+            <div class="command-count">5 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="duo mfa report account auth results push factor">
+              <div class="command-meta">
+                <h3>DUO MFA Activity for an Account</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=duo user="jdoe" earliest=-7d | table _time user access_device.ip application result factor reason</code></pre>
+              <p class="command-desc">Provides a concise authentication history for a single Duo user and is ideal for account compromise triage.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="duo failures denied fraud timeout auth">
+              <div class="command-meta">
+                <h3>DUO Authentication Failures</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=duo result IN ("denied","fraud","timeout") earliest=-24h | stats count values(reason) as reasons by user, access_device.ip, application | sort - count</code></pre>
+              <p class="command-desc">Surfaces denied, fraudulent, or timed-out MFA attempts and supports suspicious push investigation.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="duo bypass events bypass_code admin override">
+              <div class="command-meta">
+                <h3>DUO Bypass Code Use</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=duo (result="bypass" OR reason="bypass_code") earliest=-30d | table _time user application access_device.ip result reason</code></pre>
+              <p class="command-desc">Finds authentications that succeeded through bypass behavior instead of standard user-verified MFA.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="duo enrollment status users enrolled unenrolled admin data">
+              <div class="command-meta">
+                <h3>DUO Enrollment Status Query</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=duo sourcetype="duo:admin" action="user_update" earliest=-30d | stats latest(status) as enrollment_status latest(email) as email by username</code></pre>
+              <p class="command-desc">Summarizes latest enrollment-like status values for users from administrative telemetry when available.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="duo impossible travel ip countries geo">
+              <div class="command-meta">
+                <h3>DUO Geo Variance Review</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=duo user="jdoe" earliest=-48h | stats values(access_device.ip) as ips values(access_device.location.city) as cities values(access_device.location.country) as countries by user</code></pre>
+              <p class="command-desc">Quickly reviews geographic spread and IP diversity for a Duo user during suspicious login assessments.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Lateral Movement">
+          <div class="command-header">
+            <h3>Lateral Movement</h3>
+            <div class="command-count">5 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="lateral movement remote logon 4624 type 3 10">
+              <div class="command-meta">
+                <h3>Remote Logons by Host</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Logon_Type IN (3,10) earliest=-24h | stats count values(Account_Name) as users values(Source_Network_Address) as src by host Logon_Type | sort - count</code></pre>
+              <p class="command-desc">Shows remote network and RDP logons hitting hosts, useful for identifying suspect lateral access.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="lateral movement pass the hash ntlm 4624 ntlmssp 3 9">
+              <div class="command-meta">
+                <h3>Pass-the-Hash Indicator Search</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 Authentication_Package="NTLM" Logon_Type IN (3,9) earliest=-24h | table _time host Account_Name Source_Network_Address Process_Name Authentication_Package</code></pre>
+              <p class="command-desc">Focuses on NTLM-backed remote-style logons that can align with pass-the-hash or token abuse patterns.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="lateral movement admin share access 5140 c$ admin$ ipc$">
+              <div class="command-meta">
+                <h3>Admin Share Access</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=5140 Share_Name IN ("\\*\\ADMIN$","\\*\\C$","\\*\\IPC$") earliest=-24h | table _time host Account_Name Share_Name Source_Address</code></pre>
+              <p class="command-desc">Captures access to common administrative shares frequently used during remote execution or file staging.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="lateral movement kerberos anomaly 4768 4769 unusual service tickets">
+              <div class="command-meta">
+                <h3>Kerberos Ticket Anomalies</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4768 OR EventCode=4769) earliest=-24h | stats count values(Service_Name) as services values(Ticket_Encryption_Type) as enc by Account_Name Client_Address | sort - count</code></pre>
+              <p class="command-desc">Summarizes ticket activity by user and source to spot unusual service access or encryption patterns.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="lateral movement explicit creds then remote logon transaction 4648 4624">
+              <div class="command-meta">
+                <h3>Credential Use Followed by Remote Logon</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4648 OR EventCode=4624) Account_Name="adm_jdoe" earliest=-2h | transaction Account_Name maxspan=15m startswith=(EventCode=4648) endswith=(EventCode=4624) | table _time duration Account_Name host EventCode</code></pre>
+              <p class="command-desc">Uses transaction to correlate explicit credential use with a later successful logon in the same short window.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Process Execution and Command-Line Investigation">
+          <div class="command-header">
+            <h3>Process Execution &amp; Command-Line Investigation</h3>
+            <div class="command-count">5 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="process execution suspicious 4688 encoded command powershell cmd line">
+              <div class="command-meta">
+                <h3>Suspicious Process Launches</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4688 earliest=-24h (New_Process_Name="*\\powershell.exe" OR New_Process_Name="*\\cmd.exe" OR New_Process_Name="*\\rundll32.exe") | table _time host Creator_Process_Name New_Process_Name Process_Command_Line Account_Name</code></pre>
+              <p class="command-desc">Pulls common LOLBin and shell executions with full command-line context for analyst review.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="process execution powershell script block suspicious keywords">
+              <div class="command-meta">
+                <h3>PowerShell Execution Review</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4688 OR EventCode=4104) earliest=-24h ("powershell" OR "Invoke-Expression" OR "DownloadString") | table _time host Account_Name Process_Command_Line Message</code></pre>
+              <p class="command-desc">Blends process creation and script block evidence to review suspicious PowerShell behavior more efficiently.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="process execution encoded commands powershell -enc base64">
+              <div class="command-meta">
+                <h3>Encoded PowerShell Commands</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4688 earliest=-7d Process_Command_Line="*-enc*" OR Process_Command_Line="*-EncodedCommand*" | table _time host Account_Name Process_Command_Line</code></pre>
+              <p class="command-desc">Flags PowerShell encoded command usage, which commonly appears in malicious staging and defense evasion.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="process execution parent child relation office spawning shell">
+              <div class="command-meta">
+                <h3>Office Spawning Shells</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4688 earliest=-7d Creator_Process_Name IN ("*\\WINWORD.EXE","*\\EXCEL.EXE","*\\OUTLOOK.EXE") New_Process_Name IN ("*\\cmd.exe","*\\powershell.exe","*\\wscript.exe") | table _time host Account_Name Creator_Process_Name New_Process_Name Process_Command_Line</code></pre>
+              <p class="command-desc">Hunts for document-driven execution chains that often appear in phishing or macro abuse incidents.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="process execution certutil mshta regsvr32 lolbin">
+              <div class="command-meta">
+                <h3>LOLBin Execution Watchlist</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4688 earliest=-7d New_Process_Name IN ("*\\certutil.exe","*\\mshta.exe","*\\regsvr32.exe","*\\bitsadmin.exe") | table _time host Account_Name New_Process_Name Process_Command_Line</code></pre>
+              <p class="command-desc">Targets living-off-the-land binaries frequently abused for download, execution, or proxy behavior.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Network Issues">
+          <div class="command-header">
+            <h3>Network Issues</h3>
+            <div class="command-count">4 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="network issues dns failures query refused nxdomain">
+              <div class="command-meta">
+                <h3>DNS Failures by Host</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=dns earliest=-24h (rcode="NXDOMAIN" OR rcode="SERVFAIL") | stats count values(query) as queries by src_host, rcode | sort - count</code></pre>
+              <p class="command-desc">Surfaces hosts experiencing repeated DNS failures, which may reflect malware beaconing or resolver issues.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="network issues dhcp lease renew failures declines">
+              <div class="command-meta">
+                <h3>DHCP Error Review</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=dhcp earliest=-24h ("DECLINE" OR "NACK" OR "No free leases") | table _time dhcp_server client_ip client_hostname Message</code></pre>
+              <p class="command-desc">Useful for endpoint connectivity complaints tied to DHCP declines, address conflicts, or exhausted scopes.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="network issues connectivity drops vpn firewall disconnects">
+              <div class="command-meta">
+                <h3>Connectivity Drop Events</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=network earliest=-24h (action="disconnect" OR event_type="link_down" OR message="*session terminated*") | stats count by host, src_ip, dest_ip, event_type, action | sort - count</code></pre>
+              <p class="command-desc">Reviews disconnect patterns across network telemetry to support outage triage and endpoint complaints.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="network issues high connection volume by host firewall netflow">
+              <div class="command-meta">
+                <h3>High Connection Volume by Host</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=network earliest=-1h | stats count dc(dest_ip) as unique_destinations by src_ip, src_host | where count&gt;500 OR unique_destinations&gt;100 | sort - count</code></pre>
+              <p class="command-desc">Flags systems generating unusually high connection volume, useful for scans, malware spread, or noisy misconfigurations.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Wi-Fi Issues">
+          <div class="command-header">
+            <h3>Wi-Fi Issues</h3>
+            <div class="command-count">4 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="wifi issues association failures auth reject wlan">
+              <div class="command-meta">
+                <h3>Wireless Association Failures</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wifi earliest=-24h (event="association_failed" OR reason="auth_failed") | table _time client_mac username ap_name ssid reason</code></pre>
+              <p class="command-desc">Pinpoints failed joins to wireless infrastructure and helps separate credential problems from RF issues.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="wifi issues disconnects roam drops deauth">
+              <div class="command-meta">
+                <h3>Wi-Fi Disconnects</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wifi earliest=-24h (event="disassociate" OR event="deauth" OR reason="client_disconnected") | stats count by username, client_mac, ap_name, ssid, reason | sort - count</code></pre>
+              <p class="command-desc">Summarizes wireless disconnect reasons so analysts can identify bad coverage, aggressive roaming, or auth drops.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="wifi issues ssid anomalies rogue uncommon ssid names">
+              <div class="command-meta">
+                <h3>SSID Anomaly Review</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wifi earliest=-7d | stats count by ssid | where count&lt;5 | sort count</code></pre>
+              <p class="command-desc">Highlights rarely seen SSIDs in the environment, useful for rogue network review or unusual site behavior.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="wifi issues top failing clients username mac">
+              <div class="command-meta">
+                <h3>Top Failing Wireless Clients</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wifi earliest=-24h (event="association_failed" OR event="deauth") | stats count values(reason) as reasons by username, client_mac | sort - count | head 20</code></pre>
+              <p class="command-desc">Ranks users or devices with the worst wireless experience so engineers can prioritize troubleshooting.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="Log Source Health and Index Investigation">
+          <div class="command-header">
+            <h3>Log Source Health / Index Investigation</h3>
+            <div class="command-count">4 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="log source health index summary event counts per index">
+              <div class="command-meta">
+                <h3>Index Summary</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=* earliest=-24h | stats count by index | sort - count</code></pre>
+              <p class="command-desc">Provides a broad ingestion snapshot and is often the first search during source health investigations.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="log source health sourcetype counts volume">
+              <div class="command-meta">
+                <h3>Sourcetype Volume Counts</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=* earliest=-24h | stats count by sourcetype | sort - count | head 30</code></pre>
+              <p class="command-desc">Shows which sourcetypes dominate volume and helps validate whether expected sources are still flowing.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="log source health missing hosts last seen metadata">
+              <div class="command-meta">
+                <h3>Missing Log Sources by Last Seen</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>| metadata type=hosts index=wineventlog | eval age_hours=round((now()-lastTime)/3600,2) | where age_hours&gt;4 | table host lastTime age_hours recentTime totalCount</code></pre>
+              <p class="command-desc">Finds Windows log sources that appear stale or offline based on metadata instead of event scans.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="log source health specific host no data">
+              <div class="command-meta">
+                <h3>Host Data Gap Check</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog host="server123" earliest=-24h | stats count min(_time) as first_seen max(_time) as last_seen by host</code></pre>
+              <p class="command-desc">Quickly confirms whether a named host has recent events and the last timeframe observed in Splunk.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="command-section" data-section="SPL Operators and Functions">
+          <div class="command-header">
+            <h3>SPL Operators &amp; Functions</h3>
+            <div class="command-count">5 commands</div>
+          </div>
+          <div class="commands-grid">
+            <article class="command-card command-entry" data-search="spl operators stats example count by host user">
+              <div class="command-meta">
+                <h3>stats Example</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4625 earliest=-24h | stats count dc(Account_Name) as unique_users by host</code></pre>
+              <p class="command-desc">Uses <span class="subtle">stats</span> to aggregate failed logins and count distinct impacted users by host.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="spl operators eval rex extract transaction lookup timechart dedup rename where fields">
+              <div class="command-meta">
+                <h3>eval + rex Example</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4688 earliest=-24h | rex field=Process_Command_Line "(?&lt;encoded_flag&gt;-enc|-EncodedCommand)" | eval suspicious=if(isnotnull(encoded_flag),"yes","no") | stats count by suspicious, New_Process_Name</code></pre>
+              <p class="command-desc">Combines field extraction and conditional logic to classify encoded command activity in process telemetry.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="spl operators transaction example sequence grouping">
+              <div class="command-meta">
+                <h3>transaction Example</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog (EventCode=4625 OR EventCode=4624) Account_Name="jdoe" earliest=-2h | transaction Account_Name maxspan=5m | table _time duration eventcount Account_Name host</code></pre>
+              <p class="command-desc">Groups nearby auth events into a short sequence to understand failure-then-success behavior for a user.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="spl operators lookup timechart dedup rename where fields examples">
+              <div class="command-meta">
+                <h3>lookup + timechart + dedup Workflow</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4624 earliest=-24h | lookup asset_lookup host OUTPUT owner business_unit | dedup host Account_Name | rename Account_Name as user | where business_unit="Finance" | timechart span=1h count by owner limit=10</code></pre>
+              <p class="command-desc">Demonstrates enrichment, deduplication, rename, filtering, and trending in a single reusable SOC workflow.</p>
+            </article>
+
+            <article class="command-card command-entry" data-search="spl operators fields where rename minimal output speed">
+              <div class="command-meta">
+                <h3>fields + where Cleanup Pattern</h3>
+                <button class="copy-btn" type="button">Copy SPL</button>
+              </div>
+              <pre class="spl-code"><code>index=wineventlog EventCode=4740 earliest=-24h | fields _time Username Caller_Computer_Name ComputerName | where like(Username,"svc_%") | rename Caller_Computer_Name as source_host, ComputerName as domain_controller</code></pre>
+              <p class="command-desc">Shows a clean pattern for reducing field noise, filtering service accounts, and renaming columns for analysts.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div id="emptyState" class="empty-state">No commands matched your filter. Try an event code like <strong>4740</strong>, <strong>4625</strong>, <strong>4688</strong>, or a keyword like <strong>duo</strong>, <strong>kerberos</strong>, <strong>lockout</strong>, or <strong>lookup</strong>.</div>
+    </section>
+
+    <section class="page-section" id="best-practices">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>Best Practices</h2>
+            <p class="section-copy">A strong cheat sheet matters most when the underlying analyst workflow is disciplined.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="mini-card">
+            <h3>Start Narrow, Then Pivot</h3>
+            <p>Use the user, host, source IP, Logon_ID, or domain controller as your first pivot. Expand only after establishing whether the activity is isolated, repeated, or spreading laterally.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Correlate Across Event Families</h3>
+            <p>Lockouts without 4625 context are incomplete. Privileged sessions without 4672 or 4648 context are also incomplete. The fastest Tier 3 work usually comes from chaining multiple event types.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Normalize Your Field Names</h3>
+            <p>Create macros, eventtypes, tags, and field aliases for your environment so these searches become durable runbook building blocks instead of one-off custom queries.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="useful-links">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>Useful External Links</h2>
+            <p class="section-copy">Official and high-value references that pair well with the searches above.</p>
+          </div>
+        </div>
+        <div class="link-grid">
+          <a class="link-card" href="https://help.splunk.com/?resourceId=Splunk_SearchReference_WhatsInThisManual" target="_blank" rel="noopener noreferrer"><strong>Splunk Search Reference</strong><span>Primary SPL reference for search commands, syntax, and usage patterns.</span></a>
+          <a class="link-card" href="https://docs.splunk.com/Documentation/Splunk/9.3.2/SearchReference/Stats" target="_blank" rel="noopener noreferrer"><strong>Splunk stats Command</strong><span>Detailed guidance for one of the most heavily used aggregation commands in SOC workflows.</span></a>
+          <a class="link-card" href="https://www.splunk.com/en_us/blog/learn/splunk-cheat-sheet-query-spl-regex-commands.html" target="_blank" rel="noopener noreferrer"><strong>Splunk SPL Quick Reference</strong><span>Supplemental command guide useful for onboarding analysts into SPL patterns.</span></a>
+          <a class="link-card" href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/appendix-l--events-to-monitor" target="_blank" rel="noopener noreferrer"><strong>Microsoft AD Events to Monitor</strong><span>Helpful reference for prioritizing Windows security events relevant to identity and domain operations.</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="references">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>References with Links</h2>
+            <p class="section-copy">Specific documentation pages that map directly to the detections and event IDs used in this cheat sheet.</p>
+          </div>
+        </div>
+        <div class="link-grid">
+          <a class="link-card" href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4624" target="_blank" rel="noopener noreferrer"><strong>Microsoft Event 4624</strong><span>Successful logon event reference with field and monitoring guidance.</span></a>
+          <a class="link-card" href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625" target="_blank" rel="noopener noreferrer"><strong>Microsoft Event 4625</strong><span>Failed logon reference commonly used in brute force, spray, and lockout triage.</span></a>
+          <a class="link-card" href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4672" target="_blank" rel="noopener noreferrer"><strong>Microsoft Event 4672</strong><span>Special privileges assigned to a new logon session.</span></a>
+          <a class="link-card" href="https://duo.com/docs/administration-reporting" target="_blank" rel="noopener noreferrer"><strong>Duo Administration Reporting</strong><span>Official Duo reporting guide for authentication and administrative visibility.</span></a>
+          <a class="link-card" href="https://duo.com/docs/adminapi" target="_blank" rel="noopener noreferrer"><strong>Duo Admin API</strong><span>Programmatic route for richer enrollment and log collection use cases.</span></a>
+          <a class="link-card" href="https://help.duo.com/s/article/1023" target="_blank" rel="noopener noreferrer"><strong>Duo Authentication Log Report</strong><span>Reference for understanding Duo auth report content, timing, and reporting scope.</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="faq">
+      <div class="section-card">
+        <div class="section-head">
+          <div>
+            <h2>FAQ</h2>
+            <p class="section-copy">Fast answers to common implementation questions analysts raise when operationalizing search content like this.</p>
+          </div>
+        </div>
+        <div class="faq-grid">
+          <article class="mini-card">
+            <h3>Why do some field names differ from my environment?</h3>
+            <p class="faq-answer">Splunk field names depend on your TA, source normalization, CIM mappings, and custom props/transforms. Update Account_Name, Username, Caller_Computer_Name, Source_Network_Address, or Duo fields to align with your data onboarding.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Should I keep using index=* in production?</h3>
+            <p class="faq-answer">Only when exploring unknown data or during urgent triage. In repeatable workflows, narrow to the correct indexes and sourcetypes for speed, cost control, and better search head performance.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Which commands are best for triage under pressure?</h3>
+            <p class="faq-answer">Start with 4740, 4625, 4624, 4672, 4648, and 4688. Those usually provide enough context to establish identity misuse, privileged access, or suspicious execution direction within minutes.</p>
+          </article>
+          <article class="mini-card">
+            <h3>How should I operationalize this page?</h3>
+            <p class="faq-answer">Convert high-value searches into macros, dashboards, ES correlations, saved searches, and runbook-linked investigations. This page works best as a human-friendly front door to those standardized workflows.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Splunk Commands for Experienced Users • Enterprise SOC Reference Page
+  </footer>
+
+  <script>
+    (function () {
+      const filterInput = document.getElementById('commandFilter');
+      const entries = Array.from(document.querySelectorAll('.command-entry'));
+      const visibleCount = document.getElementById('visibleCount');
+      const emptyState = document.getElementById('emptyState');
+      const sections = Array.from(document.querySelectorAll('.command-section'));
+
+      const escapeHtml = (value) => value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      const highlightSPL = (raw) => {
+        let html = escapeHtml(raw);
+        html = html.replace(/(\|)/g, '<span class="tok-pipe">$1</span>');
+        html = html.replace(/(&quot;[^&]*?&quot;|"[^"]*"|'[^']*')/g, '<span class="tok-str">$1</span>');
+        html = html.replace(/\b(\d{3,5}|0x[A-Fa-f0-9]+)\b/g, '<span class="tok-num">$1</span>');
+        html = html.replace(/\b(index|sourcetype|host|source|earliest|latest|EventCode|Logon_Type|Account_Name|Username|Source_Network_Address|Caller_Computer_Name|ComputerName|Group_Name|Member_Name|Process_Command_Line|New_Process_Name|Creator_Process_Name|Authentication_Package|Share_Name|Service_Name|Ticket_Encryption_Type|rcode|ssid|user|application|result|reason)\b(?==|\s)/g, '<span class="tok-field">$1</span>');
+        html = html.replace(/\b(stats|table|sort|head|timechart|where|eval|rex|transaction|lookup|dedup|rename|fields|bin|search)\b/g, '<span class="tok-cmd">$1</span>');
+        html = html.replace(/\b(IN|OR|AND|by|as|if|like)\b/g, '<span class="tok-op">$1</span>');
+        return html;
+      };
+
+      document.querySelectorAll('.spl-code code').forEach((codeBlock) => {
+        const raw = codeBlock.textContent;
+        codeBlock.innerHTML = highlightSPL(raw);
+      });
+
+      document.querySelectorAll('.copy-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+          const card = button.closest('.command-card');
+          const query = card.querySelector('.spl-code code').innerText;
+          navigator.clipboard.writeText(query).then(() => {
+            const original = button.textContent;
+            button.textContent = 'Copied';
+            setTimeout(() => { button.textContent = original; }, 1400);
+          }).catch(() => {
+            button.textContent = 'Copy failed';
+            setTimeout(() => { button.textContent = 'Copy SPL'; }, 1400);
+          });
+        });
+      });
+
+      const applyFilter = () => {
+        const term = filterInput.value.trim().toLowerCase();
+        let visible = 0;
+
+        entries.forEach((entry) => {
+          const text = [entry.dataset.search || '', entry.innerText].join(' ').toLowerCase();
+          const match = text.includes(term);
+          entry.classList.toggle('hidden-card', !match);
+          if (match) visible += 1;
+        });
+
+        sections.forEach((section) => {
+          const hasVisible = section.querySelector('.command-entry:not(.hidden-card)');
+          section.style.display = hasVisible ? '' : 'none';
+        });
+
+        visibleCount.textContent = visible;
+        emptyState.style.display = visible === 0 ? 'block' : 'none';
+      };
+
+      filterInput.addEventListener('input', applyFilter);
+      applyFilter();
+    })();
+  </script>
+</body>
+</html>
