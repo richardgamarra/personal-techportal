@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 
+  PORTAL_META
+  title: List Group Printers When Adding Printers
+  description: Deploy department-scoped shared printers in Windows so only the intended users can see and use them.
+  category: enterprise
+  icon: 🖨️
+  thumbnail: https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Small_Office_with_Hewlett-Packard_printers.jpg/1280px-Small_Office_with_Hewlett-Packard_printers.jpg
+  featured: yes
+  tags: windows domain, active directory, group policy, print server, printers, enterprise, gpo, point and print
+  order: 10
+  PORTAL_META_END
+  -->
+  <meta name="description" content="Practical guide for listing and deploying department-only printers in a Windows domain using Print Server shares, Group Policy, and scoped access controls." />
+  <meta name="keywords" content="Windows domain printers, GPO printer deployment, department printers, Active Directory printers, print server, Point and Print, Print Management" />
+  <meta name="author" content="Richard Gamarra" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="canonical" href="/pages/enterprise/list-groupprinters-when-adding-printers.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="List Group Printers When Adding Printers" />
+  <meta property="og:description" content="Use GPO-based printer deployment so only one department can see and use its printers in Windows." />
+  <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Small_Office_with_Hewlett-Packard_printers.jpg/1280px-Small_Office_with_Hewlett-Packard_printers.jpg" />
+  <meta property="og:url" content="/pages/enterprise/list-groupprinters-when-adding-printers.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="List Group Printers When Adding Printers" />
+  <meta name="twitter:description" content="Enterprise guide for department-scoped printer visibility and deployment in Windows domain environments." />
+  <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Small_Office_with_Hewlett-Packard_printers.jpg/1280px-Small_Office_with_Hewlett-Packard_printers.jpg" />
+  <title>List Group Printers When Adding Printers</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "List Group Printers When Adding Printers",
+      "description": "Deploy department-scoped shared printers in Windows so only the intended users can see and use them.",
+      "author": {
+        "@type": "Person",
+        "name": "Richard Gamarra"
+      },
+      "datePublished": "2026-03-13",
+      "dateModified": "2026-03-13",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Small_Office_with_Hewlett-Packard_printers.jpg/1280px-Small_Office_with_Hewlett-Packard_printers.jpg",
+      "articleSection": "Enterprise",
+      "keywords": ["Windows domain", "Group Policy", "Print Server", "Point and Print", "Active Directory"]
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1220;
+      --panel: rgba(10, 18, 34, 0.88);
+      --panel-strong: rgba(14, 24, 44, 0.96);
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #e5eefc;
+      --muted: #96a7c6;
+      --accent: #63b3ff;
+      --accent-2: #6ee7d8;
+      --success: #7ee787;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(99, 179, 255, 0.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(110, 231, 216, 0.10), transparent 26%),
+        linear-gradient(180deg, #040a14 0%, #08111d 45%, #07111f 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { color: #91c9ff; }
+
+    .page {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(12, 22, 40, 0.96), rgba(11, 18, 32, 0.88)),
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Small_Office_with_Hewlett-Packard_printers.jpg/1280px-Small_Office_with_Hewlett-Packard_printers.jpg') center/cover;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      min-height: 360px;
+      display: grid;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(4, 10, 20, 0.16), rgba(4, 10, 20, 0.78) 58%, rgba(4, 10, 20, 0.92));
+    }
+
+    .hero-content {
+      position: relative;
+      padding: 32px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .badge-row,
+    .quick-stats,
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge,
+    .chip,
+    .mini-card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .badge,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      max-width: 900px;
+    }
+
+    .hero p.lead {
+      margin: 0;
+      max-width: 820px;
+      color: #d3e3fa;
+      font-size: 1.05rem;
+    }
+
+    .meta-lines {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-inner {
+      padding: 22px;
+    }
+
+    .toc h2,
+    .side-title,
+    .section h2,
+    .section h3 {
+      letter-spacing: -0.02em;
+    }
+
+    .side-title {
+      margin: 0 0 12px;
+      font-size: 0.95rem;
+      color: #d9e6fb;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .toc nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: #cbdaf3;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .toc a:hover {
+      background: rgba(99, 179, 255, 0.08);
+      border-color: rgba(99, 179, 255, 0.2);
+    }
+
+    .content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-inner {
+      padding: 28px;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.45rem, 2.6vw, 2rem);
+    }
+
+    .section h3 {
+      margin: 24px 0 10px;
+      font-size: 1.12rem;
+      color: #f1f6ff;
+    }
+
+    .section p,
+    .section li { color: #d3def3; }
+
+    .section ul,
+    .section ol {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .mini-card {
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #f4f8ff;
+    }
+
+    .callout {
+      margin: 18px 0;
+      border-left: 4px solid var(--accent);
+      background: rgba(99, 179, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px 18px;
+      color: #d8e9ff;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warn);
+      background: rgba(251, 191, 36, 0.08);
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: rgba(126, 231, 135, 0.08);
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .comparison th,
+    .comparison td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      vertical-align: top;
+    }
+
+    .comparison th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f1f6ff;
+      font-size: 0.95rem;
+    }
+
+    .comparison tr:last-child td { border-bottom: 0; }
+
+    .good { color: var(--success); font-weight: 700; }
+    .caution { color: var(--warn); font-weight: 700; }
+    .bad { color: var(--danger); font-weight: 700; }
+
+    .code-block {
+      background: #030814;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 14px 0 0;
+    }
+
+    pre {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: #d8e8ff;
+      white-space: pre-wrap;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+      color: #d8e8ff;
+    }
+
+    .phase-grid,
+    .risk-grid,
+    .reference-grid,
+    .faq-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .phase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .risk-grid,
+    .reference-grid,
+    .faq-grid { grid-template-columns: 1fr; }
+
+    .tile {
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .tile h3,
+    .tile h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .step-list {
+      counter-reset: step;
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .step {
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.06);
+      letter-spacing: -0.05em;
+    }
+
+    .step h3 {
+      margin-top: 0;
+      max-width: 85%;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 179, 255, 0.18);
+      background: rgba(99, 179, 255, 0.08);
+    }
+
+    @media (max-width: 980px) {
+      .main-grid,
+      .phase-grid,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-content,
+      .section-inner,
+      .panel-inner {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(calc(100% - 20px), var(--max));
+        padding-top: 20px;
+      }
+
+      .hero {
+        min-height: 320px;
+        border-radius: 24px;
+      }
+
+      .section,
+      .panel {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="top">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="badge-row">
+          <span class="badge">🖨️ Enterprise</span>
+          <span class="badge">Active Directory</span>
+          <span class="badge">Group Policy</span>
+          <span class="badge">Featured Guide</span>
+        </div>
+        <div>
+          <h1>List all printers available for one department in a Windows domain</h1>
+        </div>
+        <p class="lead">Use a print server, shared printers, and user-scoped Group Policy deployment so only the intended department can see the printers in Windows Settings and print to them.</p>
+        <div class="meta-lines">
+          <div>13 March 2026</div>
+          <div>By Richard Gamarra</div>
+        </div>
+        <div class="quick-stats">
+          <span class="chip">Best fit: fixed enterprise print environments</span>
+          <span class="chip">Primary model: per-user GPO deployment</span>
+          <span class="chip">Scope: OU or security group</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <aside class="sidebar">
+        <section class="panel toc">
+          <div class="panel-inner">
+            <h2 class="side-title">On this page</h2>
+            <nav>
+              <a href="#overview">Overview</a>
+              <a href="#requirements">Requirements</a>
+              <a href="#steps">Steps</a>
+              <a href="#best-practices">Best Practices</a>
+              <a href="#references">References</a>
+              <a href="#faq">FAQ</a>
+            </nav>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-inner">
+            <h2 class="side-title">Outcome</h2>
+            <p>Users in the target department can see the approved shared printers in <strong>Settings → Bluetooth &amp; devices → Printers &amp; scanners</strong>, while users outside that scope do not receive them.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-inner">
+            <h2 class="side-title">Core building blocks</h2>
+            <div class="chip-row">
+              <span class="chip">Print Management</span>
+              <span class="chip">GPMC</span>
+              <span class="chip">Security Filtering</span>
+              <span class="chip">Point and Print</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="content">
+        <section class="section" id="overview">
+          <div class="section-inner">
+            <h2>Overview</h2>
+            <p>The recommended approach is <strong>GPO-based printer deployment</strong> using <strong>shared printers on a Windows print server</strong>, then scoping those printer connections to the intended department through an <strong>OU</strong> or an <strong>AD security group</strong>. This is the cleanest native design when your goal is not only access control, but also controlled visibility in the Windows printer experience.</p>
+
+            <div class="callout success">
+              The key design target is visibility plus authorization. The department users should both <strong>see</strong> the printers and be able to <strong>use</strong> them, while other users should neither receive the connections nor retain print rights if they somehow discover the shares.
+            </div>
+
+            <table class="comparison">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Visible in Settings?</th>
+                  <th>Scoped to department?</th>
+                  <th>Native Windows/AD?</th>
+                  <th>Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>GPO Deploy Printers via Print Management</td>
+                  <td class="good">Yes</td>
+                  <td class="good">Yes</td>
+                  <td class="good">Yes</td>
+                  <td><strong>Best option</strong></td>
+                </tr>
+                <tr>
+                  <td>Logon script with <code>Add-Printer</code></td>
+                  <td class="good">Yes</td>
+                  <td class="good">Yes</td>
+                  <td class="good">Yes</td>
+                  <td>Good fallback</td>
+                </tr>
+                <tr>
+                  <td>Printer location tracking</td>
+                  <td class="caution">Partial</td>
+                  <td class="caution">Partial</td>
+                  <td class="good">Yes</td>
+                  <td>Too broad for department isolation</td>
+                </tr>
+                <tr>
+                  <td>Manual Add Printer</td>
+                  <td class="bad">Requires user action</td>
+                  <td class="bad">No</td>
+                  <td class="good">Yes</td>
+                  <td>Not suitable for managed deployment</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="cards">
+              <article class="mini-card">
+                <strong>Primary objective</strong>
+                Make only one department receive and visualize the printer list automatically.
+              </article>
+              <article class="mini-card">
+                <strong>Security objective</strong>
+                Restrict printer permissions so non-department users cannot print even if they find the share path.
+              </article>
+              <article class="mini-card">
+                <strong>Operational objective</strong>
+                Keep onboarding and offboarding automatic through AD membership and GPO refresh.
+              </article>
+            </div>
+
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+
+        <section class="section" id="requirements">
+          <div class="section-inner">
+            <h2>Requirements</h2>
+            <p>Before deployment, confirm the following technical prerequisites. The design assumes a standard domain-joined Windows environment with centrally managed print services.</p>
+
+            <div class="phase-grid">
+              <article class="tile">
+                <h3>Infrastructure</h3>
+                <ul>
+                  <li>A Windows print server with the required shared printers already installed.</li>
+                  <li>A consistent naming convention such as <code>TECH-PRN-01</code>, <code>TECH-PRN-02</code>, and so on.</li>
+                  <li>Domain-joined user devices with line-of-sight to the print server.</li>
+                  <li>Matching client/server print drivers for the supported device architecture.</li>
+                </ul>
+              </article>
+
+              <article class="tile">
+                <h3>Directory and policy</h3>
+                <ul>
+                  <li>An OU for the target department, or a dedicated security group such as <code>GRP_TECH_Users</code>.</li>
+                  <li>Administrative access to <code>printmanagement.msc</code> and <code>gpmc.msc</code>.</li>
+                  <li>A planned scope model: per-user for roaming staff, or per-computer for fixed workstation layouts.</li>
+                  <li>Printer share permissions aligned with the department access model.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="callout warn">
+              Do not rely on visibility alone. Printer share permissions must also be restricted. Otherwise, a user outside the target group may still be able to use a printer if they connect to it directly by UNC path.
+            </div>
+
+            <h3>Recommended naming and scope model</h3>
+            <ul>
+              <li>Use printer share names that clearly identify department, location, and sequence.</li>
+              <li>Use a dedicated GPO for this printer set so lifecycle changes are isolated and easy to audit.</li>
+              <li>Prefer security group scoping if users may be split across multiple OUs.</li>
+            </ul>
+
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+
+        <section class="section" id="steps">
+          <div class="section-inner">
+            <h2>Steps</h2>
+            <p>This implementation follows four phases: print server setup, GPO deployment, Point and Print trust configuration, and validation. The result is a controlled, supportable, and fully native Windows deployment model.</p>
+
+            <div class="step-list">
+              <article class="step">
+                <h3>Phase 1 — Share all department printers on the print server</h3>
+                <p>Open <strong>Print Management</strong> on the print server or a management workstation and confirm every department printer is shared using a consistent convention.</p>
+                <div class="code-block"><pre>Print Management
+ └─ Print Servers
+     └─ [YourPrintServer]
+         └─ Printers
+             └─ Right-click each printer → Properties → Sharing tab
+                 ☑ Share this printer
+                 Share name: TECH-PRN-01</pre></div>
+                <p>This establishes the central source that GPO will deploy to users.</p>
+              </article>
+
+              <article class="step">
+                <h3>Phase 1 — Restrict printer permissions to the department</h3>
+                <p>For each shared printer, remove broad access and grant print rights only to the department security group.</p>
+                <div class="code-block"><pre>Printer Properties → Security tab
+  → Remove: Everyone
+  → Add: GRP_TECH_Users → Allow: Print
+  → Keep: Administrators → Allow: Manage Printers</pre></div>
+                <p>This ensures that even direct discovery or manual UNC attempts do not grant usable access to other departments.</p>
+              </article>
+
+              <article class="step">
+                <h3>Phase 2 — Create a dedicated GPO for the printer deployment</h3>
+                <p>In <strong>Group Policy Management</strong>, create and link a GPO specifically for the department printers.</p>
+                <div class="code-block"><pre>Group Policy Management
+ └─ YourDomain.com
+     └─ OU=TECH, OU=Departments
+         → Right-click → Create a GPO in this domain and Link it here
+         Name: GPO_TECH_PrinterDeploy</pre></div>
+                <p>If the department is distributed across multiple OUs, create the GPO once and plan to use security filtering instead of OU-only scope.</p>
+              </article>
+
+              <article class="step">
+                <h3>Phase 2 — Deploy the shared printers through Print Management</h3>
+                <p>From <strong>Print Management</strong>, use the <strong>Deploy with Group Policy</strong> workflow for each printer. This method is cleaner than manually building printer preference items and aligns well with print-server managed deployments.</p>
+                <div class="code-block"><pre>Print Management → Printers
+  → Right-click a TECH printer → Deploy with Group Policy...
+  → Browse → select GPO_TECH_PrinterDeploy
+  → Choose: "The users that this GPO applies to (per user)"
+  → Click Add → repeat for all printers</pre></div>
+                <div class="callout">
+                  Use <strong>per user</strong> when staff may sign in to different devices. Use <strong>per computer</strong> only when printers are tightly tied to fixed desks, kiosks, or room-specific workstations.
+                </div>
+              </article>
+
+              <article class="step">
+                <h3>Phase 2 — Apply OU scope or security group scope</h3>
+                <p>Choose one of the two standard targeting approaches:</p>
+                <ul>
+                  <li><strong>OU-based scope:</strong> link the GPO directly where the target department users live.</li>
+                  <li><strong>Security group scope:</strong> remove <code>Authenticated Users</code> from Security Filtering and add the department group, such as <code>GRP_TECH_Users</code>.</li>
+                </ul>
+                <div class="code-block"><pre>Group Policy Management → GPO_TECH_PrinterDeploy
+  → Scope tab → Security Filtering
+      → Remove: Authenticated Users
+      → Add: GRP_TECH_Users</pre></div>
+                <p>When using security filtering, keep read access aligned so the policy can be evaluated correctly in your environment.</p>
+              </article>
+
+              <article class="step">
+                <h3>Phase 3 — Configure Point and Print restrictions for trusted driver installation</h3>
+                <p>Windows printer driver installation is security-sensitive. Configure Point and Print restrictions in the printer deployment GPO so clients trust the designated print server.</p>
+                <div class="code-block"><pre>Computer Configuration
+ └─ Policies
+     └─ Administrative Templates
+         └─ Printers
+             └─ Point and Print Restrictions → Enabled
+                 ☑ Users can only point and print to these servers:
+                    Value: YourPrintServer.domain.com
+                 ☑ When installing drivers: Do not show warning or elevation prompt
+                 ☑ When updating drivers: Do not show warning or elevation prompt</pre></div>
+                <div class="callout warn">
+                  Avoid broad, domain-wide relaxation of printer driver installation behavior. Trust only the approved print server and keep the exception scoped to this use case.
+                </div>
+              </article>
+
+              <article class="step">
+                <h3>Phase 4 — Validate on a freshly imaged department workstation</h3>
+                <p>After policy application, verify GPO scope and deployed printer objects from the client side.</p>
+                <div class="code-block"><pre># Force GPO refresh
+gpupdate /force
+
+# Verify GPO is applied
+gpresult /r /scope user | findstr /i "print"
+
+# Check deployed printers
+Get-Printer | Select Name, PortName, Shared</pre></div>
+                <p>Then open <strong>Settings → Bluetooth &amp; devices → Printers &amp; scanners</strong> and verify the department printer set is visible.</p>
+              </article>
+
+              <article class="step">
+                <h3>Phase 4 — Test with a non-department user</h3>
+                <p>Sign in on the same device using an account from another department, refresh policy, and confirm the department printers are not present.</p>
+                <div class="code-block"><pre>gpupdate /force</pre></div>
+                <p>This is the final confirmation that your visibility model and security scope are both working as intended.</p>
+              </article>
+            </div>
+
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+
+        <section class="section" id="best-practices">
+          <div class="section-inner">
+            <h2>Best Practices</h2>
+            <p>Large departmental printer sets can work well with a single GPO, but a few operational design choices make the environment easier to scale and support.</p>
+
+            <div class="risk-grid">
+              <article class="tile">
+                <h3>Suppress overly broad printer discovery</h3>
+                <p>In newer Windows builds, organization printer discovery can surface more printers than you want when location tracking or broad discovery is available. To keep the experience focused on managed assignments, disable broad network browsing in the printer wizard where appropriate.</p>
+                <div class="code-block"><pre>Computer Configuration → Administrative Templates → Printers
+  → Add Printer Wizard - Network scan page (Managed Network)
+      → Disabled</pre></div>
+              </article>
+
+              <article class="tile">
+                <h3>Split large deployments if logon performance becomes noticeable</h3>
+                <p>Fifty printers in one GPO is acceptable, but if users experience delays, split the deployment into logical sets such as floor, building, or function.</p>
+                <ul>
+                  <li>Example: <code>GPO_TECH_PrinterDeploy_Floor1</code></li>
+                  <li>Example: <code>GPO_TECH_PrinterDeploy_Lab</code></li>
+                  <li>Example: <code>GPO_TECH_PrinterDeploy_Color</code></li>
+                </ul>
+              </article>
+
+              <article class="tile">
+                <h3>Validate VPN routing for remote users</h3>
+                <p>Remote users may receive printer objects through policy but still fail at print time if the VPN path does not include the print server network or name resolution path.</p>
+                <ul>
+                  <li>Confirm DNS resolves the print server correctly.</li>
+                  <li>Confirm SMB and print traffic reach the server through the tunnel.</li>
+                  <li>Confirm split tunnel rules do not bypass the print subnet.</li>
+                </ul>
+              </article>
+
+              <article class="tile">
+                <h3>Standardize driver architecture</h3>
+                <p>Mixed device types raise deployment risk. Keep server-side drivers aligned with the supported client fleet, especially for x64-first environments and any ARM64 exception devices.</p>
+              </article>
+
+              <article class="tile">
+                <h3>Use group membership as the lifecycle control plane</h3>
+                <p>When a user leaves the department security group, allow the next logon or GPO refresh cycle to remove the printer set automatically. This is one of the strongest advantages of a GPO-based deployment model over ad hoc scripts.</p>
+              </article>
+            </div>
+
+            <div class="callout success">
+              Best enterprise pattern: combine <strong>GPO deployment</strong> for visibility, <strong>printer ACLs</strong> for enforcement, and <strong>AD group membership</strong> for lifecycle automation.
+            </div>
+
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+
+        <section class="section" id="references">
+          <div class="section-inner">
+            <h2>References</h2>
+            <p>Use these official resources to validate policy behavior, security considerations, and printer deployment details in production environments.</p>
+
+            <div class="reference-grid">
+              <article class="tile">
+                <h3>Microsoft Learn — Use Group Policy settings to control printers</h3>
+                <p>Reference for printer-related Group Policy settings and administrative policy paths.</p>
+                <p><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/use-group-policy-to-control-ad-printer" target="_blank" rel="noopener noreferrer">Open Microsoft documentation</a></p>
+              </article>
+
+              <article class="tile">
+                <h3>Microsoft Learn — Introduction to Point and Print</h3>
+                <p>Background on the Point and Print model and how client connections obtain printer configuration from a print server.</p>
+                <p><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/print/introduction-to-point-and-print" target="_blank" rel="noopener noreferrer">Open Microsoft documentation</a></p>
+              </article>
+
+              <article class="tile">
+                <h3>Microsoft Support — KB5005652</h3>
+                <p>Security behavior for printer driver installation after the PrintNightmare-era changes and the default requirement for administrative privilege in many scenarios.</p>
+                <p><a href="https://support.microsoft.com/en-us/topic/kb5005652-manage-new-point-and-print-default-driver-installation-behavior-cve-2021-34481-873642bf-2634-49c5-a23b-6d8e9a302872" target="_blank" rel="noopener noreferrer">Open Microsoft support article</a></p>
+              </article>
+
+              <article class="tile">
+                <h3>Microsoft Support — KB5005010</h3>
+                <p>Guidance on restricting installation of new printer drivers after the July 2021 security updates.</p>
+                <p><a href="https://support.microsoft.com/en-us/topic/kb5005010-restricting-installation-of-new-printer-drivers-after-applying-the-july-6-2021-updates-31b91c02-05bc-4ada-a7ea-183b129578a7" target="_blank" rel="noopener noreferrer">Open Microsoft support article</a></p>
+              </article>
+            </div>
+
+            <p class="footer-note">Thumbnail image source: Wikimedia Commons, used as a remote image URL for portal metadata.</p>
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+
+        <section class="section" id="faq">
+          <div class="section-inner">
+            <h2>FAQ</h2>
+            <div class="faq-grid">
+              <article class="tile">
+                <h3>Why not just script <code>Add-Printer</code> at logon?</h3>
+                <p>That can work, but it becomes harder to govern at scale. GPO-based deployment is easier to audit, easier to scope, and cleaner to manage over time, especially when combined with security filtering and printer ACLs.</p>
+              </article>
+
+              <article class="tile">
+                <h3>Should I scope by OU or by security group?</h3>
+                <p>Use OU scope when your user placement is already clean and stable. Use security group scope when department membership crosses multiple OUs or when you want simpler operational control through group membership changes.</p>
+              </article>
+
+              <article class="tile">
+                <h3>What if users move between shared desks?</h3>
+                <p>Deploy printers <strong>per user</strong>. That keeps the printer set attached to the user identity rather than to a single workstation.</p>
+              </article>
+
+              <article class="tile">
+                <h3>Can users outside the department still discover the printer share manually?</h3>
+                <p>They may discover the path if they know it, but they should not be able to use it if you have correctly restricted printer permissions to the department group.</p>
+              </article>
+
+              <article class="tile">
+                <h3>What happens when a user leaves the department?</h3>
+                <p>Remove the user from the department security group or move them out of the scoped OU. The printer assignments should be removed at the next policy refresh or sign-in cycle.</p>
+              </article>
+
+              <article class="tile">
+                <h3>How do I prove that only the target users can visualize the printers?</h3>
+                <p>Test with two accounts on the same machine: one inside the target scope and one outside it. Refresh policy for each session and compare the contents of <strong>Printers &amp; scanners</strong>.</p>
+              </article>
+            </div>
+
+            <a class="top-link" href="#top">↑ Back to top</a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
