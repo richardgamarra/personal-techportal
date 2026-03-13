@@ -379,6 +379,8 @@ export default function PortalClient({ initialContent = [] }) {
   }
 
   function SidebarContent() {
+    const getSidebarPreviewItems = (items) => [...items].slice(0, 3);
+
     return (
       <div className={sidebarClass}>
         <div className={`border-b p-5 ${borderClass}`}>
@@ -475,7 +477,7 @@ export default function PortalClient({ initialContent = [] }) {
                   </div>
 
                   <div className="space-y-1.5">
-                    {group.items.map((item) => {
+                    {getSidebarPreviewItems(group.items).map((item) => {
                       const Icon = getItemIcon(item);
                       const isActive = viewMode === "page" && visibleSelectedItem?.id === item.id;
 
@@ -794,11 +796,11 @@ export default function PortalClient({ initialContent = [] }) {
             </p>
           </div>
 
-          <div className="p-6 md:p-8">
+          <div className="p-4 md:p-6 xl:p-8">
             <iframe
               src={getItemHref(item)}
               title={item.title}
-              className={`h-[calc(100vh-160px)] min-h-[950px] w-full rounded-[24px] border ${
+              className={`h-[calc(100vh-120px)] min-h-[1400px] w-full rounded-[24px] border ${
                 isDark ? "border-white/10 bg-white" : "border-slate-200 bg-white"
               }`}
             />
